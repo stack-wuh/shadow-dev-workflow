@@ -2,18 +2,18 @@
 name: shadow-dev-apply
 description: 开始执行 — 按 tasks.md 执行代码实现，含分支创建、预估、TDD 门禁、并行 Agent 调度
 ---
-# Apply — 开始执行
+# 🚀 Apply — 开始执行
 
 按 tasks.md 执行代码实现。执行前创建功能分支、预估耗时 + 依赖分析，同 Phase 独立 task 并行 Agent 执行。
 
-## 步骤
+## 📋 步骤
 
-### 1. 选择变更
+### 🎯 1. 选择变更
 - 有名称直接用
 - 否则从上下文推断，或 `openspec list --json` 让用户选
 - 提示: "将执行变更: <name>"
 
-### 2. 检查状态
+### 🔍 2. 检查状态
 ```bash
 openspec status --change "<name>" --json
 ```
@@ -21,13 +21,13 @@ openspec status --change "<name>" --json
 - all_done → 提示已完成，进入审查
 - 否则继续
 
-### 3. 获取执行指令
+### 📋 3. 获取执行指令
 ```bash
 openspec instructions apply --change "<name>" --json
 ```
 读取所有 `contextFiles`。
 
-### 4. 预估耗时 + 依赖分析
+### ⏱️ 4. 预估耗时 + 依赖分析
 
 分析 tasks.md 中的每个 task:
 - **预估耗时**: 根据文件数、复杂度估算（新建 1 文件 ~5min，修改 ~3min，配置 ~2min）
@@ -52,7 +52,7 @@ openspec instructions apply --change "<name>" --json
 确认执行计划？
 ```
 
-### 5. 创建功能分支
+### 🌿 5. 创建功能分支
 
 **执行前检查：** 确认当前不在 main/master 分支上直接修改代码。
 
@@ -64,12 +64,11 @@ git branch --show-current
 
 **每次执行必须创建新分支**，代码编写在分支上进行，不在 main 上直接改。
 
-**分支命名：**
+**分支命名：** 读取 `openspec/config.yaml` 的 `rules.branch` 确认命名规则（默认格式: `{issue-number}-{type}-{short-description}`，type 取值 feat/fix/refactor/docs/chore，short-description 使用中文 2-5 字）。
 
 - 从 `.openspec.yaml` 读取 `issue` 字段
-  - 有 Issue → `<issue-number>-feat-<change-name>`
-  - 无 Issue → `feat-<change-name>`
-- 例：`134-feat-map-footprint`、`feat-refactor-api`
+  - 有 Issue → `<issue-number>-<type>-<short-description>`
+  - 无 Issue → `<type>-<short-description>`
 
 **操作：**
 
@@ -82,7 +81,7 @@ git checkout -b <branch-name>
 
 **已有同名分支时：** `git checkout <branch-name>` 继续使用。
 
-### 6. 执行前决策
+### 🚦 6. 执行前决策
 
 **worktree（进阶，按需启用）：** 仅在以下情况调用 `Skill("superpowers:using-git-worktrees")`：
 - 多模块跨越修改（前后端同时改动）
@@ -95,7 +94,7 @@ git checkout -b <branch-name>
 
 **反模式:** 在 main 分支上直接改代码、跳过 TDD 直接写实现。
 
-### 6. 按 Phase 执行
+### ⚡ 6. 按 Phase 执行
 
 **同一 Phase 内无依赖的 tasks → 并行 Agent 执行**
 
@@ -117,7 +116,7 @@ Agent(description="Task: 异常过滤器", prompt="实现 tasks.md task Y: ...",
 - 不阻塞: 其他独立 Agent 继续执行
 - 超时 task 由用户决定: 重试 / 跳过 / 手动处理
 
-### 7. 进度追踪
+### 📊 7. 进度追踪
 
 ```
 ## 执行中: <name>
@@ -129,7 +128,7 @@ Phase 1/3 | 总进度: 2/6
 
 每个 task 完成后标记 tasks.md: `- [ ]` → `- [x]`，补写实际耗时。
 
-### 8. 执行完成
+### ✅ 8. 执行完成
 
 ```
 ## 执行完成: <name>
@@ -145,8 +144,8 @@ Phase 1/3 | 总进度: 2/6
 6/6 完成 ✓  建议执行 "代码审查"。
 ```
 
-### 9. 暂停条件
+### ⏸️ 9. 暂停条件
 - 任务不清晰 / 设计问题 / 错误阻塞 / 多个超时 / 用户中断
 
-### 10. 审查不通过回环
+### 🔄 10. 审查不通过回环
 如果来自 review 的 ✗ 阻塞 → 只执行阻塞项对应的 task，完成后再次 "代码审查"。

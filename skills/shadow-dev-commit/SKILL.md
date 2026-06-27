@@ -2,15 +2,15 @@
 name: shadow-dev-commit
 description: 代码提交 — 推送功能分支到远端，自动创建 PR 并关联 Issue
 ---
-# Commit — 代码提交
+# 📦 Commit — 代码提交
 
 在 archive 之后，将功能分支推送远端并创建 PR。
 
-**前置条件:** apply 阶段已在功能分支上完成代码编写。分支命名如 `{issue-number}-feat-{name}`。
+**前置条件:** apply 阶段已在功能分支上完成代码编写。分支命名遵循 `openspec/config.yaml` 的 `rules.branch`。
 
-## 步骤
+## 📋 步骤
 
-### 1. 提交 openspec 文档
+### 📄 [1/6] 提交 openspec 文档
 
 在主仓库中提交 archive 阶段产生的 openspec 文档变更（归档目录 + 合并后的 specs）。
 
@@ -19,7 +19,9 @@ git add openspec/changes/archive/<name>/ openspec/specs/
 git commit -m "docs(openspec): 归档需求文档 <name>"
 ```
 
-### 2. 提交代码
+→ 下一步: [2/6] 提交代码
+
+### 💾 [2/6] 提交代码
 
 在当前功能分支上提交所有代码改动，遵守 conventional commits（`type(scope): description`）。
 
@@ -28,13 +30,17 @@ git add <changed-files>
 git commit -m "type(scope): description"
 ```
 
-### 3. 推送功能分支
+→ 下一步: [3/6] 推送功能分支
+
+### 🚀 [3/6] 推送功能分支
 
 ```bash
 git push origin <branch-name>
 ```
 
-### 4. 清理 worktree（仅 worktree 模式）
+→ 下一步: [4/6] 清理 worktree
+
+### 🧹 [4/6] 清理 worktree（仅 worktree 模式）
 
 如果 apply 阶段使用了 worktree，合入后清理：
 
@@ -48,7 +54,9 @@ git worktree prune
 
 未使用 worktree 则跳过此步。
 
-### 5. 创建 PR
+→ 下一步: [5/6] 创建 PR
+
+### 🔀 [5/6] 创建 PR
 
 PR 由 openspec 制品自动生成。
 
@@ -77,7 +85,9 @@ gh pr create --title "feat: <change-name>" --body "<filled-template>"
 
 **前置条件:** `gh auth status` 已登录。未登录时提示用户先执行 `gh auth login`。
 
-### 6. 输出
+→ 下一步: [6/6] 输出
+
+### 📊 [6/6] 输出
 
 ```
 ## 代码已提交
@@ -88,3 +98,7 @@ gh pr create --title "feat: <change-name>" --body "<filled-template>"
 **远端:** 已推送
 **PR:** <url>
 ```
+
+---
+
+✅ **commit 完成** — 代码已推送，PR 已创建。关注 CI 结果和 code review 反馈。

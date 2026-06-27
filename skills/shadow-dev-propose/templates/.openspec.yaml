@@ -1,0 +1,6 @@
+project: <PROJECT_NAME>
+change: <CHANGE_NAME>
+date: <yyyy-MM-dd>
+type: P
+status: proposed
+issue: <ISSUE_NUMBER>
