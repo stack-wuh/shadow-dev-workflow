@@ -30,7 +30,7 @@ metadata:
                 │                                         │
                 ⬇️                                         ⬇️
 propose ──➡️ discuss ──➡️ apply ──➡️ review ──➡️ archive ──➡️ commit
- 新建需求     需求讨论     开始执行    代码审查   文档归档   提交/PR
+ 需求对齐     技术方案     开始执行    代码审查   文档归档   提交/PR
                            ⬆️            │
                            │   ✓ 通过   │
                            │            │
@@ -39,9 +39,9 @@ propose ──➡️ discuss ──➡️ apply ──➡️ review ──➡️
 
 **状态转换规则：**
 
-- **propose** ➡️ **discuss**: 制品创建完成，进入需求讨论细化方案
+- **propose** ➡️ **discuss**: 需求制品完成，进入技术方案设计
 - **propose** ➡️ **ff**: 简单变更，跳过讨论直接生成全部制品
-- **discuss** ➡️ **apply**: 方案明确，开始执行
+- **discuss** ➡️ **apply**: 技术方案明确，design.md + tasks.md 就绪，开始执行
 - **apply** ➡️ **review**: 所有 task 完成，进入代码审查
 - **review ✓** ➡️ **archive**: 审查通过，归档 openspec 文档
 - **review ✗** ➡️ **apply**: 有阻塞项，回到执行修复（修复后再次 review）
@@ -66,7 +66,7 @@ propose ──➡️ discuss ──➡️ apply ──➡️ review ──➡️
 
 ⏭️ 下一步: [2/6] 需求讨论（full 模式）/ [3/6] 开始执行（ff 模式）
 
-### 🎨 [2/6] 需求讨论 ⚡ 优先级最高
+### 🎨 [2/6] 技术方案设计 ⚡ 优先级最高
 
 **意图关键词:** 提案 (最高优先级)、需求讨论、讨论一下、架构设计、技术方案、怎么设计、怎么实现、explore、design
 
@@ -76,7 +76,7 @@ propose ──➡️ discuss ──➡️ apply ──➡️ review ──➡️
 - "技术选型讨论"
 
 **路由:** `Skill("shadow-dev-discuss")`
-**描述:** 思考模式，只讨论不实现。可读代码、搜索、调研，但不写代码
+**描述:** 承接 propose 的需求制品，完成技术方案设计。只讨论不写代码，产出 design.md + tasks.md
 
 ⏭️ 下一步: [3/6] 开始执行
 
