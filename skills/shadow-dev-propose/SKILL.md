@@ -90,7 +90,7 @@ cat openspec/INDEX.md 2>/dev/null || echo "INDEX_NOT_FOUND"
 
 **brainstorming 的输出仅供思路参考，禁止写出到 `docs/superpowers/`。** 最终产物统一走 [6/9] + [7/9] 的 OpenSpec 模板，产出以下 5 个制品到 `openspec/changes/<name>/`：
 
-- `.openspec.yaml` — project/change/date/type/status/issue（可选）
+- `.openspec.yaml` — project/change/date/type/status/issue（必备，步骤 [9/9] 创建后填入）
 - `proposal.md` — 动机、变更范围、非目标
 - `design.md` — 技术方案、影响分析
 - `tasks.md` — 按 Phase 组织，标注涉及文件、预计耗时
@@ -137,16 +137,15 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 接下来可以 "需求讨论" 细化方案，或直接 "开始执行"。
 ```
 
-⏭️ 下一步: [9/9] 发布 GitHub Issue（可选）
+⏭️ 下一步: [9/9] 发布 GitHub Issue（必备）
 
-### 🐙 [9/9] 发布 GitHub Issue（可选）
+### 🐙 [9/9] 发布 GitHub Issue（必备）
 
-仅 "手动描述" 来源时生效。AskUserQuestion：
+所有来源均必须执行。AskUserQuestion：
 
 - "发布为 GitHub Issue" ➡️ `gh issue create --title "<proposal 标题>" --body "<proposal 摘要>" --label enhancement`
-- "跳过"
 
-创建成功后，将返回的 Issue 编号写入 `.openspec.yaml` 的 `issue` 字段。
+创建成功后，将 `gh issue create` 返回的 Issue URL 写入 `.openspec.yaml` 的 `issue` 字段（如 `https://github.com/stack-wuh/x.wuh.site/issues/N`）。此 Issue 编号将用于后续分支命名和 PR 关联。
 
 ---
 
@@ -210,7 +209,7 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 - 建议直接 "开始执行"。
 ```
 
-AskUserQuestion（仅 "手动描述" 来源）: "发布为 GitHub Issue" / "跳过"。
+AskUserQuestion：「发布为 GitHub Issue」➡️ `gh issue create --title "<proposal 标题>" --body "<proposal 摘要>" --label enhancement`。创建成功后，将返回的 Issue URL 写入 `.openspec.yaml` 的 `issue` 字段。
 
 ---
 

@@ -1,6 +1,6 @@
-project: <PROJECT_NAME>
-change: <CHANGE_NAME>
-date: <yyyy-MM-dd>
-type: P
+project: <项目名>
+change: <change-name>
+date: yyyy-MM-dd
+type: P|B
 status: proposed
-issue: <ISSUE_NUMBER>
+issue: <GitHub Issue URL，如 https://github.com/stack-wuh/x.wuh.site/issues/N>
