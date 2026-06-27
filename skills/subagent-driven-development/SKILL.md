@@ -97,9 +97,9 @@ Use the least powerful model that can handle each role to conserve cost and incr
 **Architecture, design, and review tasks**: use the most capable available model.
 
 **Task complexity signals:**
-- Touches 1-2 files with a complete spec → cheap model
-- Touches multiple files with integration concerns → standard model
-- Requires design judgment or broad codebase understanding → most capable model
+- Touches 1-2 files with a complete spec ➡️ cheap model
+- Touches multiple files with integration concerns ➡️ standard model
+- Requires design judgment or broad codebase understanding ➡️ most capable model
 
 ## Handling Implementer Status
 

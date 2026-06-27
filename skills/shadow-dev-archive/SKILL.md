@@ -12,7 +12,7 @@ description: 文档归档 — 将 openspec 变更文档移到 archive/，同步 
 
 审查结果必须为 ✓ 或用户对 ⚠ 明确决定归档。
 
-→ 下一步: [2/5] 迁移 change 目录
+⏭️ 下一步: [2/5] 迁移 change 目录
 
 ### 📁 [2/5] 迁移 change 目录
 
@@ -20,16 +20,16 @@ description: 文档归档 — 将 openspec 变更文档移到 archive/，同步 
 mv openspec/changes/<name> openspec/changes/archive/<name>
 ```
 
-→ 下一步: [3/5] 同步 specs
+⏭️ 下一步: [3/5] 同步 specs
 
 ### ✍️ [3/5] 同步 specs
 
 将 `openspec/changes/archive/<name>/specs/` 中的增量规格合并到 `openspec/specs/<domain>/`：
-- `## ADDED` → 追加到对应 spec 文件
-- `## MODIFIED` → 替换对应 Requirement
-- `## REMOVED` → 删除对应 Requirement
+- `## ADDED` ➡️ 追加到对应 spec 文件
+- `## MODIFIED` ➡️ 替换对应 Requirement
+- `## REMOVED` ➡️ 删除对应 Requirement
 
-→ 下一步: [4/5] 更新规范索引 INDEX.md
+⏭️ 下一步: [4/5] 更新规范索引 INDEX.md
 
 ### 📚 [4/5] 更新规范索引 INDEX.md
 
@@ -70,8 +70,8 @@ AskUserQuestion 展示提取的内容，让用户确认：
 
 ```
 
-- **领域已存在** → 替换该领域的条目（从 `## <domain>` 到下一个 `## ` 之间）
-- **领域不存在** → 按字母顺序插入新条目：
+- **领域已存在** ➡️ 替换该领域的条目（从 `## <domain>` 到下一个 `## ` 之间）
+- **领域不存在** ➡️ 按字母顺序插入新条目：
 
 ```markdown
 ## <domain> — <中文描述>
@@ -86,7 +86,7 @@ AskUserQuestion 展示提取的内容，让用户确认：
 grep -A 5 "^## <domain>" openspec/INDEX.md
 ```
 
-→ 下一步: [5/5] 验证归档结果
+⏭️ 下一步: [5/5] 验证归档结果
 
 ### 📊 [5/5] 验证归档结果
 

@@ -42,7 +42,7 @@ git log --oneline origin/main..HEAD 2>/dev/null || echo "(未推送提交)"
 AskUserQuestion：「确认提交以上变更？」
 - 选项：「确认继续」/「还需调整」
 
-→ 下一步: [2/5] 提交 openspec 文档
+⏭️ 下一步: [2/5] 提交 openspec 文档
 
 ### 📄 [2/5] 提交 openspec 文档
 
@@ -60,7 +60,7 @@ AskUserQuestion：「确认提交 openspec 文档？」
 
 确认后自动执行上述命令。
 
-→ 下一步: [3/5] 提交代码并推送
+⏭️ 下一步: [3/5] 提交代码并推送
 
 ### 🚀 [3/5] 提交代码并推送
 
@@ -88,7 +88,7 @@ git commit -m "<type>(<scope>): <description>"
 git push origin <branch-name>
 ```
 
-→ 下一步: [4/5] 创建 PR
+⏭️ 下一步: [4/5] 创建 PR
 
 ### 🔀 [4/5] 创建 PR
 
@@ -102,8 +102,8 @@ git push origin <branch-name>
 - `Verification` ← review 阶段的审查结论
 
 **4c. 关联 Issue：**
-- `.openspec.yaml` 有 `issue` 字段 → 自动关联
-- 没有 → AskUserQuestion：「选择 Issue」/「跳过」
+- `.openspec.yaml` 有 `issue` 字段 ➡️ 自动关联
+- 没有 ➡️ AskUserQuestion：「选择 Issue」/「跳过」
 
 **4d. 预览并确认：**
 
@@ -130,7 +130,7 @@ AskUserQuestion：「确认创建 PR？」
 
 确认后自动执行 `gh pr create`。未登录时先提示 `gh auth login`。
 
-→ 下一步: [5/5] 输出结果
+⏭️ 下一步: [5/5] 输出结果
 
 ### 📊 [5/5] 输出结果
 
