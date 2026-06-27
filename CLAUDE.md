@@ -1,6 +1,6 @@
 # Shadow的开发工作流
 
-> 个人级配置，所有项目共享。工作流统一入口为 shadow-openspec-superpowers-workflow（自动加载对应阶段的 phase skill）。
+> 个人级配置，所有项目共享。工作流统一入口为 shadow-dev-workflow（自动加载对应阶段的 phase skill）。
 > 项目特有配置（技术栈、命名规范等）见各项目的 CLAUDE.md。
 
 ## 分层规则
@@ -20,11 +20,11 @@
 
 | 场景 | Skill |
 |------|-------|
-| 新需求 | `shadow-openspec-superpowers-workflow-propose` |
-| 需求讨论/架构设计 | `shadow-openspec-superpowers-workflow-discuss` |
-| 开始执行 | `shadow-openspec-superpowers-workflow-apply` |
-| 代码审查/验收 | `shadow-openspec-superpowers-workflow-review` |
-| 归档 | `shadow-openspec-superpowers-workflow-archive` |
-| 提交/PR | `shadow-openspec-superpowers-workflow-commit` |
+| 新需求 | `shadow-dev-propose` |
+| 需求讨论/架构设计 | `shadow-dev-discuss` |
+| 开始执行 | `shadow-dev-apply` |
+| 代码审查/验收 | `shadow-dev-review` |
+| 归档 | `shadow-dev-archive` |
+| 提交/PR | `shadow-dev-commit` |
 | Bug/异常/测试失败 | `debugging-workflow` |
 | UI/UX 设计 | `ui-ux-pro-max` |

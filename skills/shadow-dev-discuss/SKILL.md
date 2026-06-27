@@ -1,5 +1,5 @@
 ---
-name: shadow-openspec-superpowers-workflow-discuss
+name: shadow-dev-discuss
 description: 需求讨论 — 思考模式，只讨论不实现。可读代码、搜索、调研，但不写代码
 ---
 # Discuss — 需求讨论

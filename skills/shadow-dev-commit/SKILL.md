@@ -1,5 +1,5 @@
 ---
-name: shadow-openspec-superpowers-workflow-commit
+name: shadow-dev-commit
 description: 代码提交 — 将 worktree 分支的改动合入功能主分支，推送远端，自动创建 PR 并关联 Issue
 ---
 # Commit — 代码提交

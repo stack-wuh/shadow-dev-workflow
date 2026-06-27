@@ -1,5 +1,5 @@
 ---
-name: shadow-openspec-superpowers-workflow-apply
+name: shadow-dev-apply
 description: 开始执行 — 按 tasks.md 执行代码实现，含预估、worktree 隔离、TDD 门禁、并行 Agent 调度
 ---
 # Apply — 开始执行

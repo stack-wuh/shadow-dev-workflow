@@ -1,5 +1,5 @@
 ---
-name: shadow-openspec-superpowers-workflow-propose
+name: shadow-dev-propose
 description: 创建新需求 — 支持 full 模式（brainstorming + 完整制品）和 ff 模式（快进一键生成）
 ---
 # Propose — 创建新需求

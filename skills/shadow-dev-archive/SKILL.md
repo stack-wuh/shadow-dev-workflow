@@ -1,5 +1,5 @@
 ---
-name: shadow-openspec-superpowers-workflow-archive
+name: shadow-dev-archive
 description: 文档归档 — 将 openspec 变更文档移到 archive/，同步 specs 到主规范。纯文档管理，不涉及 git 操作
 ---
 # Archive — 文档归档

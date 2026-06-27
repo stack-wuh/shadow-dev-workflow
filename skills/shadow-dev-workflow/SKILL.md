@@ -1,5 +1,5 @@
 ---
-name: shadow-openspec-superpowers-workflow
+name: shadow-dev-workflow
 description: >
   Shadow 的开发工作流统一入口 (6 环节): 新需求→需求讨论→开始执行→代码审查→文档归档→代码提交。
   整合 Superpowers 技能: propose 嵌 brainstorming, discuss 嵌 writing-plans, apply 嵌 worktree+TDD+subagent,
@@ -65,14 +65,14 @@ propose ──→ discuss ──→ apply ──→ review ──→ archive ─
 
 | 用户说 | 路由 |
 |--------|------|
-| "新需求"、"新增需求"、"创建需求"、"propose" | → `Skill("shadow-openspec-superpowers-workflow-propose")` |
-| "从 Issue 开始"、"GitHub Issue"、"从 Issue" | → `Skill("shadow-openspec-superpowers-workflow-propose")`（Issue 模式） |
-| "快进"、"fast-forward"、"ff"、"快速生成" | → `Skill("shadow-openspec-superpowers-workflow-propose")` (ff 模式) |
+| "新需求"、"新增需求"、"创建需求"、"propose" | → `Skill("shadow-dev-propose")` |
+| "从 Issue 开始"、"GitHub Issue"、"从 Issue" | → `Skill("shadow-dev-propose")`（Issue 模式） |
+| "快进"、"fast-forward"、"ff"、"快速生成" | → `Skill("shadow-dev-propose")` (ff 模式) |
 | "继续"、"continue"、"接着做"、"上次" | → **中断恢复**，自行路由到对应阶段 |
-| "需求讨论"、"讨论一下"、"架构设计"、"技术方案"、"怎么设计"、"explore"、"design" | → `Skill("shadow-openspec-superpowers-workflow-discuss")` |
-| "开始执行"、"开始前端"、"开始后端"、"执行任务"、"apply" | → `Skill("shadow-openspec-superpowers-workflow-apply")` |
-| "代码审查"、"review"、"验收"、"verify"、"审查代码" | → `Skill("shadow-openspec-superpowers-workflow-review")` |
-| "归档"、"需求完成"、"archive" | → `Skill("shadow-openspec-superpowers-workflow-archive")` |
-| "提交"、"commit"、"push"、"PR"、"创建PR"、"合并" | → `Skill("shadow-openspec-superpowers-workflow-commit")` |
+| "需求讨论"、"讨论一下"、"架构设计"、"技术方案"、"怎么设计"、"explore"、"design" | → `Skill("shadow-dev-discuss")` |
+| "开始执行"、"开始前端"、"开始后端"、"执行任务"、"apply" | → `Skill("shadow-dev-apply")` |
+| "代码审查"、"review"、"验收"、"verify"、"审查代码" | → `Skill("shadow-dev-review")` |
+| "归档"、"需求完成"、"archive" | → `Skill("shadow-dev-archive")` |
+| "提交"、"commit"、"push"、"PR"、"创建PR"、"合并" | → `Skill("shadow-dev-commit")` |
 
 已存在的变更名直接使用；否则让用户选择或新建议。

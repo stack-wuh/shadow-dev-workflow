@@ -1,5 +1,5 @@
 ---
-name: shadow-openspec-superpowers-workflow-review
+name: shadow-dev-review
 description: 代码审查 + 需求验收 — apply 完成后的质量门禁，合并代码审查、需求验收和代码质量检查
 ---
 # Review — 代码审查 + 需求验收
