@@ -54,6 +54,14 @@ openspec instructions apply --change "<name>" --json
 
 ### 5. 创建功能分支
 
+**执行前检查：** 确认当前不在 main/master 分支上直接修改代码。
+
+```bash
+git branch --show-current
+```
+
+如果在 main/master 上 → 必须先创建分支。如果在功能分支上 → 确认是否正确分支后继续。
+
 **每次执行必须创建新分支**，代码编写在分支上进行，不在 main 上直接改。
 
 **分支命名：**
