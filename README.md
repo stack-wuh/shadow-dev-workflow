@@ -1,17 +1,8 @@
 # shadow-dev-workflow
 
-基于 OpenSpec + Superpowers 的 6 阶段结构化开发工作流，作为 Claude Code 插件使用。
+基于 OpenSpec 的 6 阶段结构化开发工作流，作为 Claude Code 插件使用。**内置所需 superpowers 技能，开箱即用。**
 
 ## 安装
-
-### 前置依赖
-
-```bash
-# 安装 superpowers 插件（提供 brainstorming、writing-plans、TDD、verification 等基础技能）
-claude plugins install superpowers@claude-plugins-official
-```
-
-### 安装本插件
 
 ```bash
 claude plugins install stack-wuh/shadow-dev-workflow
@@ -50,9 +41,14 @@ propose ──→ discuss ──→ apply ──→ review ──→ archive ─
 
 ## 依赖
 
-- [superpowers](https://github.com/anthropics/claude-plugins-official) >= 5.0.0
 - OpenSpec CLI（用于 openspec 制品管理）
 - `gh` CLI（用于 GitHub Issues 集成和 PR 创建）
+
+## 内置技能
+
+插件内置了工作流所需的 8 个 superpowers 技能，无需额外安装：
+
+`brainstorming` · `writing-plans` · `using-git-worktrees` · `test-driven-development` · `dispatching-parallel-agents` · `subagent-driven-development` · `verification-before-completion` · `receiving-code-review`
 
 ## License
 
