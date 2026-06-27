@@ -1,10 +1,10 @@
 ---
 name: shadow-dev-apply
-description: 开始执行 — 按 tasks.md 执行代码实现，含预估、worktree 隔离、TDD 门禁、并行 Agent 调度
+description: 开始执行 — 按 tasks.md 执行代码实现，含分支创建、预估、TDD 门禁、并行 Agent 调度
 ---
 # Apply — 开始执行
 
-按 tasks.md 执行代码实现。执行前预估耗时 + 依赖分析，同 Phase 独立 task 并行 Agent 执行。
+按 tasks.md 执行代码实现。执行前创建功能分支、预估耗时 + 依赖分析，同 Phase 独立 task 并行 Agent 执行。
 
 ## 步骤
 
@@ -52,13 +52,40 @@ openspec instructions apply --change "<name>" --json
 确认执行计划？
 ```
 
-### 5. 执行前决策
+### 5. 创建功能分支
 
-**工作区隔离:** 计划涉及 2+ 文件修改时，调用 `Skill("superpowers:using-git-worktrees")` 创建隔离 worktree。
+**每次执行必须创建新分支**，代码编写在分支上进行，不在 main 上直接改。
+
+**分支命名：**
+
+- 从 `.openspec.yaml` 读取 `issue` 字段
+  - 有 Issue → `<issue-number>-feat-<change-name>`
+  - 无 Issue → `feat-<change-name>`
+- 例：`134-feat-map-footprint`、`feat-refactor-api`
+
+**操作：**
+
+```bash
+# 确保从 main 最新代码创建
+git checkout main
+git pull origin main
+git checkout -b <branch-name>
+```
+
+**已有同名分支时：** `git checkout <branch-name>` 继续使用。
+
+### 6. 执行前决策
+
+**worktree（进阶，按需启用）：** 仅在以下情况调用 `Skill("superpowers:using-git-worktrees")`：
+- 多模块跨越修改（前后端同时改动）
+- 需要并行 Agent 同时修改不同模块且需要隔离
+- 用户明确要求 worktree
+
+普通需求直接在功能分支上开发，不创建 worktree。
 
 **TDD 门禁:** 以下情况必须调用 `Skill("superpowers:test-driven-development")`：新功能实现、复杂重构、Bug 修复。流程：先写能复现的测试 → 确认失败 → 写最小实现 → 确认通过。
 
-**反模式:** 跳过 worktree 直接在主干预改多文件、跳过 TDD 直接写实现。
+**反模式:** 在 main 分支上直接改代码、跳过 TDD 直接写实现。
 
 ### 6. 按 Phase 执行
 
