@@ -34,7 +34,7 @@ git diff --stat
 
 AskUserQuestion：「确认执行？」（「确认执行」/「还需调整」）
 
-### 2. 提交代码
+### 💾 [2/4] 提交代码
 
 ```bash
 # 提交 openspec 文档
@@ -46,7 +46,7 @@ git add <changed-files>
 git commit -m "<type>(<scope>): <description> (#42)"
 ```
 
-### 3. 推送 + 创建 PR + 合并 + 清理
+### 🔀 [3/4] 推送 + 创建 PR + 合并 + 清理
 
 ```bash
 # 推送
@@ -65,7 +65,7 @@ git pull origin main
 
 **错误处理：** 任何步骤失败 → 立即停止 → 展示该步骤的手动命令 → 等待用户。不重试，不回退。
 
-### 4. 输出结果
+### 🎁 [4/4] 输出结果
 
 ```
 ## 已完成 ✓
