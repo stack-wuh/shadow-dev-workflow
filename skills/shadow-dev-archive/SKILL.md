@@ -97,15 +97,19 @@ ls openspec/changes/archive/<name>/
 **输出:**
 
 ```
-## 文档已归档
+## 文档已归档 ✓
 
 **变更:** <name>
 **归档位置:** openspec/changes/archive/<name>/
 **合并的 Specs:** <domain>
 **索引:** INDEX.md 已更新
-**下一步:** 建议执行 '提交' (commit/PR)
 ```
 
----
+⏹️ **archive 完成，立即停止。** 不执行以下任何操作：
+- `git push`
+- `gh pr list / create / merge / view`
+- 检查 open PRs
+- 检查 origin/main 状态
+- 同步 main 分支
 
-✅ **archive 完成** — 下一步: "提交" (`shadow-dev-commit`)
+这些操作属于后续的 commit 阶段，不在 archive 范围内。
