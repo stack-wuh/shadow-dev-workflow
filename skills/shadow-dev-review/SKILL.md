@@ -121,11 +121,23 @@ ESLint Warning Checklist (用户决定):
 4. 修复完成后自动触发重新审查
 5. 直到 ✓ 或 ⚠（用户决定停止）
 
-⏭️ 下一步: [5/6] 代码简化
+⏭️ 下一步: [5/6] 简化建议
 
-### 🔧 [5/6] 代码简化
+### 🔧 [5/6] 简化建议
 
-审查通过后，调用 `Skill("simplify")` 检查：冗余代码、可简化的逻辑、不必要的抽象。
+审查通过后，启动 1 个 Agent 做简化检查——只看 `git diff`，不做并行审查：
+
+```ts
+Agent({
+  description: "Simplify changed code",
+  prompt: `Review this git diff for simplification issues only (not bugs). Flag: duplicate code, unnecessary abstraction, dead code, redundant computation. For each finding provide file, line, one-line summary, and the simpler form.
+
+Diff:
+${diffContent}`
+})
+```
+
+Agent 返回后逐条评估，只修真正值得修的。
 
 ⏭️ 下一步: [6/6] 处理审查反馈
 
