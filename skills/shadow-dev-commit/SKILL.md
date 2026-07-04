@@ -1,213 +1,77 @@
 ---
 name: shadow-dev-commit
-description: 代码提交 — 推送功能分支到远端，自动创建 PR 并关联 Issue
+description: 代码提交 — 推送、创建 PR、合并、清理分支一气呵成
 ---
 # 📦 Commit — 代码提交
 
-在 archive 之后，将功能分支推送远端并创建 PR。每个操作步骤均需用户确认后自动执行。
+archive 之后，一键完成：提交 → 推送 → 创建 PR → 合并 PR → 清理分支 → 切回 main。
 
-**前置条件:** apply 阶段已在功能分支上完成代码编写。分支命名遵循 `openspec/config.yaml` 的 `rules.branch`。
+**前置条件:** 代码已在功能分支上编写完成。
 
-### 🐙 GitHub 操作兼容
+## 步骤
 
-所有 `gh` / `git push` 命令默认使用原生方式；若不可用（沙箱环境），回退到 `curl` / HTTPS token 方案。
-
-**沙箱检测：** `gh auth status 2>/dev/null || echo "SANDBOX"` 或 `git push --dry-run 2>&1 | grep -q "Connection closed"`。
-
-**`{owner}/{repo}` 解析：** `gh repo view --json nameWithOwner 2>/dev/null -q .nameWithOwner || git remote get-url origin | sed 's|.*github.com[:/]||;s|\.git$||'`。
-
-**命令对照：**
-
-| 操作 | 正常模式 | 沙箱回退 |
-|------|---------|-----------|
-| 推送分支 | `git push origin <branch>` | `git push https://x-access-token:${GITHUB_TOKEN}@github.com/{owner}/{repo}.git <branch>` |
-| 创建 PR | `gh pr create --title "..." --body "..." --base main` | `curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/{owner}/{repo}/pulls" -d '{"title":"...","body":"...","head":"<branch>","base":"main"}'` |
-| 查询 Issue | `gh issue list -s open --json number,title` | `curl -s -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/{owner}/{repo}/issues?state=open&per_page=30"` |
-
-## 📋 步骤
-
-### 🔍 [1/5] 展示变更预览
-
-先收集当前 git 状态，列出所有待提交内容，让用户确认是否继续：
+### 1. 展示变更预览 + 确认
 
 ```bash
 git status
 git diff --stat
-git log --oneline origin/main..HEAD 2>/dev/null || echo "(未推送提交)"
 ```
 
-展示格式：
+展示待提交内容，让用户确认一次：
 
 ```
-## 待提交变更预览
+## 待提交变更
 
-**分支:** <branch-name>
-**未跟踪文件:** <N> 个
-**已修改文件:** <N> 个
-**本地提交:** <N> 个 (未推送)
+**分支:** 42-feat-相邻文章优化
 
 | 文件 | 状态 |
 |------|------|
-| openspec/changes/archive/<name>/... | A |
+| openspec/changes/archive/... | A |
 | packages/xxx/xxx.ts | M |
-| ...
 
-详细 diff 可以执行 git diff 查看。
+确认后自动完成: commit → push → create PR → merge PR → cleanup → checkout main
 ```
 
-AskUserQuestion：「确认提交以上变更？」
-- 选项：「确认继续」/「还需调整」
+AskUserQuestion：「确认执行？」（「确认执行」/「还需调整」）
 
-⏭️ 下一步: [2/5] 提交 openspec 文档
-
-### 📄 [2/5] 提交 openspec 文档
-
-展示即将执行的操作：
-
-```
-## 提交 openspec 文档
-
-git add openspec/changes/archive/<name>/ openspec/specs/
-git commit -m "docs(openspec): 归档需求文档 <name>"
-```
-
-AskUserQuestion：「确认提交 openspec 文档？」
-- 选项：「确认执行」/「跳过」
-
-确认后自动执行上述命令。
-
-⏭️ 下一步: [3/5] 提交代码并推送
-
-### ⚡ [3/5] 提交代码并推送
-
-**决策树：推送**
-
-```
-push → 成功 ✓ ──► [4/5] 创建 PR
-    │
-    ├── gh auth 失效 ──► 展示：gh auth refresh 命令 → 等待用户手动操作
-    │
-    ├── SSH/TLS 失败 ──► 尝试 1 次 HTTPS token 回退
-    │    │
-    │    ├── 成功 ──► [4/5]
-    │    └── 失败 ──► 停止！展示手动推送命令 → 等待用户
-    │
-    └── DNS/代理失败 ──► 停止！不重试 → 展示手动命令 → 等待用户
-
-⛔ 不尝试：多次重试、代理切换、unset 环境变量、休眠等待
-```
-
-**决策树：创建 PR**
-
-```
-gh pr create → 成功 ✓ ──► 输出 PR URL
-            │
-            ├── auth 失败 ──► 展示 gh auth login → 停止
-            │
-            └── 网络失败 ──► 展示 curl 命令或 PR 预览 → 停止
-
-⛔ 不尝试：API curl 回退、浏览器打开、多次重试
-```
-
-展示代码变更时，生成 conventional commit message：
-
-```
-## 提交代码并推送
-
-**分支:** <branch-name>
-**commit message:** <type>(<scope>): <description>
-
-**变更文件:**
-- <file1> — <说明>
-- <file2> — <说明>
-```
-
-AskUserQuestion：「确认提交代码并推送到远端？」
-- 选项：「确认执行」/「还需调整」
-
-确认后自动执行：
+### 2. 提交代码
 
 ```bash
+# 提交 openspec 文档
+git add openspec/changes/archive/<name>/ openspec/specs/
+git commit -m "docs(openspec): 归档需求文档 <name>"
+
+# 提交代码
 git add <changed-files>
-git commit -m "<type>(<scope>): <description>"
-git push origin <branch-name>
+git commit -m "<type>(<scope>): <description> (#42)"
 ```
 
-推送严格遵循上方决策树。失败后不自行重试，不切换网络模式，直接停止。
+### 3. 推送 + 创建 PR + 合并 + 清理
 
+```bash
+# 推送
+git push origin <branch>
 
-⏭️ 下一步: [4/5] 创建 PR
+# 创建 PR（squash merge 到 main）
+gh pr create --title "<type>: <change-name> (#42)" --body "<summary>" --base main
 
-### 🔀 [4/5] 创建 PR
+# 合并 PR（squash）
+gh pr merge --squash --delete-branch
 
-自动组装 PR 内容并预览：
-
-**4a. 读取模板** — `.github/PULL_REQUEST_TEMPLATE.md`
-
-**4b. 组装内容：**
-- `Summary` ← `proposal.md` 的动机/变更范围章节
-- `Changes` ← `tasks.md` 的任务列表（已完成的标 ✓）
-- `Verification` ← review 阶段的审查结论
-
-**4c. 关联 Issue：**
-- `.openspec.yaml` 有 `issue` 字段（如 `https://github.com/stack-wuh/x.wuh.site/issues/42`）➡️ PR body 末尾加 `Closes #42`
-- commit message 格式：`{type}({scope}): {description} (#42)`
-- 没有 Issue ➡️ AskUserQuestion：「选择 Issue」/「跳过」
-
-**4d. 预览并确认（决策树）：**
-
-```
-PR body 组装完毕
-
-AskUserQuestion: "确认创建 PR？"
-        ├── "确认执行" ──► gh pr create（最多 1 次）
-        │    │
-        │    ├── 成功 ──► 输出 PR URL
-        │    ├── auth 失效 ──► 展示 gh auth login → 停止
-        │    └── 网络失败 ──► 展示 PR 预览文本 + 手动命令 → 停止
-        │
-        └── "还需调整" ──► 等待用户指令
-
-⛔ 不尝试：curl API 回退、浏览器打开 URL、重复重试
+# 切回 main 并同步
+git checkout main
+git pull origin main
 ```
 
-```
-## PR 预览
+**错误处理：** 任何步骤失败 → 立即停止 → 展示该步骤的手动命令 → 等待用户。不重试，不回退。
 
-**标题:** <type>: <change-name>
-**关联 Issue:** #<N>
-
-## Summary
-<proposal 摘要>
-
-## Changes
-✓ <task 1>
-✓ <task 2>
-...
-
-## Verification
-<审查结论>
-```
-
-AskUserQuestion：「确认创建 PR？」
-- 选项：「确认执行」/「还需调整」
-
-确认后自动执行 `gh pr create`，严格遵循决策树。失败后不自行重试，不切换网络模式，直接停止。
-
-⏭️ 下一步: [5/5] 输出结果
-
-### 📊 [5/5] 输出结果
+### 4. 输出结果
 
 ```
-## 代码已提交 ✓
+## 已完成 ✓
 
-**功能分支:** <branch-name>
-**openspec 文档:** 已提交 (archive/<name> + specs)
-**代码提交:** <N> commits
-**远端:** 已推送
-**PR:** <url>
+**变更:** <change-name>
+**分支:** 已删除 <branch>
+**当前分支:** main
+**远端:** 已同步
 ```
-
----
-
-✅ **commit 完成** — 代码已推送，PR 已创建。关注 CI 结果和 code review 反馈。
