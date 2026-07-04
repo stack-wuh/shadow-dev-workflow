@@ -158,16 +158,45 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 
 ### 🐙 [9/9] 发布 GitHub Issue（必备）
 
-所有来源均必须执行。AskUserQuestion：
+需求收集完成后，必须创建 GitHub Issue 作为后续开发的身份标识。
 
-- 默认使用 gh CLI：`gh issue create -t "<proposal 标题>" -b "<proposal 摘要>" -l enhancement`。创建成功后从输出或 `gh issue view` 获取 Issue URL。
-- 沙箱回退：`curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/{owner}/{repo}/issues" -d '{"title":"<title>","body":"<body>","labels":["enhancement"]}'`。创建成功后从响应 `.html_url` 获取 Issue URL。
+AskUserQuestion：「是否发布为 GitHub Issue？」
 
-将 Issue URL 写入 `.openspec.yaml` 的 `issue` 字段（如 `https://github.com/stack-wuh/x.wuh.site/issues/N`）。此 Issue 编号将用于后续分支命名和 PR 关联。
+确认后自动创建 Issue：
+
+```bash
+gh issue create --title "<proposal 标题>" --body "<proposal 摘要>
 
 ---
+**Design:** openspec/changes/<name>/design.md
+**Tasks:** openspec/changes/<name>/tasks.md" --label enhancement
+```
 
-✅ **propose 完成** — 下一步: "需求讨论" (`shadow-dev-discuss`) 或 "开始执行" (`shadow-dev-apply`)
+沙箱回退：
+
+```bash
+curl -s -X POST \
+  -H "Authorization: token ${GITHUB_TOKEN}" \
+  -H "Accept: application/vnd.github+json" \
+  "https://api.github.com/repos/{owner}/{repo}/issues" \
+  -d '{"title":"<title>","body":"<body>","labels":["enhancement"]}'
+```
+
+创建成功后将 Issue URL 写入 `.openspec.yaml`：
+
+```yaml
+issue: https://github.com/stack-wuh/x.wuh.site/issues/42
+```
+
+**⚠️ Issue 编号的下游用途：**
+
+| 阶段 | 用途 |
+|------|------|
+| apply | 分支命名 `{issue-number}-{type}-{short-description}`（如 `42-feat-相邻文章优化`） |
+| commit | commit message 关联 `#42`，title 格式 `{type}: {title} (#42)` |
+| PR | PR body 自动链接 `Closes #42` |
+
+→ 下一步: [2/6] 需求讨论 (`shadow-dev-discuss`) 或 [3/6] 开始执行 (`shadow-dev-apply`)
 
 ---
 

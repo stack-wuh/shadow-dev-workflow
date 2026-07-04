@@ -118,8 +118,9 @@ git push origin <branch-name>  # 沙箱环境自动回退到 HTTPS token push（
 - `Verification` ← review 阶段的审查结论
 
 **4c. 关联 Issue：**
-- `.openspec.yaml` 有 `issue` 字段 ➡️ 自动关联
-- 没有 ➡️ AskUserQuestion：「选择 Issue」/「跳过」
+- `.openspec.yaml` 有 `issue` 字段（如 `https://github.com/stack-wuh/x.wuh.site/issues/42`）➡️ PR body 末尾加 `Closes #42`
+- commit message 格式：`{type}({scope}): {description} (#42)`
+- 没有 Issue ➡️ AskUserQuestion：「选择 Issue」/「跳过」
 
 **4d. 预览并确认：**
 

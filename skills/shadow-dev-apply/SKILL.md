@@ -81,8 +81,10 @@ git branch --show-current
 **分支命名：** 读取 `openspec/config.yaml` 的 `rules.branch` 确认命名规则（默认格式: `{issue-number}-{type}-{short-description}`，type 取值 feat/fix/refactor/docs/chore，short-description 使用中文 2-5 字）。
 
 - 从 `.openspec.yaml` 读取 `issue` 字段
-  - 有 Issue ➡️ `<issue-number>-<type>-<short-description>`
+  - 有 Issue URL（如 `https://github.com/stack-wuh/x.wuh.site/issues/42`）➡️ 提取编号 `42`，分支名 `42-feat-相邻文章优化`
   - 无 Issue ➡️ `<type>-<short-description>`
+
+**Issue 编号提取：** 从 URL 中提取最后一个 path segment（如 `/issues/42` → `42`）。
 
 **操作：**
 
