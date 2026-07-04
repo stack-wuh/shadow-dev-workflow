@@ -158,20 +158,10 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 
 ### 🐙 [9/9] 发布 GitHub Issue（必备）
 
-需求收集完成后，必须创建 GitHub Issue 作为后续开发的身份标识。
+需求制品完成后发布 Issue。AskUserQuestion 确认后执行：
 
-AskUserQuestion：「是否发布为 GitHub Issue？」
-
-**决策树：创建 Issue**
-
-```
-gh issue create → 成功 ✓ ──► 将 URL 写入 .openspec.yaml issue 字段
-            │
-            ├── auth 失效 ──► 展示 gh auth login → 停止
-            ├── network 失败 ──► 展示 curl 命令 → 停止
-            └── --label 不存在 ──► 去掉 label 重试（仅 1 次）
-
-⛔ 不尝试：curl API 回退、浏览器打开、重复重试
+```bash
+gh issue create --title "<proposal 标题>" --body "<proposal 摘要>" --label enhancement
 ```
 
 创建成功后将 Issue URL 写入 `.openspec.yaml`：
@@ -180,15 +170,14 @@ gh issue create → 成功 ✓ ──► 将 URL 写入 .openspec.yaml issue 字
 issue: https://github.com/stack-wuh/x.wuh.site/issues/42
 ```
 
-**⚠️ Issue 编号的下游用途：**
+失败则停止，展示手动命令。不重试。
+
+**下游用途：**
 
 | 阶段 | 用途 |
 |------|------|
-| apply | 分支命名 `{issue-number}-{type}-{short-description}`（如 `42-feat-相邻文章优化`） |
-| commit | commit message 关联 `#42`，title 格式 `{type}: {title} (#42)` |
-| PR | PR body 自动链接 `Closes #42` |
-
-→ 下一步: [2/6] 需求讨论 (`shadow-dev-discuss`) 或 [3/6] 开始执行 (`shadow-dev-apply`)
+| apply | 分支命名 `42-feat-相邻文章优化` |
+| commit | commit message `(#42)`，PR body `Closes #42` |
 
 ---
 
