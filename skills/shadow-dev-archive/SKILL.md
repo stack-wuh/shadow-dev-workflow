@@ -8,30 +8,48 @@ description: 文档归档 — 将 openspec 变更文档移到 archive/，同步 
 
 ## 📋 归档流程
 
-### 🔍 [1/5] 确认归档条件
+### 🔍 [1/6] 确认归档条件
 
 审查结果必须为 ✓ 或用户对 ⚠ 明确决定归档。
 
-⏭️ 下一步: [2/5] 迁移 change 目录
+⏭️ 下一步: [2/6] 验证 openspec 文档
 
-### 📁 [2/5] 迁移 change 目录
+### ✅ [2/6] 验证 openspec 文档
+
+在迁移目录之前，先验证文档结构和内容的正确性：
+
+```bash
+openspec validate <change-name>
+```
+
+验证内容：
+- `.openspec.yaml` 格式正确
+- `proposal.md` / `design.md` / `tasks.md` 结构完整
+- `specs/` 增量规格格式正确（`## ADDED` / `## MODIFIED` / `## REMOVED`）
+- 所有必需字段存在
+
+**失败处理：** 验证失败则立即停止，展示错误信息，不继续归档。用户修复后重新执行 archive。
+
+⏭️ 下一步: [3/6] 迁移 change 目录
+
+### 📁 [3/6] 迁移 change 目录
 
 ```bash
 mv openspec/changes/<name> openspec/changes/archive/<name>
 ```
 
-⏭️ 下一步: [3/5] 同步 specs
+⏭️ 下一步: [4/6] 同步 specs
 
-### ✍️ [3/5] 同步 specs
+### ✍️ [4/6] 同步 specs
 
 将 `openspec/changes/archive/<name>/specs/` 中的增量规格合并到 `openspec/specs/<domain>/`：
 - `## ADDED` ➡️ 追加到对应 spec 文件
 - `## MODIFIED` ➡️ 替换对应 Requirement
 - `## REMOVED` ➡️ 删除对应 Requirement
 
-⏭️ 下一步: [4/5] 更新规范索引 INDEX.md
+⏭️ 下一步: [5/6] 更新规范索引 INDEX.md
 
-### 📚 [4/5] 更新规范索引 INDEX.md
+### 📚 [5/6] 更新规范索引 INDEX.md
 
 归档完成后，更新 `openspec/INDEX.md`，维护各领域规范的关键词索引。
 
@@ -86,9 +104,9 @@ AskUserQuestion 展示提取的内容，让用户确认：
 grep -A 5 "^## <domain>" openspec/INDEX.md
 ```
 
-⏭️ 下一步: [5/5] 验证归档结果
+⏭️ 下一步: [6/6] 验证归档结果
 
-### 📊 [5/5] 验证归档结果
+### 📊 [6/6] 验证归档结果
 
 ```bash
 ls openspec/changes/archive/<name>/
