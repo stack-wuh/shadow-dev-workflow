@@ -162,24 +162,16 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 
 AskUserQuestion：「是否发布为 GitHub Issue？」
 
-确认后自动创建 Issue：
+**决策树：创建 Issue**
 
-```bash
-gh issue create --title "<proposal 标题>" --body "<proposal 摘要>
-
----
-**Design:** openspec/changes/<name>/design.md
-**Tasks:** openspec/changes/<name>/tasks.md" --label enhancement
 ```
+gh issue create → 成功 ✓ ──► 将 URL 写入 .openspec.yaml issue 字段
+            │
+            ├── auth 失效 ──► 展示 gh auth login → 停止
+            ├── network 失败 ──► 展示 curl 命令 → 停止
+            └── --label 不存在 ──► 去掉 label 重试（仅 1 次）
 
-沙箱回退：
-
-```bash
-curl -s -X POST \
-  -H "Authorization: token ${GITHUB_TOKEN}" \
-  -H "Accept: application/vnd.github+json" \
-  "https://api.github.com/repos/{owner}/{repo}/issues" \
-  -d '{"title":"<title>","body":"<body>","labels":["enhancement"]}'
+⛔ 不尝试：curl API 回退、浏览器打开、重复重试
 ```
 
 创建成功后将 Issue URL 写入 `.openspec.yaml`：

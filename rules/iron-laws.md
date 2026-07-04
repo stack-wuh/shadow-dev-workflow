@@ -29,3 +29,10 @@
 - **触发**：任何代码修改操作（commit、push、merge 之外的所有写入）
 - **做什么**：apply 阶段先创建功能分支再写代码；main 只接受 merge/PR 合入
 - **阻断**：在 main 分支上的 commit 直接驳回，必须 cherry-pick 到功能分支后重置 main
+
+## 5. 不要重复尝试 GH 操作
+
+- **防什么**：在 commit 阶段反复尝试 git push / gh pr create / gh pr merge，每次失败换一种方式重试
+- **触发**：任何 GH 网络操作（push/PR/merge/issue）
+- **做什么**：最多执行 1 次；失败后立即停止，输出手动命令 + PR 预览文本，等待用户操作
+- **阻断**：同一命令执行超过 1 次视为违规

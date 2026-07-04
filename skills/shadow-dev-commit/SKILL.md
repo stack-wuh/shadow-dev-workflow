@@ -78,9 +78,38 @@ AskUserQuestion：「确认提交 openspec 文档？」
 
 ⏭️ 下一步: [3/5] 提交代码并推送
 
-### 🚀 [3/5] 提交代码并推送
+### ⚡ [3/5] 提交代码并推送
 
-展示代码变更和时间线，生成 conventional commit message：
+**决策树：推送**
+
+```
+push → 成功 ✓ ──► [4/5] 创建 PR
+    │
+    ├── gh auth 失效 ──► 展示：gh auth refresh 命令 → 等待用户手动操作
+    │
+    ├── SSH/TLS 失败 ──► 尝试 1 次 HTTPS token 回退
+    │    │
+    │    ├── 成功 ──► [4/5]
+    │    └── 失败 ──► 停止！展示手动推送命令 → 等待用户
+    │
+    └── DNS/代理失败 ──► 停止！不重试 → 展示手动命令 → 等待用户
+
+⛔ 不尝试：多次重试、代理切换、unset 环境变量、休眠等待
+```
+
+**决策树：创建 PR**
+
+```
+gh pr create → 成功 ✓ ──► 输出 PR URL
+            │
+            ├── auth 失败 ──► 展示 gh auth login → 停止
+            │
+            └── 网络失败 ──► 展示 curl 命令或 PR 预览 → 停止
+
+⛔ 不尝试：API curl 回退、浏览器打开、多次重试
+```
+
+展示代码变更时，生成 conventional commit message：
 
 ```
 ## 提交代码并推送
@@ -101,8 +130,11 @@ AskUserQuestion：「确认提交代码并推送到远端？」
 ```bash
 git add <changed-files>
 git commit -m "<type>(<scope>): <description>"
-git push origin <branch-name>  # 沙箱环境自动回退到 HTTPS token push（见上方 GitHub 操作兼容）
+git push origin <branch-name>
 ```
+
+推送严格遵循上方决策树。失败后不自行重试，不切换网络模式，直接停止。
+
 
 ⏭️ 下一步: [4/5] 创建 PR
 
@@ -122,7 +154,22 @@ git push origin <branch-name>  # 沙箱环境自动回退到 HTTPS token push（
 - commit message 格式：`{type}({scope}): {description} (#42)`
 - 没有 Issue ➡️ AskUserQuestion：「选择 Issue」/「跳过」
 
-**4d. 预览并确认：**
+**4d. 预览并确认（决策树）：**
+
+```
+PR body 组装完毕
+
+AskUserQuestion: "确认创建 PR？"
+        ├── "确认执行" ──► gh pr create（最多 1 次）
+        │    │
+        │    ├── 成功 ──► 输出 PR URL
+        │    ├── auth 失效 ──► 展示 gh auth login → 停止
+        │    └── 网络失败 ──► 展示 PR 预览文本 + 手动命令 → 停止
+        │
+        └── "还需调整" ──► 等待用户指令
+
+⛔ 不尝试：curl API 回退、浏览器打开 URL、重复重试
+```
 
 ```
 ## PR 预览
@@ -145,7 +192,7 @@ git push origin <branch-name>  # 沙箱环境自动回退到 HTTPS token push（
 AskUserQuestion：「确认创建 PR？」
 - 选项：「确认执行」/「还需调整」
 
-确认后自动执行 `gh pr create`。沙箱环境回退到 API 方式（见上方 GitHub 操作兼容）。
+确认后自动执行 `gh pr create`，严格遵循决策树。失败后不自行重试，不切换网络模式，直接停止。
 
 ⏭️ 下一步: [5/5] 输出结果
 
