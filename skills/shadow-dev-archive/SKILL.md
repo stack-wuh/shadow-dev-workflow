@@ -104,4 +104,4 @@ ls openspec/changes/archive/<name>/
 **合并的 Specs:** <domain>
 ```
 
-⏹️ **立即停止。不 `git push`，不 `gh pr *`，不 `git checkout`，不检查网络状态。**
+⏹️ **立即停止。**
