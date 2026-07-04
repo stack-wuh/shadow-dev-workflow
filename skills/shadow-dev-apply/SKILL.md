@@ -2,7 +2,7 @@
 name: shadow-dev-apply
 description: 开始执行 — 按 tasks.md 执行代码实现，含分支创建、预估、TDD 门禁、并行 Agent 调度
 ---
-# 🚀 Apply — 开始执行
+# ⚡ Apply — 开始执行
 
 按 tasks.md 执行代码实现。执行前创建功能分支、预估耗时 + 依赖分析，同 Phase 独立 task 并行 Agent 执行。
 
@@ -16,7 +16,7 @@ description: 开始执行 — 按 tasks.md 执行代码实现，含分支创建�
 
 ⏭️ 下一步: [2/11] 检查状态
 
-### 🔍 [2/11] 检查状态
+### 🔎 [2/11] 检查状态
 
 ```bash
 openspec status --change "<name>" --json
@@ -28,7 +28,7 @@ openspec status --change "<name>" --json
 
 ⏭️ 下一步: [3/11] 获取执行指令
 
-### 📋 [3/11] 获取执行指令
+### 📜 [3/11] 获取执行指令
 
 ```bash
 openspec instructions apply --change "<name>" --json
@@ -38,7 +38,7 @@ openspec instructions apply --change "<name>" --json
 
 ⏭️ 下一步: [4/11] 预估耗时 + 依赖分析
 
-### ⏱️ [4/11] 预估耗时 + 依赖分析
+### 📊 [4/11] 预估耗时 + 依赖分析
 
 分析 tasks.md 中的每个 task:
 - **预估耗时**: 根据文件数、复杂度估算（新建 1 文件 ~5min，修改 ~3min，配置 ~2min）
@@ -114,7 +114,7 @@ git checkout -b <branch-name>
 
 ⏭️ 下一步: [7/11] 按 Phase 执行
 
-### ⚡ [7/11] 按 Phase 执行
+### 🚀 [7/11] 按 Phase 执行
 
 **同一 Phase 内无依赖的 tasks ➡️ 并行 Agent 执行**
 
@@ -139,7 +139,7 @@ Agent(description="Task: 异常过滤器", prompt="实现 tasks.md task Y: ...",
 
 ⏭️ 下一步: [8/11] 进度追踪
 
-### 📊 [8/11] 进度追踪
+### 📈 [8/11] 进度追踪
 
 ```
 ## 执行中: <name>
@@ -153,7 +153,7 @@ Phase 1/3 | 总进度: 2/6
 
 ⏭️ 下一步: [9/11] 执行完成
 
-### ✅ [9/11] 执行完成
+### ✔️ [9/11] 执行完成
 
 ```
 ## 执行完成: <name>

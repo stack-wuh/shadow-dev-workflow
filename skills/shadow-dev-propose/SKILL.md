@@ -2,9 +2,9 @@
 name: shadow-dev-propose
 description: 创建新需求 — 支持 full 模式（brainstorming + 完整制品）和 ff 模式（快进一键生成）
 ---
-# 💡 Propose — 创建新需求
+# 💫 Propose — 创建新需求
 
-## 🔀 入口
+## 🎯 入口
 
 根据上下文判断模式，无法判断时 AskUserQuestion：「完整需求对齐还是快进生成？」
 
@@ -14,7 +14,7 @@ description: 创建新需求 — 支持 full 模式（brainstorming + 完整制�
 
 **在了解用户需求之前，不要执行任何查阅或探索操作。**
 
-### 🐙 GitHub 操作
+### 🔗 GitHub 操作
 
 所有 `gh` 命令直接用 gh CLI。失败则停止，展示手动命令。不重试。
 
@@ -22,13 +22,13 @@ description: 创建新需求 — 支持 full 模式（brainstorming + 完整制�
 
 ## 📋 Full 模式 — 完整需求创建
 
-### 🔍 [1/9] 模式判断
+### 🎲 [1/9] 模式判断
 
 按入口规则确定 full 模式，无法判断时 AskUserQuestion。
 
 ⏭️ 下一步: [2/9] 需求来源选择
 
-### 📥 [2/9] 需求来源选择
+### 🌟 [2/9] 需求来源选择
 
 AskUserQuestion 选择需求来源：
 
@@ -45,7 +45,7 @@ AskUserQuestion 选择需求来源：
 
 ⏭️ 下一步: [3/9] 需求对齐
 
-### 🧠 [3/9] 需求对齐（brainstorming）
+### 💬 [3/9] 需求对齐（brainstorming）
 
 调用 `Skill("superpowers:brainstorming")` 对齐需求：
 
@@ -66,7 +66,7 @@ AskUserQuestion 选择需求来源：
 
 ⏭️ 下一步: [4/9] 查阅规范索引
 
-### 📚 [4/9] 查阅规范索引
+### 🔍 [4/9] 查阅规范索引
 
 需求已明确后，检查是否与已有规范冲突。
 
@@ -88,7 +88,7 @@ cat openspec/INDEX.md 2>/dev/null || echo "INDEX_NOT_FOUND"
 
 ⏭️ 下一步: [5/9] 确定变更命名
 
-### 🏷️ [5/9] 确定变更命名
+### 🏆 [5/9] 确定变更命名
 
 读取 `openspec/config.yaml` 的 `rules.proposal` 确认命名规则。
 
@@ -102,7 +102,7 @@ cat openspec/INDEX.md 2>/dev/null || echo "INDEX_NOT_FOUND"
 
 ⏭️ 下一步: [6/9] 创建变更目录
 
-### 📁 [6/9] 创建变更目录 ⚠️ 强制执行
+### ✨ [6/9] 创建变更目录 ⚠️ 强制执行
 
 ```bash
 mkdir -p openspec/changes/<name>/specs/<domain>
@@ -112,7 +112,7 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 
 ⏭️ 下一步: [7/9] 写入全部制品
 
-### ✍️ [7/9] 写入全部制品 ⚠️ 强制执行
+### 📝 [7/9] 写入全部制品 ⚠️ 强制执行
 
 **仅使用 OpenSpec 模板产出，禁止写出到 `docs/superpowers/` 路径。**
 
@@ -128,7 +128,7 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 
 ⏭️ 下一步: [8/9] 展示结果
 
-### 📊 [8/9] 展示结果
+### 🎁 [8/9] 展示结果
 
 ```
 ## 新需求已创建: <name>
@@ -143,7 +143,7 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 
 ⏭️ 下一步: [9/9] 发布 GitHub Issue（必备）
 
-### 🐙 [9/9] 发布 GitHub Issue（必备）
+### 🔗 [9/9] 发布 GitHub Issue（必备）
 
 需求制品完成后发布 Issue。AskUserQuestion 确认后执行：
 
@@ -181,13 +181,13 @@ issue: https://github.com/stack-wuh/x.wuh.site/issues/42
 
 ⏭️ 下一步: [2/5] 查阅规范索引
 
-### 📚 [2/5] 查阅规范索引
+### 🔍 [2/5] 查阅规范索引
 
 执行与 Full 模式 [4/9] 相同的规范检查流程。
 
 ⏭️ 下一步: [3/5] 创建变更目录
 
-### 📁 [3/5] 创建变更目录 ⚠️ 强制执行
+### ✨ [3/5] 创建变更目录 ⚠️ 强制执行
 
 遵循 `openspec/config.yaml` 命名规则，创建目录：
 
@@ -199,7 +199,7 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 
 ⏭️ 下一步: [4/5] 写入全部制品
 
-### ✍️ [4/5] 写入全部制品 ⚠️ 强制执行
+### 📝 [4/5] 写入全部制品 ⚠️ 强制执行
 
 **仅使用 OpenSpec 模板产出，禁止写出到 `docs/superpowers/` 路径。**
 
@@ -215,7 +215,7 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 
 ⏭️ 下一步: [5/5] 展示结果
 
-### 📊 [5/5] 展示结果
+### 🎁 [5/5] 展示结果
 
 ```
 ## 变更已快进生成: <name>
@@ -232,4 +232,8 @@ AskUserQuestion：「是否发布为 GitHub Issue？」确认后执行 `gh issue
 
 ---
 
-✅ **propose 完成** — 建议直接 "开始执行" (`shadow-dev-apply`)
+✅ **propose 完成**
+
+**下一步建议:**
+- 需要讨论技术方案 → 输入 "提案" 或 "discuss" (`shadow-dev-discuss`)
+- 技术方案已明确，可直接编码 → 输入 "开始执行" (`shadow-dev-apply`)

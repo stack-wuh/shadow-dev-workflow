@@ -2,19 +2,19 @@
 name: shadow-dev-archive
 description: 文档归档 — 将 openspec 变更文档移到 archive/，同步 specs 到主规范。纯文档管理，不涉及 git 操作
 ---
-# 📦 Archive — 文档归档
+# 💎 Archive — 文档归档
 
 将 openspec 变更文档移到 archive/，同步 specs 到主规范。**纯文档管理，不涉及 git 操作。**
 
 ## 📋 归档流程
 
-### 🔍 [1/6] 确认归档条件
+### ✅ [1/6] 确认归档条件
 
 审查结果必须为 ✓ 或用户对 ⚠ 明确决定归档。
 
 ⏭️ 下一步: [2/6] 验证 openspec 文档
 
-### ✅ [2/6] 验证 openspec 文档
+### 🔬 [2/6] 验证 openspec 文档
 
 在迁移目录之前，先验证文档结构和内容的正确性：
 
@@ -32,7 +32,7 @@ openspec validate <change-name>
 
 ⏭️ 下一步: [3/6] 迁移 change 目录
 
-### 📁 [3/6] 迁移 change 目录
+### 🚚 [3/6] 迁移 change 目录
 
 ```bash
 mv openspec/changes/<name> openspec/changes/archive/<name>
@@ -40,7 +40,7 @@ mv openspec/changes/<name> openspec/changes/archive/<name>
 
 ⏭️ 下一步: [4/6] 同步 specs
 
-### ✍️ [4/6] 同步 specs
+### 🔄 [4/6] 同步 specs
 
 将 `openspec/changes/archive/<name>/specs/` 中的增量规格合并到 `openspec/specs/<domain>/`：
 - `## ADDED` ➡️ 追加到对应 spec 文件
@@ -49,7 +49,7 @@ mv openspec/changes/<name> openspec/changes/archive/<name>
 
 ⏭️ 下一步: [5/6] 更新规范索引 INDEX.md
 
-### 📚 [5/6] 更新规范索引 INDEX.md
+### 📑 [5/6] 更新规范索引 INDEX.md
 
 归档完成后，更新 `openspec/INDEX.md`，维护各领域规范的关键词索引。
 
@@ -106,7 +106,7 @@ grep -A 5 "^## <domain>" openspec/INDEX.md
 
 ⏭️ 下一步: [6/6] 验证归档结果
 
-### 📊 [6/6] 验证归档结果
+### ✔️ [6/6] 验证归档结果
 
 ```bash
 ls openspec/changes/archive/<name>/
@@ -122,4 +122,6 @@ ls openspec/changes/archive/<name>/
 **合并的 Specs:** <domain>
 ```
 
-⏹️ **立即停止。**
+---
+
+✅ **archive 完成** — 下一步: "提交代码" (`shadow-dev-commit`)
