@@ -14,22 +14,9 @@ description: 创建新需求 — 支持 full 模式（brainstorming + 完整制�
 
 **在了解用户需求之前，不要执行任何查阅或探索操作。**
 
-### 🐙 GitHub 操作兼容
+### 🐙 GitHub 操作
 
-所有 `gh` 命令默认使用 gh CLI；若 `gh` 不可用（沙箱环境），回退到 `curl` + `GITHUB_TOKEN` 调用 [GitHub REST API](https://docs.github.com/en/rest)。
-
-**检测方法：** 先执行 `gh auth status 2>/dev/null`，失败则走 API。
-**API 认证：** `-H "Authorization: token $GITHUB_TOKEN"`。`$GITHUB_TOKEN` 从环境变量获取（桌面端自动注入）。
-
-**命令对照：**
-
-| 操作 | gh CLI | curl 回退 |
-|------|--------|-----------|
-| 列表 | `gh issue list --limit 20 --state open --json number,title,labels` | `curl -s "https://api.github.com/repos/{owner}/{repo}/issues?state=open&per_page=20"` |
-| 详情 | `gh issue view <N> --json title,body,labels` | `curl -s "https://api.github.com/repos/{owner}/{repo}/issues/<N>"` |
-| 创建 | `gh issue create -t "..." -b "..." -l enhancement` | `curl -s -X POST "https://api.github.com/repos/{owner}/{repo}/issues" -d '{"title":"...","body":"...","labels":["enhancement"]}'` |
-
-`{owner}/{repo}` 从 `gh repo view --json nameWithOwner 2>/dev/null` 或 `git remote get-url origin` 解析。
+所有 `gh` 命令直接用 gh CLI。失败则停止，展示手动命令。不重试。
 
 ---
 
@@ -239,8 +226,7 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 
 AskUserQuestion：
 
-- 默认使用 gh CLI：`gh issue create -t "<proposal 标题>" -b "<proposal 摘要>" -l enhancement`。创建成功后从输出或 `gh issue view` 获取 Issue URL。
-- 沙箱回退：`curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/{owner}/{repo}/issues" -d '{"title":"<title>","body":"<body>","labels":["enhancement"]}'`。创建成功后从响应 `.html_url` 获取 Issue URL。
+AskUserQuestion：「是否发布为 GitHub Issue？」确认后执行 `gh issue create`。失败则停止，展示手动命令。
 
 将 Issue URL 写入 `.openspec.yaml` 的 `issue` 字段。
 
