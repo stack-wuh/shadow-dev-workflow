@@ -145,10 +145,10 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 
 ### 🔗 [9/9] 发布 GitHub Issue（必备，自动）
 
-需求制品完成后立即发布 Issue，不再额外询问是否发布：
+需求制品完成后立即发布 Issue，不再额外询问是否发布。Issue label 必须按变更类型选择：`P`（新需求）使用 `feature`，`B`（bug）使用 `bug`：
 
 ```bash
-gh issue create --title "<proposal 标题>" --body "<proposal.md 核心摘要 + 变更名 + design/tasks 链接>" --label enhancement
+gh issue create --title "<proposal 标题>" --body "<proposal.md 核心摘要 + 变更名 + design/tasks 链接>" --label <issue-label>
 ```
 
 Issue 正文建议包含：
@@ -230,7 +230,7 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 - 建议直接 "开始执行"。
 ```
 
-自动执行 `gh issue create`。失败则停止，展示手动命令。
+自动执行 `gh issue create`，并按变更类型设置 Issue label：`P`（新需求）使用 `feature`，`B`（bug）使用 `bug`。失败则停止，展示手动命令。
 
 将 Issue URL 写入 `.openspec.yaml` 的 `issue` 字段，作为后续分支命名、PR 标题和自动关闭 Issue 的唯一关联来源。
 
