@@ -1,6 +1,7 @@
 # GH 操作铁律
 
-> 适用所有阶段（commit merge issue push），GH 操作最多执行 1 次，失败后立即停止输出手动命令。
+> 适用所有阶段（commit merge issue push），同一条 GH 命令最多执行 1 次，失败后立即停止输出手动命令。
+> 标准闭环是 `propose -> issue create -> apply -> archive -> commit -> PR create -> PR merge -> auto close issue`。
 
 ## 决策树
 
@@ -15,7 +16,7 @@
   - 切换网络模式（SSH→HTTPS、代理 on/off）
   - curl API 回退
   - 休眠等待
-  - gh pr merge（用户手动操作）
+  - 阶段外的 gh pr merge
 ```
 
 ## 执行前检查

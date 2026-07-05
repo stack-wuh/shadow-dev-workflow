@@ -2,6 +2,7 @@
 name: shadow-dev-workflow
 description: >
   Shadow 的开发工作流统一入口 (6 环节): 新需求➡️需求讨论➡️开始执行➡️代码审查➡️文档归档➡️代码提交。
+  提案阶段自动创建 GitHub Issue，提交阶段自动创建 PR、开启 auto-merge，并通过 Closes/Fixes 自动关闭关联 Issue。
   整合 Superpowers 技能: propose 嵌 brainstorming, discuss 嵌 writing-plans, apply 嵌 worktree+TDD+subagent,
   review 嵌 verification+code-review+simplify, archive 纯文档管理, commit 嵌 finishing-branch。
   失败回环: 审查 ✗ ➡️ 回到执行修复。
@@ -62,7 +63,7 @@ propose ──➡️ discuss ──➡️ apply ──➡️ review ──➡️
 - "帮我设计一个 xxx 功能"
 
 **路由:** `Skill("shadow-dev-propose")`
-**描述:** 创建新需求，支持 full 模式（brainstorming + 完整 openspec 制品）和 ff 模式（快进一键生成）
+**描述:** 创建新需求，支持 full 模式（brainstorming + 完整 openspec 制品）和 ff 模式（快进一键生成），并在结束时自动发布 GitHub Issue
 
 ⏭️ 下一步: [2/6] 需求讨论（full 模式）/ [3/6] 开始执行（ff 模式）
 
@@ -128,7 +129,7 @@ propose ──➡️ discuss ──➡️ apply ──➡️ review ──➡️
 - "push 到远端"、"发个 PR"
 
 **路由:** `Skill("shadow-dev-commit")`
-**描述:** 推送功能分支到远端，自动创建 PR 并关联 Issue
+**描述:** 推送功能分支到远端，自动创建 PR、开启 auto-merge，并通过 PR body 关闭关联 Issue
 
 ➡️ ✅ **工作流完成** — 关注 CI 结果和 code review 反馈
 

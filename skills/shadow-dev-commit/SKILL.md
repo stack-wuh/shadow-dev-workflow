@@ -1,10 +1,10 @@
 ---
 name: shadow-dev-commit
-description: 代码提交 — 推送、创建 PR、合并、清理分支一气呵成
+description: 代码提交 — 推送、创建 PR、合并、清理分支一气呵成，并自动关闭关联 Issue
 ---
 # 📦 Commit — 代码提交
 
-archive 之后，一键完成：提交 → 推送 → 创建 PR → 合并 PR → 清理分支 → 切回 main。
+archive 之后，一键完成：提交 → 推送 → 创建 PR → 开启 auto-merge → 清理分支 → 切回 main，并让关联 Issue 自动关闭。
 
 **前置条件:** 代码已在功能分支上编写完成。
 
@@ -17,7 +17,10 @@ git status
 git diff --stat
 ```
 
-展示待提交内容，让用户确认一次：
+展示待提交内容，让用户确认一次，并检查 `.openspec.yaml` 中的 `issue` 字段是否存在：
+
+- 如果 `issue` 为空，立即停止，要求先回到 `propose` 补齐 Issue
+- 如果 `issue` 存在，提取编号并继续
 
 ```
 ## 待提交变更
@@ -29,7 +32,7 @@ git diff --stat
 | openspec/changes/archive/... | A |
 | packages/xxx/xxx.ts | M |
 
-确认后自动完成: commit → push → create PR → merge PR → cleanup → checkout main
+确认后自动完成: commit → push → create PR → enable auto-merge → cleanup → checkout main → close Issue
 ```
 
 AskUserQuestion：「确认执行？」（「确认执行」/「还需调整」）
@@ -48,15 +51,17 @@ git commit -m "<type>(<scope>): <description> (#42)"
 
 ### 🔀 [3/4] 推送 + 创建 PR + 合并 + 清理
 
+先从 `.openspec.yaml` 的 `issue` 字段提取编号，作为 PR 标题和关闭关联的唯一来源。
+
 ```bash
 # 推送
 git push origin <branch>
 
-# 创建 PR（squash merge 到 main）
-gh pr create --title "<type>: <change-name> (#42)" --body "<summary>" --base main
+# 创建 PR（PR body 必须包含 Closes #42）
+gh pr create --title "<type>: <change-name> (#42)" --body "<summary>\n\nCloses #42" --base main
 
-# 合并 PR（squash）
-gh pr merge --squash --delete-branch
+# 开启自动合并（squash）
+gh pr merge --auto --squash --delete-branch
 
 # 切回 main 并同步
 git checkout main
@@ -74,4 +79,5 @@ git pull origin main
 **分支:** 已删除 <branch>
 **当前分支:** main
 **远端:** 已同步
+**Issue:** 已随 PR 自动合并后关闭
 ```

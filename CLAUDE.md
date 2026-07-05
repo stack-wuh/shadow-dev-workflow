@@ -1,6 +1,7 @@
 # Shadow的开发工作流
 
 > 个人级配置，所有项目共享。工作流统一入口为 shadow-dev-workflow（自动加载对应阶段的 phase skill）。
+> 标准闭环：提案自动创建 Issue -> 开发 -> 归档 -> 提交自动创建 PR、开启 auto-merge -> 通过 `Closes #N` 自动关闭 Issue。
 > 项目特有配置（技术栈、命名规范等）见各项目的 CLAUDE.md。
 
 ## 分层规则

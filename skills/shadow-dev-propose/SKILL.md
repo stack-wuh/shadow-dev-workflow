@@ -1,6 +1,6 @@
 ---
 name: shadow-dev-propose
-description: 创建新需求 — 支持 full 模式（brainstorming + 完整制品）和 ff 模式（快进一键生成）
+description: 创建新需求 — 支持 full 模式（brainstorming + 完整制品）和 ff 模式（快进一键生成），并在完成后自动发布 GitHub Issue
 ---
 # 💫 Propose — 创建新需求
 
@@ -143,13 +143,19 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 
 ⏭️ 下一步: [9/9] 发布 GitHub Issue（必备）
 
-### 🔗 [9/9] 发布 GitHub Issue（必备）
+### 🔗 [9/9] 发布 GitHub Issue（必备，自动）
 
-需求制品完成后发布 Issue。AskUserQuestion 确认后执行：
+需求制品完成后立即发布 Issue，不再额外询问是否发布：
 
 ```bash
-gh issue create --title "<proposal 标题>" --body "<proposal 摘要>" --label enhancement
+gh issue create --title "<proposal 标题>" --body "<proposal.md 核心摘要 + 变更名 + design/tasks 链接>" --label enhancement
 ```
+
+Issue 正文建议包含：
+- `proposal.md` 的核心摘要
+- 变更名 `<change-name>`
+- 关联的 `design.md` / `tasks.md` 路径
+- 如果是从 Issue 反推的需求，保留原始来源说明
 
 创建成功后将 Issue URL 写入 `.openspec.yaml`：
 
@@ -224,11 +230,9 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 - 建议直接 "开始执行"。
 ```
 
-AskUserQuestion：
+自动执行 `gh issue create`。失败则停止，展示手动命令。
 
-AskUserQuestion：「是否发布为 GitHub Issue？」确认后执行 `gh issue create`。失败则停止，展示手动命令。
-
-将 Issue URL 写入 `.openspec.yaml` 的 `issue` 字段。
+将 Issue URL 写入 `.openspec.yaml` 的 `issue` 字段，作为后续分支命名、PR 标题和自动关闭 Issue 的唯一关联来源。
 
 ---
 

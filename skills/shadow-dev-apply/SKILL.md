@@ -13,6 +13,8 @@ description: 开始执行 — 按 tasks.md 执行代码实现，含分支创建�
 - 有名称直接用
 - 否则从上下文推断，或 `openspec list --json` 让用户选
 - 提示: "将执行变更: <name>"
+- 优先读取 `.openspec.yaml` 的 `issue` 字段；闭环流程要求提案阶段已创建 Issue
+- 如果 `issue` 缺失，停止并提示先回到 `shadow-dev-propose` 补齐 Issue
 
 ⏭️ 下一步: [2/11] 检查状态
 
@@ -82,7 +84,7 @@ git branch --show-current
 
 - 从 `.openspec.yaml` 读取 `issue` 字段
   - 有 Issue URL（如 `https://github.com/stack-wuh/x.wuh.site/issues/42`）➡️ 提取编号 `42`，分支名 `42-feat-相邻文章优化`
-  - 无 Issue ➡️ `<type>-<short-description>`
+  - 无 Issue ➡️ `<type>-<short-description>`（仅兼容历史变更；标准闭环流程不应出现）
 
 **Issue 编号提取：** 从 URL 中提取最后一个 path segment（如 `/issues/42` → `42`）。
 
