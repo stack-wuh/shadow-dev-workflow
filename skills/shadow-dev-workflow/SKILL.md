@@ -6,7 +6,7 @@ description: >
   整合 Superpowers 技能: propose 嵌 brainstorming, discuss 嵌 writing-plans, apply 嵌 worktree+TDD+subagent,
   review 嵌 verification+code-review+simplify, archive 纯文档管理, commit 嵌 finishing-branch。
   失败回环: 审查 ✗ ➡️ 回到执行修复。
-  触发词: 提案 (优先级最高 ➡️ discuss); 新需求/propose; 需求讨论/explore/design; 开始执行/apply; 代码审查/review/verify; 归档/archive; 提交/commit/PR。
+  触发词: 提案/新提案/需求提案/新需求/propose ➡️ 新需求; 讨论提案/需求讨论/explore/design ➡️ 技术方案; 开始执行/apply; 代码审查/review/verify; 归档/archive; 提交/commit/PR。
   所有输出使用中文，关键字(tasks/proposal/specs/design)保留英文。
 license: MIT
 compatibility: Requires openspec CLI.
@@ -18,7 +18,9 @@ metadata:
 
 统一入口，按用户意图路由到各子流程。所有文档输出使用中文，结构化关键字保留英文。
 
-**⚡ 优先级路由:** 用户说出"提案"时，跳过所有其他意图匹配，直接路由到 [2/6] 需求讨论 (`shadow-dev-discuss`)。
+**⚡ 语义优先路由:** 用户说出"提案"时，默认表示创建新需求，路由到 [1/6] 新需求 (`shadow-dev-propose`)。只有当用户明确表达"讨论提案"、"技术方案"、"怎么实现"、"design"，或指定已有 change 名称继续设计时，才路由到 [2/6] 技术方案设计 (`shadow-dev-discuss`)。不要仅凭"提案"二字推断为 discuss。
+
+**歧义消解规则:** 当用户只说"提案"或"提案：xxx"时，不要查询已有活跃变更来猜测上下文，直接进入 [1/6] 新需求；若缺少需求内容，先询问一句"这次新需求要解决什么问题？"。只有出现"继续"、"上次"、"已有"、具体 change 名称，或用户明确要求基于现有提案讨论时，才进行中断恢复或进入 [2/6] 技术方案设计。
 
 变更命名: `YYYY-MM-DD-{kebab-case}`，如 `2026-05-01-add-comment-api`。
 
@@ -55,10 +57,10 @@ propose ──➡️ discuss ──➡️ apply ──➡️ review ──➡️
 
 ### 💡 [1/6] 新需求
 
-**意图关键词:** 新需求、新增需求、创建需求、propose、快进、fast-forward、ff、快速生成、从 Issue 开始、GitHub Issue
+**意图关键词:** 提案、新提案、需求提案、新需求、新增需求、创建需求、propose、快进、fast-forward、ff、快速生成、从 Issue 开始、GitHub Issue
 
 **典型提示词:**
-- "新需求：xxx"、"创建一个需求"、"帮我提个需求"
+- "提案：xxx"、"新需求：xxx"、"创建一个需求"、"帮我提个需求"
 - "从 Issue #42 开始"、"ff 快进生成"
 - "帮我设计一个 xxx 功能"
 
@@ -67,12 +69,12 @@ propose ──➡️ discuss ──➡️ apply ──➡️ review ──➡️
 
 ⏭️ 下一步: [2/6] 需求讨论（full 模式）/ [3/6] 开始执行（ff 模式）
 
-### 🎨 [2/6] 技术方案设计 ⚡ 优先级最高
+### 🎨 [2/6] 技术方案设计
 
-**意图关键词:** 提案 (最高优先级)、需求讨论、讨论一下、架构设计、技术方案、怎么设计、怎么实现、explore、design
+**意图关键词:** 需求讨论、讨论提案、讨论一下、已有提案、架构设计、技术方案、怎么设计、怎么实现、explore、design
 
 **典型提示词:**
-- "提案：xxx"、"讨论一下这个方案"、"帮我设计架构"
+- "讨论提案：xxx"、"讨论一下这个方案"、"帮我设计架构"
 - "这个需求怎么实现比较好？"、"explore 一下"
 - "技术选型讨论"
 
@@ -139,18 +141,18 @@ propose ──➡️ discuss ──➡️ apply ──➡️ review ──➡️
 
 | 用户说 | 环节 | 路由 |
 |--------|------|------|
-| "提案" | [2/6] | `Skill("shadow-dev-discuss")`（优先级最高） |
+| "提案"、"新提案"、"需求提案" | [1/6] | `Skill("shadow-dev-propose")`（默认创建新需求） |
 | "新需求"、"创建需求"、"propose" | [1/6] | `Skill("shadow-dev-propose")` |
 | "从 Issue 开始"、"GitHub Issue" | [1/6] | `Skill("shadow-dev-propose")`（Issue 模式） |
 | "快进"、"fast-forward"、"ff" | [1/6] | `Skill("shadow-dev-propose")`（ff 模式） |
 | "继续"、"continue"、"接着做"、"上次" | 自动 | **中断恢复**，自行路由到对应阶段 |
-| "提案"、"需求讨论"、"怎么设计"、"explore"、"design" | [2/6] | `Skill("shadow-dev-discuss")` |
+| "讨论提案"、"需求讨论"、"怎么设计"、"explore"、"design" | [2/6] | `Skill("shadow-dev-discuss")` |
 | "开始执行"、"apply"、"实现" | [3/6] | `Skill("shadow-dev-apply")` |
 | "代码审查"、"review"、"验收"、"verify" | [4/6] | `Skill("shadow-dev-review")` |
 | "归档"、"archive" | [5/6] | `Skill("shadow-dev-archive")` |
 | "提交"、"commit"、"push"、"PR" | [6/6] | `Skill("shadow-dev-commit")` |
 
-已存在的变更名直接使用；否则让用户选择或新建议。
+仅当用户提供具体 change 名称，或明确说"继续"、"上次"、"已有提案"时，才使用已有变更；否则不要扫描活跃变更来替用户猜上下文，按新需求处理。
 
 ---
 
