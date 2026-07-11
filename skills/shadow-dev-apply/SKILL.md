@@ -16,82 +16,18 @@ description: 开始执行 — 按 tasks.md 执行代码实现，含分支创建�
 - 优先读取 `.openspec.yaml` 的 `issue` 字段；闭环流程要求提案阶段已创建 Issue
 - 如果 `issue` 缺失，停止并提示先回到 `shadow-dev-propose` 补齐 Issue
 
-⏭️ 下一步: [2/11] 检查状态
-
-### 🔎 [2/11] 检查状态
-
-```bash
-openspec status --change "<name>" --json
-```
-
-- blocked ➡️ 提示先创建制品
-- all_done ➡️ 提示已完成，进入审查
-- 否则继续
-
-⏭️ 下一步: [3/11] 获取执行指令
-
-### 📜 [3/11] 获取执行指令
+### 🌿 [2/11] 创建功能分支
+**硬性门禁：** 在 main/master 分支上直接修改代码是禁止的。当前步骤必须先将分支切换到功能分支上。
 
 ```bash
-openspec instructions apply --change "<name>" --json
+git branch --show-current
 ```
 
-读取所有 `contextFiles`。
-
-⏭️ 下一步: [4/11] 预估耗时 + 依赖分析
-
-### 📖 [3b/11] 读取复用信息
-
-`.openspec.yaml` 的 `apply` 和 `library` 段包含了 discuss 阶段准备好的复用分析和执行指引。
-
-1. **读执行指引:** 展开 `apply.instructions` 了解本需求的执行边界
-2. **读复用列表:** 展开 `library.reuse` 获取需要复用的组件列表
-3. **读 demo:** 对每个复用组件：
-   - 在 `openspec/navigation-guide.yaml` 中找到对应条目，确认 import path
-   - 读取其 `scenarios` 中指向的 demo 文件（`openspec/specs/<demo>/index.md` + `demo.jsx`）
-   - 按 demo 示例如法使用
-4. **读 context files:** 展开 `apply.contextFiles` 确认还需读取哪些文件
-5. **标注复用信息到 tasks.md** — 在每个 task 旁标注：
-
-```markdown
-### Task 1: 文章卡片列表
-**复用:** Card (@wuh.site/components/card) → demo: wuh.site/demo-blog-list
-**文件:** app/blog/page.tsx
-```
-
-如果 `library` 段不存在（如 ff 模式跳过了 discuss），跳过此步。
+- 如果当前已在功能分支上 → 确认正确后继续
+- 如果当前在 main/master 上 → 必须先执行下面的分支创建操作
+- 如果当前在 main/master 上 → 以下是分支创建操作
 
 
-
-### 📊 [4/11] 预估耗时 + 依赖分析
-
-分析 tasks.md 中的每个 task:
-- **预估耗时**: 根据文件数、复杂度估算（新建 1 文件 ~5min，修改 ~3min，配置 ~2min）
-- **依赖关系**: 标注相互依赖，构建 DAG
-- **分组**: 同一层级、无互相依赖的 task 归入同一 Phase
-
-输出预估表:
-
-```
-## 执行计划: <name>
-
-| Phase | Task | 预估 | 依赖 |
-|-------|------|------|------|
-| 1 | 创建 common 接口 | 5min | - |
-| 1 | 异常过滤器 | 5min | - |
-| 2 | 修复 DTO | 8min | common 接口 |
-| 2 | 标准化 service | 8min | common 接口 |
-| 3 | 注册全局过滤器 | 3min | Phase 2 |
-| 3 | 更新 controller | 5min | Phase 2 |
-
-总预估: 34min | Phase 1 可并行: 2 tasks ➡️ Agent A + Agent B
-
-确认执行计划？
-```
-
-⏭️ 下一步: [5/11] 创建功能分支
-
-### 🌿 [5/11] 创建功能分支
 
 **执行前检查：** 确认当前不在 main/master 分支上直接修改代码。
 
@@ -122,7 +58,82 @@ git checkout -b <branch-name>
 
 **已有同名分支时：** `git checkout <branch-name>` 继续使用。
 
+⏭️ 下一步: [3/11] 检查状态
+
+### 🔎 [3/11] 检查状态
+
+```bash
+openspec status --change "<name>" --json
+```
+
+- blocked ➡️ 提示先创建制品
+- all_done ➡️ 提示已完成，进入审查
+- 否则继续
+
+⏭️ 下一步: [4/11] 获取执行指令
+
+### 📜 [4/11] 获取执行指令
+
+```bash
+openspec instructions apply --change "<name>" --json
+```
+
+读取所有 `contextFiles`。
+
+⏭️ 下一步: [4b/11] 读取复用信息
+
+### 📖 [4b/11] 读取复用信息
+
+`.openspec.yaml` 的 `apply` 和 `library` 段包含了 discuss 阶段准备好的复用分析和执行指引。
+
+1. **读执行指引:** 展开 `apply.instructions` 了解本需求的执行边界
+2. **读复用列表:** 展开 `library.reuse` 获取需要复用的组件列表
+3. **读 demo:** 对每个复用组件：
+   - 在 `openspec/navigation-guide.yaml` 中找到对应条目，确认 import path
+   - 读取其 `scenarios` 中指向的 demo 文件（`openspec/specs/<demo>/index.md` + `demo.jsx`）
+   - 按 demo 示例如法使用
+4. **读 context files:** 展开 `apply.contextFiles` 确认还需读取哪些文件
+5. **标注复用信息到 tasks.md** — 在每个 task 旁标注：
+
+```markdown
+### Task 1: 文章卡片列表
+**复用:** Card (@wuh.site/components/card) → demo: wuh.site/demo-blog-list
+**文件:** app/blog/page.tsx
+```
+
+如果 `library` 段不存在（如 ff 模式跳过了 discuss），跳过此步。
+
+
+
+### 📊 [5/11] 预估耗时 + 依赖分析
+
+分析 tasks.md 中的每个 task:
+- **预估耗时**: 根据文件数、复杂度估算（新建 1 文件 ~5min，修改 ~3min，配置 ~2min）
+- **依赖关系**: 标注相互依赖，构建 DAG
+- **分组**: 同一层级、无互相依赖的 task 归入同一 Phase
+
+输出预估表:
+
+```
+## 执行计划: <name>
+
+| Phase | Task | 预估 | 依赖 |
+|-------|------|------|------|
+| 1 | 创建 common 接口 | 5min | - |
+| 1 | 异常过滤器 | 5min | - |
+| 2 | 修复 DTO | 8min | common 接口 |
+| 2 | 标准化 service | 8min | common 接口 |
+| 3 | 注册全局过滤器 | 3min | Phase 2 |
+| 3 | 更新 controller | 5min | Phase 2 |
+
+总预估: 34min | Phase 1 可并行: 2 tasks ➡️ Agent A + Agent B
+
+确认执行计划？
+```
+
 ⏭️ 下一步: [6/11] 执行前决策
+
+
 
 ### 🚦 [6/11] 执行前决策
 

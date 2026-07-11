@@ -6,7 +6,18 @@ description: 代码提交 — 推送、创建 PR、合并、清理分支一气�
 
 archive 之后，一键完成：提交 → 推送 → 创建 PR → 开启 auto-merge → 清理分支 → 切回 main，并让关联 Issue 自动关闭。
 
-**前置条件:** 代码已在功能分支上编写完成。
+## 0. 检查分支状态
+
+```bash
+git branch --show-current
+```
+
+- **如果在功能分支上** → 正常走 PR 流程（后续步骤自动完成）
+- **如果在 main 上** → 检查 `openspec/changes/archive/<change-name>/` 是否存在：
+  - 存在 → 说明 archive 已完成，直接提交文档改动即可（跳过 PR 流程）
+  - 不存在 → 要求先走 archive 流程，不要直接提交
+
+分支确认后继续下一步。
 
 ## 步骤
 

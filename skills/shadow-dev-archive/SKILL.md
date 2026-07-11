@@ -4,7 +4,7 @@ description: 文档归档 — 将 openspec 变更文档移到 archive/，同步 
 ---
 # 💎 Archive — 文档归档
 
-将 openspec 变更文档移到 archive/，同步 specs 到主规范。**纯文档管理，不涉及 git 操作。**
+将 openspec 变更文档移到 archive/，同步 specs 到主规范。部分涉及 git 操作（状态更新 + 提交归档文档）。
 
 ## 📋 归档流程
 
@@ -36,6 +36,13 @@ openspec validate <change-name>
 
 ```bash
 mv openspec/changes/<name> openspec/changes/archive/<name>
+```
+
+**更新状态：** 迁移后，将归档目录中 `.openspec.yaml` 的 `status` 更新为 `archived`：
+
+```bash
+# 手动修改 openspec/changes/archive/<name>/.openspec.yaml
+# status: applied → status: archived
 ```
 
 ⏭️ 下一步: [4/6] 同步 specs
