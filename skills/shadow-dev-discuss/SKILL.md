@@ -40,6 +40,27 @@ description: 技术方案设计 — 思考模式，只讨论不实现。可读�
 **反模式:** 用户说"知道了"就结束、没追问边界条件就下结论。
 
 ⏭️ 下一步: [3/5] 代码探索
+#### 组件复用检索
+
+讨论到一定阶段后（通常是在明确了 UI 元素之后），主动检索现有组件库：
+
+1. **读取领域关键字:** 读取 `.openspec.yaml` 的 `domain.keywords`
+2. **读取导航指南:** 读取 `openspec/navigation-guide.yaml` 的组件索引
+3. **关键字匹配:** 用 domain.keywords 逐个匹配 navigation-guide 中每个组件的 keywords 字段
+4. **读取 demo:** 匹配到的组件，读取其 `scenarios` 中关联的 demo 文件（`index.md` + `demo.jsx`）
+5. **标记决策:** 匹配不到的 UI 需求标记为"新建"
+6. **输出结果（对话中展示）:**
+
+```
+组件        | 匹配度 | 决策 | 引用 demo
+Card       | 高    | 复用  | wuh.site/demo-blog-list
+Tag        | 高    | 复用  | wuh.site/demo-tag-filter
+FilterBar  | 低    | 新建  | -
+```
+
+**检索完成后** 进入下一步代码探索。
+
+
 
 ### 🔍 [3/5] 代码探索
 
@@ -65,6 +86,27 @@ description: 技术方案设计 — 思考模式，只讨论不实现。可读�
 - **数据模型:** Schema 变更、迁移计划
 - **接口设计:** API contract（路径、参数、响应）
 - **影响分析:** 修改范围、风险点、回滚策略
+
+#### 更新 .openspec.yaml 复用信息
+
+design.md 确认后，将复用分析结果写入 `.openspec.yaml` 的 `library` 段：
+
+```yaml
+library:
+  reuse:
+    - component: Card
+      from: "@wuh.site/components/card"
+      for: 文章卡片展示
+      demo: wuh.site/demo-blog-list
+  new:
+    - component: FilterBar
+      at: packages/components/filter-bar
+      for: 标签组合筛选栏
+```
+
+已在 design.md 中记录的资源不再重复写入，design.md 已有记录的不再写入 .openspec.yaml 以防冗余。
+
+
 
 ⏭️ 下一步: [5/5] 生成实施计划
 
@@ -108,6 +150,25 @@ status: proposed
 ```
 
 AskUserQuestion 让用户确认计划。计划确认后建议 "开始执行"。
+
+#### 写入 apply 阶段指令
+
+实施计划确认后，将执行指引写入 `.openspec.yaml` 的 `apply` 段：
+
+```yaml
+apply:
+  instructions: |
+    本需求聚焦 <领域范围>。
+    所有组件优先从 @wuh.site/components/* 引用，
+    新建组件统一放在 packages/components/ 下。
+    具体任务和顺序见 tasks.md。
+  contextFiles:
+    - openspec/navigation-guide.yaml
+    - openspec/changes/<name>/design.md
+    - openspec/changes/<name>/tasks.md
+  tasks: tasks.md
+```
+
 
 **反模式:** 跳过计划直接写代码、任务粒度过大、不标注依赖、计划写入 superpowers 默认路径而非 openspec。
 

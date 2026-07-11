@@ -40,6 +40,29 @@ openspec instructions apply --change "<name>" --json
 
 ⏭️ 下一步: [4/11] 预估耗时 + 依赖分析
 
+### 📖 [3b/11] 读取复用信息
+
+`.openspec.yaml` 的 `apply` 和 `library` 段包含了 discuss 阶段准备好的复用分析和执行指引。
+
+1. **读执行指引:** 展开 `apply.instructions` 了解本需求的执行边界
+2. **读复用列表:** 展开 `library.reuse` 获取需要复用的组件列表
+3. **读 demo:** 对每个复用组件：
+   - 在 `openspec/navigation-guide.yaml` 中找到对应条目，确认 import path
+   - 读取其 `scenarios` 中指向的 demo 文件（`openspec/specs/<demo>/index.md` + `demo.jsx`）
+   - 按 demo 示例如法使用
+4. **读 context files:** 展开 `apply.contextFiles` 确认还需读取哪些文件
+5. **标注复用信息到 tasks.md** — 在每个 task 旁标注：
+
+```markdown
+### Task 1: 文章卡片列表
+**复用:** Card (@wuh.site/components/card) → demo: wuh.site/demo-blog-list
+**文件:** app/blog/page.tsx
+```
+
+如果 `library` 段不存在（如 ff 模式跳过了 discuss），跳过此步。
+
+
+
 ### 📊 [4/11] 预估耗时 + 依赖分析
 
 分析 tasks.md 中的每个 task:

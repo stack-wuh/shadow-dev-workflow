@@ -1,6 +1,40 @@
+# ================================================================
+# OpenSpec 变更元数据
+# ================================================================
 project: <项目名>
 change: <change-name>
 date: yyyy-MM-dd
 type: P|B
 status: proposed
-issue: <GitHub Issue URL，如 https://github.com/stack-wuh/x.wuh.site/issues/N>
+
+# [propose 产出] 领域信息 — 用于 discuss 阶段检索导航指南
+domain:
+  name: <需求名称>
+  keywords: []
+  description: <一句话描述>
+
+# [discuss 产出] 复用分析 — 标识组件复用/新建决策
+# library:
+#   reuse:
+#     - component: <组件名>
+#       from: <import path>
+#       for: <用途>
+#       demo: <关联的 demo 目录名>
+#   new:
+#     - component: <组件名>
+#       at: <创建路径>
+#       for: <用途>
+
+# [discuss 产出] API 契约（如有前后端联动）
+# apiContracts:
+#   frontend:
+#     - endpoint: <路径>
+#       params: {}
+
+# [discuss 产出] Apply 阶段指令
+# apply:
+#   instructions: |
+#     <执行指引>
+#   contextFiles:
+#     - <文件路径>
+#   tasks: tasks.md

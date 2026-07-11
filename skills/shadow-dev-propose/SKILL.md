@@ -125,6 +125,29 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 5. 读取 `templates/spec.md` ➡️ 填入 `openspec/changes/<name>/specs/<domain>/spec.md`
 
 模板文件位置：`skills/shadow-dev-propose/templates/`。不得跳过，不得遗漏。
+**填充领域关键字：** 写入 .openspec.yaml 后，从 proposal.md 的内容中提取领域关键字，补充 `domain` 段：
+
+```yaml
+domain:
+  name: <需求标题>
+  keywords:
+    - <核心用途中文>
+    - <核心用途英文>
+    - <页面/上下文>
+    - <视觉元素>
+    - <交互行为>
+    - <数据流>
+  description: <一句话描述>
+```
+
+关键字从以下维度提取，覆盖中英文：
+- 核心用途（如 `blog` / `list` / `博客` / `列表`）
+- 页面/上下文（如 `homepage` / `blogPage` / `首页` / `博客页`）
+- 视觉元素（如 `card` / `tag` / `cover` / `卡片` / `标签`）
+- 交互行为（如 `filter` / `click` / `navigate` / `筛选` / `跳转`）
+- 数据流（如 `fetch` / `api` / `sync` / `请求`）
+
+
 
 ⏭️ 下一步: [8/9] 展示结果
 
@@ -218,6 +241,29 @@ mkdir -p openspec/changes/<name>/specs/<domain>
 5. 读取 `templates/spec.md` ➡️ 填入 `openspec/changes/<name>/specs/<domain>/spec.md`
 
 模板文件位置：`skills/shadow-dev-propose/templates/`。不得跳过，不得遗漏。
+**填充领域关键字：** 写入 .openspec.yaml 后，从 proposal.md 的内容中提取领域关键字，补充 `domain` 段：
+
+```yaml
+domain:
+  name: <需求标题>
+  keywords:
+    - <核心用途中文>
+    - <核心用途英文>
+    - <页面/上下文>
+    - <视觉元素>
+    - <交互行为>
+    - <数据流>
+  description: <一句话描述>
+```
+
+关键字从以下维度提取，覆盖中英文：
+- 核心用途（如 `blog` / `list` / `博客` / `列表`）
+- 页面/上下文（如 `homepage` / `blogPage` / `首页` / `博客页`）
+- 视觉元素（如 `card` / `tag` / `cover` / `卡片` / `标签`）
+- 交互行为（如 `filter` / `click` / `navigate` / `筛选` / `跳转`）
+- 数据流（如 `fetch` / `api` / `sync` / `请求`）
+
+
 
 ⏭️ 下一步: [5/5] 展示结果
 
