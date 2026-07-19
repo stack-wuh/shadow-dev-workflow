@@ -1,94 +1,89 @@
 ---
 name: shadow-dev-commit
-description: 代码提交 — 推送、创建 PR、合并、清理分支一气呵成，并自动关闭关联 Issue
+description: Agent Loop 提交 — 从单一 .openspec.yaml 读取门禁、Issue 与发布状态，完成 PR 闭环
 ---
-# 📦 Commit — 代码提交
+# 📦 Commit — Agent Loop 提交
 
-archive 之后，一键完成：提交 → 推送 → 创建 PR → 开启 auto-merge → 清理分支 → 切回 main，并让关联 Issue 自动关闭。
+## 输入边界
 
-## 0. 检查分支状态
+对 `schema: agent-loop/v1`，先读取 `.openspec.yaml`：
 
-```bash
-git branch --show-current
+```yaml
+change:
+review:
+archive:
+commit:
+runtime:
 ```
 
-- **如果在功能分支上** → 正常走 PR 流程（后续步骤自动完成）
-- **如果在 main 上** → 检查 `openspec/changes/archive/<change-name>/` 是否存在：
-  - 存在 → 说明 archive 已完成，直接提交文档改动即可（跳过 PR 流程）
-  - 不存在 → 要求先走 archive 流程，不要直接提交
+提交门禁只由 YAML 状态决定；归档产物仍由 `archive` 阶段维护。必要时可按 YAML `artifacts` 清单将归档目录、主 specs、场景 demo 和 INDEX 一起纳入 commit。若 schema 不是 `agent-loop/v1`，读取 `skills/shadow-dev-workflow/references/legacy-markdown/shadow-dev-commit.md` 后使用 legacy 规则。
 
-分支确认后继续下一步。
+## [1/5] 提交门禁
 
-## 步骤
+必须满足：
 
-### 1. 展示变更预览 + 确认
-
-```bash
-git status
-git diff --stat
+```yaml
+review.status: passed
+archive.status: completed
+change.issue: <GitHub issue URL>
+runtime.phase: commit
 ```
 
-展示待提交内容，让用户确认一次，并检查 `.openspec.yaml` 中的 `issue` 字段是否存在：
+否则将 `commit.status: blocked` 和 `runtime.failure` 写回 YAML，停止。禁止在未验证、未归档、无 Issue 时创建 PR 或自动合并。
 
-- 如果 `issue` 为空，立即停止，要求先回到 `propose` 补齐 Issue
-- 如果 `issue` 存在，提取编号并继续
+## [2/5] 预览与用户确认
 
-```
-## 待提交变更
+展示：当前分支、`git status`、`git diff --stat`、变更 ID、Issue、review verification 摘要。得到用户确认后继续。
 
-**分支:** 42-feat-相邻文章优化
+## [3/5] Commit
 
-| 文件 | 状态 |
-|------|------|
-| openspec/changes/archive/... | A |
-| packages/xxx/xxx.ts | M |
+将 YAML 更新与代码一起提交，写入：
 
-确认后自动完成: commit → push → create PR → enable auto-merge → cleanup → checkout main → close Issue
-```
-
-AskUserQuestion：「确认执行？」（「确认执行」/「还需调整」）
-
-### 💾 [2/4] 提交代码
-
-```bash
-# 提交 openspec 文档
-git add openspec/changes/archive/<name>/ openspec/specs/
-git commit -m "docs(openspec): 归档需求文档 <name>"
-
-# 提交代码
-git add <changed-files>
-git commit -m "<type>(<scope>): <description> (#42)"
+```yaml
+commit:
+  status: pending
+  branch: <branch>
+  commits:
+    - hash: <hash>
+      message: <message>
+      at: <ISO-8601>
 ```
 
-### 🔀 [3/4] 推送 + 创建 PR + 合并 + 清理
+commit 失败时：
 
-先从 `.openspec.yaml` 的 `issue` 字段提取编号，作为 PR 标题和关闭关联的唯一来源。
-
-```bash
-# 推送
-git push origin <branch>
-
-# 创建 PR（PR body 必须包含 Closes #42）
-gh pr create --title "<type>: <change-name> (#42)" --body "<summary>\n\nCloses #42" --base main
-
-# 开启自动合并（squash）
-gh pr merge --auto --squash --delete-branch
-
-# 切回 main 并同步
-git checkout main
-git pull origin main
+```yaml
+runtime:
+  phase: commit
+  state: blocked
+  failure:
+    kind: retryable
+    message: <git error>
+  resume:
+    command: 提交代码
 ```
 
-**错误处理：** 任何步骤失败 → 立即停止 → 展示该步骤的手动命令 → 等待用户。不重试，不回退。
+## [4/5] Push 与 PR
 
-### 🎁 [4/4] 输出结果
+从 `change.issue` 提取 Issue number。PR body 必须包含 `Closes #<number>`。创建/更新 PR 后回写：
 
+```yaml
+commit:
+  pullRequest:
+    number: <number>
+    url: <url>
+    state: open | merged
 ```
-## 已完成 ✓
 
-**变更:** <change-name>
-**分支:** 已删除 <branch>
-**当前分支:** main
-**远端:** 已同步
-**Issue:** 已随 PR 自动合并后关闭
+自动合并只在用户明确要求、所有 review verification 为 passed、且无 open warning/findings 时可启用。网络/API 失败按 circuit breaker 写入 YAML，不得直接假定完成。
+
+## [5/5] 完成
+
+PR 合并后：
+
+```yaml
+commit: { status: completed }
+change: { status: committed }
+runtime: { phase: commit, state: completed }
 ```
+
+输出 commit、PR、Issue 关闭状态和当前分支。

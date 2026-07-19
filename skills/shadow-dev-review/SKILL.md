@@ -1,150 +1,142 @@
 ---
 name: shadow-dev-review
-description: 代码审查 + 需求验收 — apply 完成后的质量门禁，合并代码审查、需求验收和代码质量检查
+description: Agent Loop 代码审查与验收 — 将验证证据、findings 和 repair DAG 写入单一 .openspec.yaml
 ---
-# ✅ Review — 代码审查 + 需求验收
+# ✅ Review — Agent Loop 验收
 
-apply 完成后的质量门禁，合并代码审查、需求验收和代码质量检查。
+## 输入边界
 
-**触发条件:**
-- apply 完成后自动提示进入 review
-- 用户主动说 "代码审查" / "review" / "验收"
+对 `schema: agent-loop/v1`，Review 先读取 `.openspec.yaml` 中：
 
-## 📋 审查流程
-
-### 🔍 [1/6] 自检验证（verification 门禁）
-
-调用 `Skill("superpowers:verification-before-completion")`：
-- 运行 Lint、类型检查、测试
-- 全部通过才进入正式审查
-- 不通过 ➡️ 回去修，修完重新自检
-
-**铁律:** 绝不声称完成而未通过 verification。
-
-⏭️ 下一步: [2/6] 多维审查
-
-### 📋 [2/6] 多维审查（7 项）
-
-**审查方式：**
-1. 读取变更制品: `proposal.md`, `design.md`, `tasks.md`, `specs/`
-2. `git diff --name-only` 获取改动文件
-3. 运行 ESLint 检查改动文件
-4. 逐一读取改动文件，对照以下维度审查
-
-**维度 1 — 任务完成度：**
-- tasks.md: 所有 checkbox 是否 `[x]`
-- 是否有未完成的遗留任务
-
-**维度 2 — 需求覆盖：**
-- 按 specs 中每个 Requirement 的 GIVEN/WHEN/THEN 检查代码是否覆盖
-- 接口路径和响应格式是否匹配 spec
-
-**维度 3 — 设计一致性：**
-- 实现是否匹配 `design.md` 的技术方案
-- 模块划分是否符合设计
-
-**维度 4 — ESLint / 代码风格：**
-- 运行 ESLint 检查所有改动文件
-  ```bash
-  pnpm exec eslint <changed-files> --format stylish 2>&1
-  ```
-- **error**: 阻塞项，必须修复
-- **warning**: 生成 checklist 交给用户决定
-- 不在 review 中自动 fix
-
-**维度 5 — 代码质量：**
-- 重复代码、过长函数（>50行）、过深嵌套（>3层）
-- 命名是否清晰；有无不必要的抽象
-- 错误处理是否完整
-
-**维度 6 — 安全性：**
-- 输入校验、注入风险、敏感信息泄露、权限控制
-
-**维度 7 — 性能 + 变更范围：**
-- N+1 查询、缺失索引、阻塞操作、是否缺分页
-- 是否有超出 proposal 范围的改动
-
-⏭️ 下一步: [3/6] 审查报告
-
-### 📊 [3/6] 审查报告
-
-```
-## 代码审查: <name>
-
-### 任务完成度: 6/6 ✓
-
-### 需求覆盖
-- content-api: ✓ 分页格式 / ✓ 404处理 / ✓ 查询校验
-- repos-api: ✓ GitHub接口 / ✓ 缓存策略
-
-### 设计一致性 ✓
-
-### ESLint
-- ✗ error (1): src/app.service.ts:15 — no-unused-vars
-- ⚠ warning (3): 见 checklist
-
-### 代码质量
-- ⚠ content.service.ts:42 — findAll 方法 60 行，建议拆分
-
-### 安全性 ✓
-
-### 性能 + 变更范围 ✓
-
-### 审查结论: ✗ 阻塞
-
-阻塞项 (必须修复):
-1. [ ] ESLint error: src/app.service.ts:15 no-unused-vars
-
-建议项 (用户决定):
-2. [ ] content.service.ts findAll 拆分查询逻辑
-
-ESLint Warning Checklist (用户决定):
-3. [ ] src/main.ts:12 — prefer-const
-4. [ ] src/repos.service.ts:25 — @typescript-eslint/no-explicit-any
-5. [ ] src/content.controller.ts:30 — max-lines-per-function
+```yaml
+proposal:
+discuss:
+artifacts:
+apply:
+review:
+runtime:
 ```
 
-⏭️ 下一步: [4/6] 结果分级与回环
+再按 `artifacts` 索引读取固定 proposal/discuss 产物：`proposal.md`、`specs/<domain>/spec.md`、`design.md`、`tasks.md`，以及 `apply.workflow[].files` 所列代码 diff。禁止扫描未登记文档。
 
-### ⚖️ [4/6] 结果分级与回环
+## [1/6] 启动门禁
 
-| 结果 | 含义 | 动作 |
-|------|------|------|
-| ✓ 通过 | 无阻塞项 | ➡️ 执行 "归档" |
-| ⚠ 建议 | 有建议无阻塞 | 用户决定: 修复➡️归档 / 直接归档 |
-| ✗ 阻塞 | 有必须修复的问题 | ➡️ 回到 apply 修复阻塞项 ➡️ 重新审查 |
+只有在以下条件满足时开始：
 
-**✗ 阻塞回环流程:**
-1. 列出阻塞项清单
-2. 用户确认后回到 apply 子流程
-3. apply 只执行阻塞项修复 task
-4. 修复完成后自动触发重新审查
-5. 直到 ✓ 或 ⚠（用户决定停止）
+- `apply.status: completed`；
+- `runtime.state` 不是未解决 `blocked | waiting_for_input`；
+- 每个完成 task 都有至少一条 evidence。
 
-⏭️ 下一步: [5/6] 简化建议
+否则写入 `runtime.failure.kind: verification` 或展示 required inputs，回到 Apply 的精确 task；不得宣布通过。
 
-### 🔧 [5/6] 简化建议
+开始时：
 
-审查通过后，启动 1 个 Agent 做简化检查——只看 `git diff`，不做并行审查：
-
-```ts
-Agent({
-  description: "Simplify changed code",
-  prompt: `Review this git diff for simplification issues only (not bugs). Flag: duplicate code, unnecessary abstraction, dead code, redundant computation. For each finding provide file, line, one-line summary, and the simpler form.
-
-Diff:
-${diffContent}`
-})
+```yaml
+change: { status: reviewing }
+review: { status: running, verification: [], findings: [] }
+runtime: { phase: review, state: running }
 ```
 
-Agent 返回后逐条评估，只修真正值得修的。
+## [2/6] 验证与多维审查
 
-⏭️ 下一步: [6/6] 处理审查反馈
+1. 运行 `apply.workflow` 与 `apply.repairWorkflow` 收集的验证命令；
+2. 检查 `proposal.acceptanceCriteria` 是否由实现和 evidence 覆盖；
+3. 检查 `discuss.decisions/contracts/reuse` 是否被遵守；
+4. 只审查 workflow files 的 git diff：代码质量、安全、性能、范围漂移；
+5. Lint/类型/测试不可运行时，写入明确证据；环境缺失归为 `missing_input`，工具失败归为 `retryable` 或 `verification`。
 
-### 💬 [6/6] 处理审查反馈
+每条验证记录写入：
 
-收到审查意见时，调用 `Skill("superpowers:receiving-code-review")` 逐条严谨分析，而非盲目同意或拒绝。修改后重新跑 verification。
+```yaml
+review:
+  verification:
+    - id: type-check
+      command: pnpm exec tsc --noEmit
+      result: passed | failed | unavailable
+      summary: <short output>
+      at: <ISO-8601>
+```
 
----
+每条发现记录写入：
 
-✅ **review 完成** — 下一步: "归档" (`shadow-dev-archive`)
+```yaml
+review:
+  findings:
+    - id: R-001
+      severity: blocker | warning | suggestion
+      file: <path>
+      line: <optional line>
+      message: <finding>
+      status: open | fixed | accepted
+```
+
+## [3/6] 阻塞回环
+
+存在 blocker 或失败验证时，不得直接修代码。先把每项 blocker 转成最小 repair task：
+
+```yaml
+apply:
+  repairWorkflow:
+    - id: repair-r-001
+      originFindingId: R-001
+      title: <fix title>
+      status: pending
+      dependsOn: []
+      files: []
+      instructions: []
+      verification: []
+      requiredInputs: []
+      attempts: 0
+      maxAttempts: 2
+      evidence: []
+      failure: null
+```
+
+然后：
+
+```yaml
+review: { status: blocked }
+change: { status: applying }
+runtime:
+  phase: apply
+  state: failed
+  resume: { taskId: repair-r-001, command: 开始执行 }
+  failure:
+    kind: verification
+    message: <blocker summary>
+```
+
+提示用户执行“开始执行”。Apply 只运行 repairWorkflow，完成后回到 Review。
+
+## [4/6] Warning 决策
+
+仅有 warning 时：
+
+```yaml
+review: { status: warnings }
+runtime:
+  phase: review
+  state: waiting_for_input
+  requiredInputs:
+    - key: review-warnings-decision
+      description: 选择修复 warning 或接受 warning 后归档
+      supplied: false
+```
+
+不得替用户默认接受 warning。
+
+## [5/6] 通过
+
+没有 blocker，且所有 required verification 已通过时：
+
+```yaml
+review:
+  status: passed
+  summary: <acceptance and risk summary>
+change: { status: reviewing }
+runtime: { phase: archive, state: completed }
+```
+
+## [6/6] Legacy
+
+Legacy change 必须读取 `skills/shadow-dev-workflow/references/legacy-markdown/shadow-dev-review.md` 后按旧 Markdown 审查方式处理；不要混用两套制品。

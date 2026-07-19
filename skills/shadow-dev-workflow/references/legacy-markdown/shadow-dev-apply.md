@@ -1,0 +1,222 @@
+---
+name: shadow-dev-apply
+description: 开始执行 — 按 tasks.md 执行代码实现，含分支创建、预估、TDD 门禁、并行 Agent 调度
+---
+# ⚡ Apply — 开始执行
+
+按 tasks.md 执行代码实现。执行前创建功能分支、预估耗时 + 依赖分析，同 Phase 独立 task 并行 Agent 执行。
+
+## 📋 步骤
+
+### 🎯 [1/11] 选择变更
+
+- 有名称直接用
+- 否则从上下文推断，或 `openspec list --json` 让用户选
+- 提示: "将执行变更: <name>"
+- 优先读取 `.openspec.yaml` 的 `issue` 字段；闭环流程要求提案阶段已创建 Issue
+- 如果 `issue` 缺失，停止并提示先回到 `shadow-dev-propose` 补齐 Issue
+
+### 🌿 [2/11] 创建功能分支
+**硬性门禁：** 在 main/master 分支上直接修改代码是禁止的。当前步骤必须先将分支切换到功能分支上。
+
+```bash
+git branch --show-current
+```
+
+- 如果当前已在功能分支上 → 确认正确后继续
+- 如果当前在 main/master 上 → 必须先执行下面的分支创建操作
+- 如果当前在 main/master 上 → 以下是分支创建操作
+
+
+
+**执行前检查：** 确认当前不在 main/master 分支上直接修改代码。
+
+```bash
+git branch --show-current
+```
+
+如果在 main/master 上 ➡️ 必须先创建分支。如果在功能分支上 ➡️ 确认是否正确分支后继续。
+
+**每次执行必须创建新分支**，代码编写在分支上进行，不在 main 上直接改。
+
+**分支命名：** 读取 `openspec/config.yaml` 的 `rules.branch` 确认命名规则（默认格式: `{issue-number}-{type}-{short-description}`，type 取值 feat/fix/refactor/docs/chore，short-description 使用中文 2-5 字）。
+
+- 从 `.openspec.yaml` 读取 `issue` 字段
+  - 有 Issue URL（如 `https://github.com/stack-wuh/x.wuh.site/issues/42`）➡️ 提取编号 `42`，分支名 `42-feat-相邻文章优化`
+  - 无 Issue ➡️ `<type>-<short-description>`（仅兼容历史变更；标准闭环流程不应出现）
+
+**Issue 编号提取：** 从 URL 中提取最后一个 path segment（如 `/issues/42` → `42`）。
+
+**操作：**
+
+```bash
+# 确保从 main 最新代码创建
+git checkout main
+git pull origin main
+git checkout -b <branch-name>
+```
+
+**已有同名分支时：** `git checkout <branch-name>` 继续使用。
+
+⏭️ 下一步: [3/11] 检查状态
+
+### 🔎 [3/11] 检查状态
+
+```bash
+openspec status --change "<name>" --json
+```
+
+- blocked ➡️ 提示先创建制品
+- all_done ➡️ 提示已完成，进入审查
+- 否则继续
+
+⏭️ 下一步: [4/11] 获取执行指令
+
+### 📜 [4/11] 获取执行指令
+
+```bash
+openspec instructions apply --change "<name>" --json
+```
+
+读取所有 `contextFiles`。
+
+⏭️ 下一步: [4b/11] 读取复用信息
+
+### 📖 [4b/11] 读取复用信息
+
+`.openspec.yaml` 的 `apply` 和 `library` 段包含了 discuss 阶段准备好的复用分析和执行指引。
+
+1. **读执行指引:** 展开 `apply.instructions` 了解本需求的执行边界
+2. **读复用列表:** 展开 `library.reuse` 获取需要复用的组件列表
+3. **读 demo:** 对每个复用组件：
+   - 在 `openspec/navigation-guide.yaml` 中找到对应条目，确认 import path
+   - 读取其 `scenarios` 中指向的 demo 文件（`openspec/specs/<demo>/index.md` + `demo.jsx`）
+   - 按 demo 示例如法使用
+4. **读 context files:** 展开 `apply.contextFiles` 确认还需读取哪些文件
+5. **标注复用信息到 tasks.md** — 在每个 task 旁标注：
+
+```markdown
+### Task 1: 文章卡片列表
+**复用:** Card (@wuh.site/components/card) → demo: wuh.site/demo-blog-list
+**文件:** app/blog/page.tsx
+```
+
+如果 `library` 段不存在（如 ff 模式跳过了 discuss），跳过此步。
+
+
+
+### 📊 [5/11] 预估耗时 + 依赖分析
+
+分析 tasks.md 中的每个 task:
+- **预估耗时**: 根据文件数、复杂度估算（新建 1 文件 ~5min，修改 ~3min，配置 ~2min）
+- **依赖关系**: 标注相互依赖，构建 DAG
+- **分组**: 同一层级、无互相依赖的 task 归入同一 Phase
+
+输出预估表:
+
+```
+## 执行计划: <name>
+
+| Phase | Task | 预估 | 依赖 |
+|-------|------|------|------|
+| 1 | 创建 common 接口 | 5min | - |
+| 1 | 异常过滤器 | 5min | - |
+| 2 | 修复 DTO | 8min | common 接口 |
+| 2 | 标准化 service | 8min | common 接口 |
+| 3 | 注册全局过滤器 | 3min | Phase 2 |
+| 3 | 更新 controller | 5min | Phase 2 |
+
+总预估: 34min | Phase 1 可并行: 2 tasks ➡️ Agent A + Agent B
+
+确认执行计划？
+```
+
+⏭️ 下一步: [6/11] 执行前决策
+
+
+
+### 🚦 [6/11] 执行前决策
+
+**worktree（进阶，按需启用）：** 仅在以下情况调用 `Skill("superpowers:using-git-worktrees")`：
+- 多模块跨越修改（前后端同时改动）
+- 需要并行 Agent 同时修改不同模块且需要隔离
+- 用户明确要求 worktree
+
+普通需求直接在功能分支上开发，不创建 worktree。
+
+**TDD 门禁:** 以下情况必须调用 `Skill("superpowers:test-driven-development")`：新功能实现、复杂重构、Bug 修复。流程：先写能复现的测试 ➡️ 确认失败 ➡️ 写最小实现 ➡️ 确认通过。
+
+**反模式:** 在 main 分支上直接改代码、跳过 TDD 直接写实现。
+
+⏭️ 下一步: [7/11] 按 Phase 执行
+
+### 🚀 [7/11] 按 Phase 执行
+
+**同一 Phase 内无依赖的 tasks ➡️ 并行 Agent 执行**
+
+2+ 完全独立任务调用 `Skill("superpowers:dispatching-parallel-agents")`；多步独立任务调用 `Skill("superpowers:subagent-driven-development")`。
+
+```
+Phase 1: 并行启动
+Agent(description="Task: 创建 common 接口", prompt="实现 tasks.md task X: ...", run_in_background=true)
+Agent(description="Task: 异常过滤器", prompt="实现 tasks.md task Y: ...", run_in_background=true)
+```
+
+**有依赖的 tasks ➡️ 串行执行（主 Agent）**
+
+等并行 Agent 完成后继续下一 Phase。
+
+**反模式:** 能并行却串行执行、改 A 顺手修 B（违反外科手术式修改）。
+
+**超时处理:**
+- 某 Agent 超过预估 2x 未返回 ➡️ 标记 `⚠ 超时`，提示用户
+- 不阻塞: 其他独立 Agent 继续执行
+- 超时 task 由用户决定: 重试 / 跳过 / 手动处理
+
+⏭️ 下一步: [8/11] 进度追踪
+
+### 📈 [8/11] 进度追踪
+
+```
+## 执行中: <name>
+Phase 1/3 | 总进度: 2/6
+
+✓ Agent-A: 创建 common 接口 (4min)
+⏳ Agent-B: 异常过滤器 (预估还剩 2min)
+```
+
+每个 task 完成后标记 tasks.md: `- [ ]` ➡️ `- [x]`，补写实际耗时。
+
+⏭️ 下一步: [9/11] 执行完成
+
+### ✔️ [9/11] 执行完成
+
+```
+## 执行完成: <name>
+
+| Task | 预估 | 实际 | 状态 |
+|------|------|------|------|
+| 创建 common 接口 | 5min | 4min | ✓ |
+| 异常过滤器 | 5min | 7min | ✓ |
+| ... | | | |
+
+总预估: 34min | 总实际: 32min | 并行节省: ~10min
+
+6/6 完成 ✓  建议执行 "代码审查"。
+```
+
+⏭️ 下一步: [10/11] 暂停条件（按需）
+
+### ⏸️ [10/11] 暂停条件
+
+- 任务不清晰 / 设计问题 / 错误阻塞 / 多个超时 / 用户中断
+
+⏭️ 下一步: [11/11] 审查不通过回环（按需）
+
+### ✅ [11/11] 审查不通过处理
+
+如果来自 review 的 ✗ 阻塞 → 修复阻塞项后重新审查。最多 2 轮，超过则暂停等待用户决策。
+
+---
+
+✅ **apply 完成** — 下一步: "代码审查" (`shadow-dev-review`)
