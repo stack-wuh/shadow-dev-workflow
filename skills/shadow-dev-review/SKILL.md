@@ -40,10 +40,13 @@ runtime: { phase: review, state: running }
 ## [2/6] 验证与多维审查
 
 1. 运行 `apply.workflow` 与 `apply.repairWorkflow` 收集的验证命令；
-2. 检查 `proposal.acceptanceCriteria` 是否由实现和 evidence 覆盖；
-3. 检查 `discuss.decisions/contracts/reuse` 是否被遵守；
-4. 只审查 workflow files 的 git diff：代码质量、安全、性能、范围漂移；
-5. Lint/类型/测试不可运行时，写入明确证据；环境缺失归为 `missing_input`，工具失败归为 `retryable` 或 `verification`。
+2. 对 YAML `artifacts` 中登记的 proposal、design、tasks 和每个 spec，重新运行模板契约校验器；
+3. 检查 `proposal.acceptanceCriteria` 是否由实现和 evidence 覆盖；
+4. 检查 `discuss.decisions/contracts/reuse` 是否被遵守；
+5. 只审查 workflow files 的 git diff：代码质量、安全、性能、范围漂移；
+6. Lint/类型/测试不可运行时，写入明确证据；环境缺失归为 `missing_input`，工具失败归为 `retryable` 或 `verification`。
+
+模板契约校验必须从模板 frontmatter 重新解析规则，不能仅信任 YAML 中历史写入的 `validation.status`。校验失败必须记录为 blocker finding，并生成 repair task；不得降级为 warning 或进入 archive。
 
 每条验证记录写入：
 

@@ -3,6 +3,8 @@
 基于 OpenSpec 的 6 阶段 Agent Loop 工作流，作为 Claude Code 插件使用。**内置所需 superpowers 技能，开箱即用。**
 每个变更由一个 `.openspec.yaml` 状态机文件驱动；固定的 `proposal.md`、`design.md`、`tasks.md`、`spec.md` 仍然保留。YAML 集中管理它们的索引、阶段状态、执行 DAG、验证证据、失败熔断与恢复检查点。
 
+四份模板本身是跨模型一致性的唯一结构契约：模板 frontmatter 声明必填章节和格式规则，工作流会从模板实际解析并校验产物。YAML 只记录模板路径、版本、hash 与校验结果，不重复维护标题清单。
+
 ## 安装
 
 ```bash

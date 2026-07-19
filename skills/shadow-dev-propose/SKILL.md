@@ -84,6 +84,19 @@ runtime:
 
 `proposal.md` 与 `spec.md` 是 proposal 阶段的正式、人可读产物；YAML 仅保存它们的控制索引、摘要和阶段状态。
 
+创建后必须运行模板契约校验器，分别校验 proposal 和每个 spec。将校验器 JSON 输出中的 `templateDigest`、`checkedAt`、`missingHeadings` / `invalidPatterns` 写入对应 `artifacts.*.template.digest` 与 `artifacts.*.validation`。校验失败时：
+
+```yaml
+runtime:
+  phase: propose
+  state: failed
+  failure:
+    kind: verification
+    message: <artifact contract failure>
+```
+
+不得创建 Issue 或进入 discuss，直到固定产物通过其模板契约。
+
 ## [5/7] 创建 GitHub Issue
 
 创建 Issue 后将 URL 写入：

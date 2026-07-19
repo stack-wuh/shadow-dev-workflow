@@ -22,18 +22,54 @@ artifacts:
     path: proposal.md
     status: pending # pending | completed
     summary: null
+    template:
+      id: proposal
+      source: skills/shadow-dev-propose/templates/proposal.md
+      contractVersion: 1
+      digest: null
+    validation:
+      status: pending # pending | passed | failed
+      checkedAt: null
+      missing: []
   design:
     path: design.md
     status: pending # pending | completed
     summary: null
+    template:
+      id: design
+      source: skills/shadow-dev-propose/templates/design.md
+      contractVersion: 1
+      digest: null
+    validation:
+      status: pending # pending | passed | failed
+      checkedAt: null
+      missing: []
   tasks:
     path: tasks.md
     status: pending # pending | completed
     summary: null
+    template:
+      id: tasks
+      source: skills/shadow-dev-propose/templates/tasks.md
+      contractVersion: 1
+      digest: null
+    validation:
+      status: pending # pending | passed | failed
+      checkedAt: null
+      missing: []
   specs:
     status: pending # pending | completed
-    paths:
-      - specs/<domain>/spec.md
+    entries:
+      - path: specs/<domain>/spec.md
+        template:
+          id: spec
+          source: skills/shadow-dev-propose/templates/spec.md
+          contractVersion: 1
+          digest: null
+        validation:
+          status: pending # pending | passed | failed
+          checkedAt: null
+          missing: []
 
 proposal:
   status: pending # pending | completed

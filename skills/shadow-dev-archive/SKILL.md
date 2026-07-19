@@ -35,11 +35,13 @@ artifacts:
   design: { path: design.md, status: completed }
   tasks: { path: tasks.md, status: completed }
   specs:
-    paths:
-      - specs/<domain>/spec.md
+    entries:
+      - path: specs/<domain>/spec.md
 ```
 
 缺失、未完成或路径不存在时，写入 `runtime.failure.kind: permanent`，设 `archive.status: blocked`，等待用户修复；不得猜测规格内容。
+
+归档前必须对每个登记的固定产物重新运行模板契约校验器。校验器要从模板 frontmatter 解析实际规则；若任一校验失败，设 `archive.status: blocked`、`runtime.failure.kind: verification`，回到对应拥有阶段修复。不得只信任 YAML 中已有的 `validation.status: passed`。
 
 ## [3/7] 迁移变更目录
 

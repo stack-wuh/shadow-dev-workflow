@@ -112,6 +112,19 @@ runtime:
   state: idle
 ```
 
+在将 Apply 设为 ready 前，必须运行模板契约校验器校验 `design.md` 与 `tasks.md`。把 JSON 输出中的 `templateDigest`、校验时间和失败项写入 `artifacts.design` / `artifacts.tasks` 的 `template.digest` 与 `validation`。任一校验失败时：
+
+```yaml
+runtime:
+  phase: discuss
+  state: failed
+  failure:
+    kind: verification
+    message: <artifact contract failure>
+```
+
+不得生成 `apply.status: ready` 或进入 Apply。
+
 ## [5/6] 设计未决与熔断
 
 若设计需要用户答案，写入：

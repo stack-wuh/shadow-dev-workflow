@@ -1,3 +1,15 @@
+---
+artifact: design
+contractVersion: 1
+requiredHeadings:
+  - 架构
+  - 技术选型
+  - 复用分析
+  - 影响分析
+requiredPatterns:
+  - '^# .+'
+---
+
 # 设计文档
 
 ## 架构

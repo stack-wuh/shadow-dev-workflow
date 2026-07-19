@@ -23,6 +23,8 @@ openspec/changes/<change>/.openspec.yaml
 skills/shadow-dev-workflow/references/agent-loop-protocol.md
 ```
 
+模板是唯一的产物结构契约。每个模板 frontmatter 声明必填章节与格式规则；阶段推进前必须重新运行 `scripts/validate-artifact-contract.mjs`。YAML 只保存模板引用、digest 与校验结果，不能复制或绕过模板规则。
+
 ## 🛡️ 进入门禁
 
 任何阶段开始前，必须先向用户打印：

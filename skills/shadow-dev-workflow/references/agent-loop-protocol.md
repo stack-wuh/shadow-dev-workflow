@@ -44,18 +44,51 @@ commit: {}
 runtime: {}
 ```
 
-`artifacts` must index the four fixed artifacts and their status:
+`artifacts` must index the four fixed artifacts, the template contract used to create them, and the latest validation result:
 
 ```yaml
 artifacts:
-  proposal: { path: proposal.md, status: completed }
-  design: { path: design.md, status: completed }
-  tasks: { path: tasks.md, status: completed }
+  proposal:
+    path: proposal.md
+    status: completed
+    template:
+      id: proposal
+      source: skills/shadow-dev-propose/templates/proposal.md
+      contractVersion: 1
+      digest: sha256:<creation-time-template-digest>
+    validation: { status: passed, checkedAt: <ISO-8601>, missing: [] }
+  design:
+    path: design.md
+    status: completed
+    template: { id: design, source: skills/shadow-dev-propose/templates/design.md, contractVersion: 1, digest: sha256:<digest> }
+    validation: { status: passed, checkedAt: <ISO-8601>, missing: [] }
+  tasks:
+    path: tasks.md
+    status: completed
+    template: { id: tasks, source: skills/shadow-dev-propose/templates/tasks.md, contractVersion: 1, digest: sha256:<digest> }
+    validation: { status: passed, checkedAt: <ISO-8601>, missing: [] }
   specs:
     status: completed
-    paths:
-      - specs/<domain>/spec.md
+    entries:
+      - path: specs/<domain>/spec.md
+        template: { id: spec, source: skills/shadow-dev-propose/templates/spec.md, contractVersion: 1, digest: sha256:<digest> }
+        validation: { status: passed, checkedAt: <ISO-8601>, missing: [] }
 ```
+
+## Template Contract
+
+Templates are the only source for artifact shape and required content. Every template begins with YAML frontmatter declaring its `artifact`, `contractVersion`, `requiredHeadings`, and `requiredPatterns`. Do not copy those requirements into `.openspec.yaml`.
+
+The workflow validates an artifact with:
+
+```bash
+node <shadow-dev-workflow-root>/scripts/validate-artifact-contract.mjs \
+  --template <template-path> \
+  --artifact <artifact-path> \
+  --json
+```
+
+The validator reads the contract from the template itself and returns the `templateDigest`, missing headings, and pattern failures. YAML records only that result. A validation failure is a `verification` failure: the owning phase must not advance until the artifact is fixed and validation passes.
 
 ## State Machine
 
@@ -69,7 +102,7 @@ propose -> discuss -> apply -> review -> archive -> commit
 - `runtime.phase`: `propose | discuss | apply | review | archive | commit`
 - `runtime.state`: `idle | running | waiting_for_input | blocked | failed | completed`
 
-A phase is complete only when its YAML phase status is complete **and** every required fixed artifact has the recorded completed status and exists at the registered path.
+A phase is complete only when its YAML phase status is complete **and** every required fixed artifact has the recorded completed status, exists at the registered path, and has `validation.status: passed` against its referenced template contract.
 
 ## Phase Ownership
 
