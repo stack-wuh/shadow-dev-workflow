@@ -1,3 +1,15 @@
+---
+artifact: tasks
+contractVersion: 1
+requiredHeadings:
+  - 任务清单
+  - 验收
+requiredPatterns:
+  - '^## Phase .+'
+  - '^### Task .+'
+  - '^- \[ \] \*\*文件:\*\* .+'
+---
+
 # 任务清单
 
 ## Phase 1: <阶段名称>

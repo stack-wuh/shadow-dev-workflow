@@ -1,3 +1,16 @@
+---
+artifact: spec
+contractVersion: 1
+requiredHeadings:
+  - ADDED
+requiredPatterns:
+  - '^# Spec: .+'
+  - '^### Requirement: .+'
+  - '^- \*\*GIVEN\*\* .+'
+  - '^- \*\*WHEN\*\* .+'
+  - '^- \*\*THEN\*\* .+'
+---
+
 # Spec: <规格名称>
 
 ## ADDED

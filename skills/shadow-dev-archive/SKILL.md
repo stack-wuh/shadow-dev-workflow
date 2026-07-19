@@ -1,134 +1,120 @@
 ---
 name: shadow-dev-archive
-description: 文档归档 — 将 openspec 变更文档移到 archive/，同步 specs 到主规范。纯文档管理，不涉及 git 操作
+description: Agent Loop 归档 — 保留 OpenSpec specs 合并和组件场景沉淀，并将归档进度写入 .openspec.yaml
 ---
-# 💎 Archive — 文档归档
+# 💎 Archive — 固定产物归档 + Agent Loop 控制
 
-将 openspec 变更文档移到 archive/，同步 specs 到主规范。部分涉及 git 操作（状态更新 + 提交归档文档）。
+## 核心约束
 
-## 📋 归档流程
+对 `schema: agent-loop/v1`：
 
-### ✅ [1/6] 确认归档条件
+- `.openspec.yaml` 是归档的控制面、清单和恢复记录；
+- `proposal.md`、`design.md`、`tasks.md`、`specs/<domain>/spec.md` 仍是固定产物；
+- Archive 必须保留原有语义：移动 change、将增量 specs 合并到 `openspec/specs/<domain>/spec.md`、沉淀组件使用场景、更新 `navigation-guide.yaml` 与 `openspec/INDEX.md`。
 
-审查结果必须为 ✓ 或用户对 ⚠ 明确决定归档。
+YAML 不替代这些归档资产；它记录它们的路径、状态、同步结果和验证证据。
 
-⏭️ 下一步: [2/6] 验证 openspec 文档
+Legacy change 继续使用 `skills/shadow-dev-workflow/references/legacy-markdown/shadow-dev-archive.md`。
 
-### 🔬 [2/6] 验证 openspec 文档
+## [1/7] 归档门禁
 
-在迁移目录之前，先验证文档结构和内容的正确性：
+仅当：
 
-```bash
-openspec validate <change-name>
+- `review.status: passed`；或
+- `review.status: warnings` 且用户已经明确接受，并写入 YAML evidence；
+
+才可归档。若 `runtime.state` 是 `blocked | waiting_for_input | failed`，停止并展示 `failure` / `requiredInputs`。
+
+## [2/7] 读取固定产物清单
+
+读取 YAML `artifacts`，仅加载登记的：
+
+```yaml
+artifacts:
+  proposal: { path: proposal.md, status: completed }
+  design: { path: design.md, status: completed }
+  tasks: { path: tasks.md, status: completed }
+  specs:
+    entries:
+      - path: specs/<domain>/spec.md
 ```
 
-验证内容：
-- `.openspec.yaml` 格式正确
-- `proposal.md` / `design.md` / `tasks.md` 结构完整
-- `specs/` 增量规格格式正确（`## ADDED` / `## MODIFIED` / `## REMOVED`）
-- 所有必需字段存在
+缺失、未完成或路径不存在时，写入 `runtime.failure.kind: permanent`，设 `archive.status: blocked`，等待用户修复；不得猜测规格内容。
 
-**失败处理：** 验证失败则立即停止，展示错误信息，不继续归档。用户修复后重新执行 archive。
+归档前必须对每个登记的固定产物重新运行模板契约校验器。校验器要从模板 frontmatter 解析实际规则；若任一校验失败，设 `archive.status: blocked`、`runtime.failure.kind: verification`，回到对应拥有阶段修复。不得只信任 YAML 中已有的 `validation.status: passed`。
 
-⏭️ 下一步: [3/6] 迁移 change 目录
+## [3/7] 迁移变更目录
 
-### 🚚 [3/6] 迁移 change 目录
+保持原有目录约定：
 
 ```bash
 mv openspec/changes/<name> openspec/changes/archive/<name>
 ```
 
-**更新状态：** 迁移后，将归档目录中 `.openspec.yaml` 的 `status` 更新为 `archived`：
+迁移后更新 YAML 中 artifact paths 为归档后的相对路径，并记录 `archive.movedAt`。若目录已归档，视为可恢复状态，继续下一步。
 
-```bash
-# 手动修改 openspec/changes/archive/<name>/.openspec.yaml
-# status: applied → status: archived
+## [4/7] 同步 Specs
+
+保持原有 OpenSpec 合并逻辑。对每个登记的 `specs/<domain>/spec.md`：
+
+- `## ADDED`：追加对应 Requirement；
+- `## MODIFIED`：替换同名 Requirement；
+- `## REMOVED`：删除对应 Requirement；
+- 主规范不存在时：创建 `openspec/specs/<domain>/spec.md`。
+
+每个同步结果必须写入：
+
+```yaml
+archive:
+  specSync:
+    - domain: <domain>
+      source: specs/<domain>/spec.md
+      target: openspec/specs/<domain>/spec.md
+      result: created | updated | unchanged
+      evidence:
+        - command: <validation command>
+          result: passed
+          at: <ISO-8601>
 ```
 
-⏭️ 下一步: [4/6] 同步 specs
+## [5/7] 沉淀组件场景
 
-### 🔄 [4/6] 同步 specs
+保持你原有的组件使用场景沉淀逻辑。数据来源是 `design.md` 的复用分析，并用 `discuss.reuse` 作为索引：
 
-将 `openspec/changes/archive/<name>/specs/` 中的增量规格合并到 `openspec/specs/<domain>/`：
-- `## ADDED` ➡️ 追加到对应 spec 文件
-- `## MODIFIED` ➡️ 替换对应 Requirement
-- `## REMOVED` ➡️ 删除对应 Requirement
+1. 对照 `openspec/navigation-guide.yaml` 的 `scenarios`；
+2. 已有 demo 覆盖时记录 `decision: existing`；
+3. 出现新 props 组合、新布局或新交互时，创建 `openspec/specs/wuh.site/demo-<usage>/index.md` 和 `demo.jsx`；
+4. 更新 `navigation-guide.yaml`；
+5. 将路径、决策和验证写入 `archive.componentScenarios`。
 
-⏭️ 下一步: [5/6] 更新规范索引 INDEX.md
+本阶段不改组件业务实现。
 
-### 📑 [5/6] 更新规范索引 INDEX.md
+## [6/7] 更新 INDEX
 
-归档完成后，更新 `openspec/INDEX.md`，维护各领域规范的关键词索引。
-
-**4a. 确定受影响的领域**
-
-从当前变更的 `specs/` 目录确定修改了哪些领域（即 specs 子目录名）。
-
-**4b. 提取关键词**
-
-从该领域的 `spec.md` 中提取：
-- **领域名称:** specs 子目录名 + 简短中文描述
-- **3-5 个关键词:** 用于检索的精准标签
-- **需求列表:** 从 `### Requirement:` 提取所有需求名
-
-**4c. 让用户确认**
-
-AskUserQuestion 展示提取的内容，让用户确认：
-
-```
-领域: <domain>
-关键词: [提取的关键词]
-需求: [需求列表]
-```
-
-选项：「确认」「修改」
-
-**4d. 更新 INDEX.md**
-
-- **INDEX.md 不存在时**先创建：
-
-```markdown
-# OpenSpec 规范索引
-
-> 新需求开始前，先查阅此索引了解当前系统规范，避免设计与已有规范冲突。
-> 每个领域列出核心需求和关键词，匹配后可深入阅读对应 spec.md。
-
-```
-
-- **领域已存在** ➡️ 替换该领域的条目（从 `## <domain>` 到下一个 `## ` 之间）
-- **领域不存在** ➡️ 按字母顺序插入新条目：
+保持原有 `INDEX.md` 格式和领域入口。条目必须继续指向主规范：
 
 ```markdown
 ## <domain> — <中文描述>
-- **关键词:** <逗号分隔>
-- **需求:** <需求列表>
+- **关键词:** <domain keywords>
+- **需求:** <Requirement 名称列表>
 - **路径:** `openspec/specs/<domain>/spec.md`
 ```
 
-**4e. 验证条目**
+将最终条目记录到 `archive.indexEntry`。
 
-```bash
-grep -A 5 "^## <domain>" openspec/INDEX.md
+## [7/7] 冻结状态与输出
+
+只有 specs 同步、场景沉淀和 INDEX 更新均有 evidence 时：
+
+```yaml
+archive:
+  status: completed
+  archivedAt: <ISO-8601>
+change:
+  status: archived
+runtime:
+  phase: commit
+  state: completed
 ```
 
-⏭️ 下一步: [6/6] 验证归档结果
-
-### ✔️ [6/6] 验证归档结果
-
-```bash
-ls openspec/changes/archive/<name>/
-```
-
-**输出:**
-
-```
-## 文档已归档 ✓
-
-**变更:** <name>
-**归档位置:** openspec/changes/archive/<name>/
-**合并的 Specs:** <domain>
-```
-
----
-
-✅ **archive 完成** — 下一步: "提交代码" (`shadow-dev-commit`)
+输出归档目录、同步的 specs、组件场景结果、INDEX 条目和下一步“提交代码”。

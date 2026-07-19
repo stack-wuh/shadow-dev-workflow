@@ -1,3 +1,15 @@
+---
+artifact: proposal
+contractVersion: 1
+requiredHeadings:
+  - 背景
+  - 目标
+  - 非目标（明确不做）
+  - 影响范围
+requiredPatterns:
+  - '^# .+'
+---
+
 # <需求标题>
 
 ## 背景

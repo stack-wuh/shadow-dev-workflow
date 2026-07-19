@@ -31,6 +31,16 @@ You MUST create a task for each of these items and complete them in order:
 8. **User reviews written spec** — ask user to review the spec file before proceeding
 9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
+### Shadow Agent Loop Override
+
+When this skill is invoked by `shadow-dev-propose` or `shadow-dev-discuss` for an `agent-loop/v1` change, the parent workflow overrides documentation and planning outputs:
+
+- Do not write or commit a design document under `docs/superpowers/`.
+- Do not invoke `writing-plans`.
+- Keep brainstorming outputs in the conversation until the parent phase writes them into the change's single `.openspec.yaml` file.
+- `shadow-dev-propose` owns `proposal`; `shadow-dev-discuss` owns `discuss` and generates `apply.workflow`.
+- The normal design-approval gate remains mandatory; only the artifact destination changes.
+
 ## Process Flow
 
 ```dot
@@ -107,6 +117,8 @@ digraph brainstorming {
 ## After the Design
 
 **Documentation:**
+
+Unless the Shadow Agent Loop Override above applies:
 
 - Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
   - (User preferences for spec location override this default)
