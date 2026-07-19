@@ -41,6 +41,29 @@ runtime:
 
 探索结论写入 `design.md`；`discuss.implementationNotes` 只保存已读文件、关键决策和恢复所需的简短索引，避免下次重复探索。
 
+当 `proposal.uiux.mode: required` 时，在读取实现文件前调用已安装的 `ui-ux-pro-max`，并按需求选择最少必要能力：
+
+| 需求重点 | 优先能力 | 必须沉淀的输出 |
+|---|---|---|
+| 信息层级、页面结构、导航、交互 | `design` | 用户目标、布局结构、交互状态、响应式策略 |
+| token、颜色、排版、组件复用、品牌 | `design-system` | 令牌约束、组件复用/扩展决策、对比度要求 |
+| CSS 实现、动效、微交互、断点 | `ui-styling` | 样式约束、动效边界、`prefers-reduced-motion` 与溢出处理 |
+
+将调用结果写入：
+
+```yaml
+discuss:
+  uiux:
+    status: completed | unavailable
+    triggers: []
+    capabilities: []
+    decisions: []
+    accessibility: []
+    acceptanceCriteria: []
+```
+
+`design.md` 必须包含这些决策，`tasks.md` 与 `apply.workflow` 必须包含可执行的视觉验收。`proposal.uiux.mode: skipped` 时不得调用 UI/UX 技能。若能力不可用：非视觉需求记录 warning 并继续；视觉需求把缺失技能或用户的降级授权写入 `runtime.requiredInputs`，等待输入。
+
 ## [3/6] 决策收敛
 
 向用户提供 2–3 个方案，标记推荐项；确认后写入 `design.md`，并在 YAML 回写可恢复摘要：
@@ -66,6 +89,13 @@ discuss:
     dependencies: []
     compatibility: <compatibility>
     rollback: <rollback>
+  uiux:
+    status: completed | unavailable | skipped
+    triggers: []
+    capabilities: []
+    decisions: []
+    accessibility: []
+    acceptanceCriteria: []
 ```
 
 ## [4/6] 生成 Apply 工作流
