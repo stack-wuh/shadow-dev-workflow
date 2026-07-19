@@ -34,6 +34,22 @@ full 模式必须完成一次需求对齐：一次只问一个必要问题，明
 
 ff 模式只做一次快速确认。确认后才可读取 `openspec/INDEX.md` 与最小范围的代码上下文。
 
+需求对齐完成后，必须进行一次 UI/UX 语义分类，并写入 `proposal.uiux`：
+
+```yaml
+proposal:
+  uiux:
+    mode: required | skipped | uncertain
+    triggers: []
+    rationale: <classification reason>
+```
+
+- `required`：用户意图包含页面、前端、组件、视觉、UI、UX、布局、交互、响应式、设计系统、品牌、动效、无障碍或 Figma。
+- `skipped`：仅后端、API、数据库、同步、Webhook、部署、CI、测试、日志或构建，且没有界面影响。
+- `uncertain`：需求没有足够信息判断界面影响；把“是否影响用户界面或交互？”写入 `runtime.requiredInputs`，不得猜测。
+
+`required` 只标记后续 discuss 必须调用 `ui-ux-pro-max`；propose 不得在此时提前生成视觉方案或绕过 brainstorming 确认。
+
 ## [3/7] 规范预检
 
 读取 `openspec/INDEX.md`。仅在关键词至少命中两个时读取相关领域规范；将冲突、可复用约束和待确认问题记入后续 YAML 的 `proposal.constraints` / `proposal.risks`。
@@ -77,6 +93,7 @@ proposal:
   constraints: []
   risks: []
   domain: { name: <name>, keywords: [], description: <description> }
+  uiux: { mode: skipped, triggers: [], rationale: <reason> }
 runtime:
   phase: discuss
   state: idle

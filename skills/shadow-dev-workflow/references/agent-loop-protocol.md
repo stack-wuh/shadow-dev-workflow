@@ -44,6 +44,32 @@ commit: {}
 runtime: {}
 ```
 
+## UI/UX Routing Contract
+
+UI/UX routing is conditional and remains part of the existing `propose → discuss` flow. It never creates a seventh phase or bypasses design approval.
+
+```yaml
+proposal:
+  uiux:
+    mode: required | skipped | uncertain
+    triggers: []
+    rationale: <why this mode applies>
+discuss:
+  uiux:
+    status: completed | unavailable | skipped
+    triggers: []
+    capabilities: []
+    decisions: []
+    accessibility: []
+    acceptanceCriteria: []
+```
+
+- `required` means Discuss MUST use installed `ui-ux-pro-max` design intelligence before creating `design.md`, `tasks.md`, or `apply.workflow`.
+- `skipped` means the requirement has no user-interface impact and Discuss MUST NOT add a cosmetic design step.
+- `uncertain` blocks transition out of Propose until the user confirms whether there is UI/UX impact.
+- If `ui-ux-pro-max` is unavailable, non-visual changes record a warning and continue; visual changes wait for user authorization to install, repair, or explicitly waive the skill.
+- For completed UI/UX routing, `discuss.uiux.acceptanceCriteria` must be reflected in both `tasks.md` and the relevant Apply task verification.
+
 `artifacts` must index the four fixed artifacts, the template contract used to create them, and the latest validation result:
 
 ```yaml

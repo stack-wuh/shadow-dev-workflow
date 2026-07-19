@@ -68,6 +68,19 @@ propose -> discuss -> apply -> review -> archive -> commit
 | 提交 / commit / PR | `shadow-dev-commit` | `archive.status: completed` |
 | 继续 / continue / 上次 | 断点恢复 | 从 `runtime.phase/state/resume` 路由 |
 
+## UI/UX 条件路由
+
+页面设计不构成独立阶段，仍由 `propose → discuss → apply` 的 Agent Loop 管理；但当需求涉及 UI/UX 时，流程必须引入已安装的 `ui-ux-pro-max` 作为 discuss 阶段的设计输入。
+
+1. `propose` 根据用户意图判断 `proposal.uiux.mode`：`required`、`skipped` 或 `uncertain`。
+2. `required` 的典型信号：页面、前端、组件、视觉、UI、UX、布局、交互、响应式、设计系统、品牌、动效、无障碍、Figma。
+3. 仅后端、API、数据库、同步、Webhook、部署、CI、测试、日志、构建类需求默认 `skipped`；若同时包含界面影响，优先 `required`。
+4. `discuss` 在 `proposal.uiux.mode: required` 时先调用 `ui-ux-pro-max` 的适当能力：`design` 用于信息层级与交互，`design-system` 用于令牌和组件复用，`ui-styling` 用于实现约束、动效和响应式细节。
+5. `discuss.uiux` 必须记录触发原因、使用的能力、关键设计决策、可访问性要求和视觉验收项；这些验收项必须进入 `tasks.md` 与 `apply.workflow`。
+6. `ui-ux-pro-max` 不可用时：非视觉任务记录 warning 后回退既有 discuss；视觉任务写入 `runtime.requiredInputs`，由用户选择安装/修复技能或接受不使用该技能继续。
+
+`ui-ux-pro-max` 只提供设计情报，不能跳过 brainstorming 的设计确认、OpenSpec 固定产物或 Apply 的验证门禁。
+
 用户仅说“提案”时，默认创建新需求；不得扫描活跃 change 猜测上下文。用户说“继续”或明确给出 change ID 时，读取该 change 的 YAML 恢复。
 
 ## 中断恢复与熔断
