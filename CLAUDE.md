@@ -1,31 +1,37 @@
-# Shadow的开发工作流
+# Shadow 的开发工作流
 
-> 个人级配置，所有项目共享。工作流统一入口为 shadow-dev-workflow（自动加载对应阶段的 phase skill）。
-> 标准闭环：提案自动创建 Issue -> 开发 -> 归档 -> 提交自动创建 PR、开启 auto-merge -> 通过 `Closes #N` 自动关闭 Issue。
+> 自包含技能包，不依赖任何外部工作流插件。以三层知识库驱动开发决策。
 > 项目特有配置（技术栈、命名规范等）见各项目的 CLAUDE.md。
 
 ## 分层规则
 
-- 个人级（本文件 + skills/ + rules/）：定义「怎么做」—— 流程、Skill 触发、行为准则、验证标准
+- 本仓库（skills/ + norms/ + menu.md）：定义「怎么做」—— 流程、Skill、行为准则、验证标准
 - 项目级（各项目 CLAUDE.md）：定义「是什么」—— 技术栈、命名规范、项目约束
+- 项目 `shadow-docs/knowledge/`：项目独有的领域知识
 - 冲突时项目级优先
 
 ## 规则体系
 
-| 文件 | 内容 | 规则数 |
-|------|------|--------|
-| `rules/behavior.md` | 行为准则 — 4 行模板（防什么/何时触发/做什么/怎么验收），全部以否定约束开头 | 12 条 |
-| `rules/iron-laws.md` | 补充铁律 — 非协商，违反即阻断（TDD/验证/调试） | 3 条 |
+| 文件 | 内容 |
+|------|------|
+| `rules/behavior.md` | 行为准则 — 12 条，以否定约束开头 |
+| `rules/iron-laws.md` | 补充铁律 — TDD、验证、调试、分支 |
+| `norms/` | 跨项目通用规范 — UI、API、交互、代码风格、TDD |
+
+## 知识库
+
+| 层级 | 位置 | 内容 |
+|------|------|------|
+| 规范级 | `norms/` | 跨项目通用约束 |
+| 项目级 | `shadow-docs/knowledge/` | 项目独有领域知识 |
+| 菜单级 | `menu.md` | 技术域 → 规范路由表 |
 
 ## Skill 触发
 
 | 场景 | Skill |
 |------|-------|
-| 新需求 | `shadow-dev-propose` |
-| 需求讨论/架构设计 | `shadow-dev-discuss` |
-| 开始执行 | `shadow-dev-apply` |
-| 代码审查/验收 | `shadow-dev-review` |
-| 归档 | `shadow-dev-archive` |
-| 提交/PR | `shadow-dev-commit` |
-| Bug/异常/测试失败 | `debugging-workflow` |
-| UI/UX 设计 | `ui-ux-pro-max` |
+| 新需求 / 提案 / 方案设计 | `wuh-propose` |
+| 开始执行 / apply / 实现 | `wuh-apply` |
+| 代码审查 / review / 验收 | `wuh-review` |
+| 提交 / PR / 发布 / 归档 | `wuh-ship` |
+| 知识库查询 | `wuh-knowledge`（propose 自动调用）|
