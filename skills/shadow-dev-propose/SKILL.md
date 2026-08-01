@@ -1,5 +1,5 @@
 ---
-name: wuh-propose
+name: shadow-dev-propose
 description: 新需求对齐 + 方案设计 — 从模糊需求到可执行的 brief.md。触发词：新需求、提案、设计一下、讨论方案。
 ---
 # 💡 Wuh Propose — 需求对齐 + 方案设计
@@ -10,7 +10,7 @@ description: 新需求对齐 + 方案设计 — 从模糊需求到可执行的 b
 
 ### 1. 查知识库
 
-调用 wuh-knowledge 查询流程，用需求关键词匹配规范约束。结果作为方案讨论的输入。
+调用 shadow-dev-knowledge 查询流程，用需求关键词匹配规范约束。结果作为方案讨论的输入。
 
 ### 2. 澄清需求（一次一个问题）
 
@@ -99,4 +99,4 @@ description: 新需求对齐 + 方案设计 — 从模糊需求到可执行的 b
 
 ---
 
-✅ **propose 完成** — 下一步: "开始执行" (wuh-apply)
+✅ **propose 完成** — 下一步: "开始执行" (shadow-dev-apply)

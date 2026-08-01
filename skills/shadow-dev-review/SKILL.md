@@ -1,5 +1,5 @@
 ---
-name: wuh-review
+name: shadow-dev-review
 description: 质量门禁 — 验证 + 对照方案论据检查 + 结论分级。触发词：代码审查、review、验收、verify。
 ---
 # ✅ Wuh Review — 质量门禁
@@ -85,7 +85,7 @@ pnpm exec eslint <改动的文件> --format stylish 2>&1  # ESLint
 
 | 结果 | 含义 | 动作 |
 |------|------|------|
-| ✓ 通过 | 无问题 | → "发布" (wuh-ship) |
+| ✓ 通过 | 无问题 | → "发布" (shadow-dev-ship) |
 | ⚠ 建议 | 有建议无阻塞 | 用户决定: 修复后发布 / 直接发布 |
 | ✗ 阻塞 | 有必须修复的问题 | → 回到 apply 修复阻塞项 → 重新审查 |
 
@@ -93,4 +93,4 @@ pnpm exec eslint <改动的文件> --format stylish 2>&1  # ESLint
 
 ---
 
-✅ **review 完成** — 下一步: "发布" (wuh-ship)
+✅ **review 完成** — 下一步: "发布" (shadow-dev-ship)

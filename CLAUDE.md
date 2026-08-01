@@ -30,8 +30,8 @@
 
 | 场景 | Skill |
 |------|-------|
-| 新需求 / 提案 / 方案设计 | `wuh-propose` |
-| 开始执行 / apply / 实现 | `wuh-apply` |
-| 代码审查 / review / 验收 | `wuh-review` |
-| 提交 / PR / 发布 / 归档 | `wuh-ship` |
-| 知识库查询 | `wuh-knowledge`（propose 自动调用）|
+| 新需求 / 提案 / 方案设计 | `shadow-dev-propose` |
+| 开始执行 / apply / 实现 | `shadow-dev-apply` |
+| 代码审查 / review / 验收 | `shadow-dev-review` |
+| 提交 / PR / 发布 / 归档 | `shadow-dev-ship` |
+| 知识库查询 | `shadow-dev-knowledge`（propose 自动调用）|

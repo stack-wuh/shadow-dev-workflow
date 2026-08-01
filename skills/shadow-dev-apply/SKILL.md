@@ -1,5 +1,5 @@
 ---
-name: wuh-apply
+name: shadow-dev-apply
 description: 开始执行 — 按 brief.md 的 Phase 顺序执行任务，TDD 门禁 + 并行 Agent 调度。触发词：开始执行、apply、实现、写代码。
 ---
 # ⚡ Wuh Apply — 代码执行
@@ -78,4 +78,4 @@ git checkout -b <type>-<short-description>
 
 ---
 
-✅ **apply 完成** — 下一步: "审查" (wuh-review)
+✅ **apply 完成** — 下一步: "审查" (shadow-dev-review)

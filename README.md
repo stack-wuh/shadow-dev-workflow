@@ -6,11 +6,11 @@
 
 ```
 skills/
-├── wuh-propose/     # 需求对齐 + 方案设计 → brief.md
-├── wuh-apply/       # 代码执行：分支 + TDD + Agent 调度
-├── wuh-review/      # 质量门禁：验证 + 对照论据检查
-├── wuh-ship/        # 归档 + 提交 + PR
-└── wuh-knowledge/   # 知识库查询（propose 自动调用）
+├── shadow-dev-propose/     # 需求对齐 + 方案设计 → brief.md
+├── shadow-dev-apply/       # 代码执行：分支 + TDD + Agent 调度
+├── shadow-dev-review/      # 质量门禁：验证 + 对照论据检查
+├── shadow-dev-ship/        # 归档 + 提交 + PR
+└── shadow-dev-knowledge/   # 知识库查询（propose 自动调用）
 
 norms/               # 跨项目通用规范
 ├── ui-patterns.md
@@ -31,7 +31,7 @@ rules/               # 行为准则 + 铁律（不可协商）
 | 项目级 | `shadow-docs/knowledge/` | 项目独有领域知识片段 |
 | 菜单级 | `menu.md` | 按技术域路由到对应规范 |
 
-做新需求时，wuh-propose 自动查菜单 → 拉规范 + 项目知识 → 约束方案设计 → 写入 brief.md 的「引用规范」和「决策」部分。
+做新需求时，shadow-dev-propose 自动查菜单 → 拉规范 + 项目知识 → 约束方案设计 → 写入 brief.md 的「引用规范」和「决策」部分。
 
 ## brief.md（替代 proposal + design + tasks + specs）
 

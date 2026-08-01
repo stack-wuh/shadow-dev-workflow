@@ -1,5 +1,5 @@
 ---
-name: wuh-ship
+name: shadow-dev-ship
 description: 归档 + 提交 + PR — 将 brief.md 移到 archive/，更新索引，提 PR。触发词：提交、commit、push、PR、发布、归档。
 ---
 # 📦 Wuh Ship — 归档 + 提交

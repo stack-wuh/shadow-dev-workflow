@@ -1,10 +1,10 @@
 ---
-name: wuh-knowledge
+name: shadow-dev-knowledge
 description: 知识库查询 — 根据需求关键词匹配菜单路由，拉取规范和项目知识。被 propose 自动调用，不直接面向用户。
 ---
 # 📚 Wuh Knowledge — 知识库查询
 
-只被 `wuh-propose` 在需求对齐阶段调用，提供规范约束注入。
+只被 `shadow-dev-propose` 在需求对齐阶段调用，提供规范约束注入。
 
 ## 查询流程
 
