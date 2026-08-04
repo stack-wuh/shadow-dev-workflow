@@ -1,0 +1,15 @@
+{
+  "name": "shadow-dev-workflow",
+  "version": "6.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:cli": "node --test test/cli.test.mjs"
+  },
+  "bin": {
+    "shadow-dev": "scripts/shadow-dev.mjs"
+  }
+}

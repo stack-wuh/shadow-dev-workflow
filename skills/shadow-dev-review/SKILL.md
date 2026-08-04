@@ -1,145 +1,96 @@
 ---
 name: shadow-dev-review
-description: Agent Loop 代码审查与验收 — 将验证证据、findings 和 repair DAG 写入单一 .openspec.yaml
+description: 质量门禁 — 验证 + 对照方案论据检查 + 结论分级。触发词：代码审查、review、验收、verify。
 ---
-# ✅ Review — Agent Loop 验收
+# Shadow Dev Review — 质量门禁
 
-## 输入边界
+apply 完成后的质量检查。只审查本次改动，不扫全仓。
 
-对 `schema: agent-loop/v1`，Review 先读取 `.openspec.yaml` 中：
+## 流程
 
-```yaml
-proposal:
-discuss:
-artifacts:
-apply:
-review:
-runtime:
+### 1. 自检验证
+
+**铁律: 无验证输出不得声称完成。**
+
+```bash
+pnpm exec tsc --noEmit 2>&1   # 类型检查
+pnpm exec eslint <改动的文件> --format stylish 2>&1  # ESLint
+# 运行相关测试（如有）
 ```
 
-再按 `artifacts` 索引读取固定 proposal/discuss 产物：`proposal.md`、`specs/<domain>/spec.md`、`design.md`、`tasks.md`，以及 `apply.workflow[].files` 所列代码 diff。禁止扫描未登记文档。
+不通过 ➡️ 回去修。修完重新自检。
 
-## [1/6] 启动门禁
+### 2. 获取变更上下文
 
-只有在以下条件满足时开始：
-
-- `apply.status: completed`；
-- `runtime.state` 不是未解决 `blocked | waiting_for_input`；
-- 每个完成 task 都有至少一条 evidence。
-
-否则写入 `runtime.failure.kind: verification` 或展示 required inputs，回到 Apply 的精确 task；不得宣布通过。
-
-开始时：
-
-```yaml
-change: { status: reviewing }
-review: { status: running, verification: [], findings: [] }
-runtime: { phase: review, state: running }
+```
+1. `node scripts/shadow-dev.mjs review plan --name <name>` 获取 brief、任务和改动范围
+2. 阅读理解计划列出的 diff 内容
+3. 验证后执行 `node scripts/shadow-dev.mjs review execute --name <name> --plan-hash <hash> --conclusion <passed|blocked> --confirm`
 ```
 
-## [2/6] 验证与多维审查
+### 3. 对照检查（6 维）
 
-1. 运行 `apply.workflow` 与 `apply.repairWorkflow` 收集的验证命令；
-2. 对 YAML `artifacts` 中登记的 proposal、design、tasks 和每个 spec，重新运行模板契约校验器；
-3. 检查 `proposal.acceptanceCriteria` 是否由实现和 evidence 覆盖；
-4. 检查 `discuss.decisions/contracts/reuse` 是否被遵守；
-5. 只审查 workflow files 的 git diff：代码质量、安全、性能、范围漂移；
-6. Lint/类型/测试不可运行时，写入明确证据；环境缺失归为 `missing_input`，工具失败归为 `retryable` 或 `verification`。
+**维度 1 — 任务完成度：**
+- brief.md 所有 checkbox 是否 `[x]`
+- 有没有遗漏的任务
 
-模板契约校验必须从模板 frontmatter 重新解析规则，不能仅信任 YAML 中历史写入的 `validation.status`。校验失败必须记录为 blocker finding，并生成 repair task；不得降级为 warning 或进入 archive。
+**维度 2 — 方案一致性：**
+- 代码实现是否匹配 brief.md 的「决策」部分
+- 有没有偏离选定的方案
 
-每条验证记录写入：
+**维度 3 — 规范遵循：**
+- 对照 brief.md 的「引用规范」，检查代码是否遵循了每条约束
+- 不遵循的约束是否在决策中说明了理由
 
-```yaml
-review:
-  verification:
-    - id: type-check
-      command: pnpm exec tsc --noEmit
-      result: passed | failed | unavailable
-      summary: <short output>
-      at: <ISO-8601>
+**维度 4 — 正确性：**
+- 边界条件处理（空值、异常路径、并发冲突）
+- 类型安全（无无理由 `as`、无 `any`）
+- 错误处理不吞异常
+
+**维度 5 — 代码质量：**
+- 重复代码、过长函数（>50 行需说明理由）
+- 无明显性能问题（N+1 查询、缺失分页）
+- 变更范围未超出 brief.md 声明
+
+**维度 6 — 知识贡献：**
+- 本次变更是否有值得沉淀到 `shadow-docs/knowledge/` 的领域知识
+- 如有，记录到审查报告中
+
+### 4. 审查报告
+
+```
+## 审查: <name>
+
+### 任务完成度: N/M ✓
+
+### 方案一致性 ✓
+
+### 规范遵循 ✓
+
+### 正确性
+- ⚠ file.ts:42 — xxx 边界未处理
+
+### 代码质量 ✓
+
+### 知识贡献
+- 建议新增: knowledge/xxx.md — <为什么值得沉淀>
+
+### 审查结论: ⚠ 建议
+
+建议项（用户决定）:
+1. file.ts:42 — xxx 边界处理
 ```
 
-每条发现记录写入：
+### 5. 结论分级
 
-```yaml
-review:
-  findings:
-    - id: R-001
-      severity: blocker | warning | suggestion
-      file: <path>
-      line: <optional line>
-      message: <finding>
-      status: open | fixed | accepted
-```
+| 结果 | 含义 | 动作 |
+|------|------|------|
+| ✓ 通过 | 无问题 | → "发布" (shadow-dev-ship) |
+| ⚠ 建议 | 有建议无阻塞 | 用户决定: 修复后发布 / 直接发布 |
+| ✗ 阻塞 | 有必须修复的问题 | → 回到 apply 修复阻塞项 → 重新审查 |
 
-## [3/6] 阻塞回环
+**✗ 阻塞回环**: 修复 → 重新审查 → 最多 2 轮。
 
-存在 blocker 或失败验证时，不得直接修代码。先把每项 blocker 转成最小 repair task：
+---
 
-```yaml
-apply:
-  repairWorkflow:
-    - id: repair-r-001
-      originFindingId: R-001
-      title: <fix title>
-      status: pending
-      dependsOn: []
-      files: []
-      instructions: []
-      verification: []
-      requiredInputs: []
-      attempts: 0
-      maxAttempts: 2
-      evidence: []
-      failure: null
-```
-
-然后：
-
-```yaml
-review: { status: blocked }
-change: { status: applying }
-runtime:
-  phase: apply
-  state: failed
-  resume: { taskId: repair-r-001, command: 开始执行 }
-  failure:
-    kind: verification
-    message: <blocker summary>
-```
-
-提示用户执行“开始执行”。Apply 只运行 repairWorkflow，完成后回到 Review。
-
-## [4/6] Warning 决策
-
-仅有 warning 时：
-
-```yaml
-review: { status: warnings }
-runtime:
-  phase: review
-  state: waiting_for_input
-  requiredInputs:
-    - key: review-warnings-decision
-      description: 选择修复 warning 或接受 warning 后归档
-      supplied: false
-```
-
-不得替用户默认接受 warning。
-
-## [5/6] 通过
-
-没有 blocker，且所有 required verification 已通过时：
-
-```yaml
-review:
-  status: passed
-  summary: <acceptance and risk summary>
-change: { status: reviewing }
-runtime: { phase: archive, state: completed }
-```
-
-## [6/6] Legacy
-
-Legacy change 必须读取 `skills/shadow-dev-workflow/references/legacy-markdown/shadow-dev-review.md` 后按旧 Markdown 审查方式处理；不要混用两套制品。
+✅ **review 完成** — 下一步: "发布" (shadow-dev-ship)

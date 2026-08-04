@@ -1,157 +1,114 @@
 ---
 name: shadow-dev-propose
-description: 创建 Agent Loop 需求 — 将需求产物写入单一 .openspec.yaml，并自动关联 GitHub Issue
+description: 新需求对齐 + 方案设计 — 从模糊需求到可执行的 brief.md。触发词：新需求、提案、设计一下、讨论方案。
 ---
-# 💫 Propose — Agent Loop 需求创建
+# Shadow Dev Propose — 需求对齐 + 方案设计
 
-## 核心约束
+从模糊需求收敛到可执行的 brief。**必须先聊清楚需求，再做方案设计。**
 
-新变更使用 `agent-loop/v1`。`.openspec.yaml` 是唯一的 Agent Loop **控制面**：
+## 流程
 
-```text
-openspec/changes/<change>/.openspec.yaml
+### 1. 查知识库
+
+调用 shadow-dev-knowledge 查询流程，用需求关键词匹配规范约束。结果作为方案讨论的输入。
+
+### 2. 澄清需求（一次一个问题）
+
+- 逐一提问，每轮一个问题
+- 重点关注：目的、边界、成功标准、不做什么
+- 涉及代码探索时，先用 Grep/Glob 检索 → 列出匹配文件让用户确认 → 再读
+- 直到需求足够清晰才进入方案讨论
+
+**反模式**: 用户说"简单"就跳过澄清；一次抛多个问题；不确认文件清单就读代码。
+
+### 3. 提出方案（含论据）
+
+提出 2-3 个方案，每个标注：
+
+```
+方案 A（推荐）：
+- 做法: <怎么做>
+- 优势: <为什么好>
+- 代价: <什么代价>
+
+方案 B：
+- 做法: <怎么做>
+- 优势: <为什么好>
+- 代价: <什么代价>
+
+推荐 A，因为: <关键权衡>。
+聊一下 B 也行吗？<让用户参与>
 ```
 
-固定 OpenSpec 产物必须保留并从 templates 创建：`proposal.md`、`design.md`、`tasks.md`、`specs/<domain>/spec.md`。YAML 记录它们的路径、状态、摘要、依赖、checkpoint 和熔断信息，避免 Agent 在各阶段无目的地反复扫描文档。完整协议见 `skills/shadow-dev-workflow/references/agent-loop-protocol.md`。
+**论据必须包含**: 每个方案对比了什么、为什么选这个不选那个、知识库规范约束如何体现。
 
-历史变更（`schema` 不为 `agent-loop/v1`）保持只读兼容；必须读取 `skills/shadow-dev-workflow/references/legacy-markdown/shadow-dev-propose.md` 执行旧规则，不得在本阶段隐式迁移。
+### 4. 收敛为 brief.md
 
-## [1/7] 判断入口
+用户确认方案后，先生成 brief 正文，再通过 CLI 创建并批准变更。brief 的 JSON frontmatter 是状态唯一真相：
 
-- 用户说 `ff` / `快进`：使用快速模式，仅适用于单文件、输入输出明确、无架构影响的变更。
-- 用户说 `Issue` / `从 Issue 开始`：读取指定 Issue，再选择 full 或 ff。
-- 其他 `提案`、`新需求`、`bug反馈`：默认 full。
-
-在明确需求前，不读取代码或现有变更。
-
-## [2/7] 对齐需求
-
-full 模式必须完成一次需求对齐：一次只问一个必要问题，明确：
-
-- 要解决的问题与成功标准；
-- 范围、非目标、风险；
-- 是否涉及用户决策、外部服务或敏感输入。
-
-ff 模式只做一次快速确认。确认后才可读取 `openspec/INDEX.md` 与最小范围的代码上下文。
-
-需求对齐完成后，必须进行一次 UI/UX 语义分类，并写入 `proposal.uiux`：
-
-```yaml
-proposal:
-  uiux:
-    mode: required | skipped | uncertain
-    triggers: []
-    rationale: <classification reason>
+```bash
+node scripts/shadow-dev.mjs change create --name <name> --type <type> --scope <scope> --base-branch <branch> --files <逗号分隔路径> --body-file <正文文件> --confirm
+node scripts/shadow-dev.mjs change approve --name <name> --confirm
 ```
 
-- `required`：用户意图包含页面、前端、组件、视觉、UI、UX、布局、交互、响应式、设计系统、品牌、动效、无障碍或 Figma。
-- `skipped`：仅后端、API、数据库、同步、Webhook、部署、CI、测试、日志或构建，且没有界面影响。
-- `uncertain`：需求没有足够信息判断界面影响；把“是否影响用户界面或交互？”写入 `runtime.requiredInputs`，不得猜测。
+正文结构：
 
-`required` 只标记后续 discuss 必须调用 `ui-ux-pro-max`；propose 不得在此时提前生成视觉方案或绕过 brainstorming 确认。
+```markdown
+# <变更标题>
 
-## [3/7] 规范预检
+## 动机
+<为什么现在做，1-2 句话>
 
-读取 `openspec/INDEX.md`。仅在关键词至少命中两个时读取相关领域规范；将冲突、可复用约束和待确认问题记入后续 YAML 的 `proposal.constraints` / `proposal.risks`。
+## 引用规范
+- <来源文件>: <约束内容>
+- <来源文件>: <约束内容>
 
-## [4/7] 创建固定产物与控制面
+## 决策
+- **选型:** <方案 A>
+- **对比方案:** B（<为什么不选>）、C（<为什么不选>）
+- **理由:** <关键权衡、规范遵循情况>
 
-按 `openspec/config.yaml` 命名规则创建：
+## 任务
+### Phase 1
+- [ ] task 1 — `文件路径` — <做什么>
 
-```text
-openspec/changes/<YYYY-MM-DD-P-or-B-kebab-case>/
+### Phase 2（依赖 Phase 1）
+- [ ] task 2 — `文件路径` — <做什么>
+
+## 结果
+- 实际耗时: —
+- 验证: Lint — / TypeScript — / 测试 —
 ```
 
-必须从 templates 创建以下固定产物，并登记到 YAML 的 `artifacts`：
+**命名**: `YYYY-MM-DD-<kebab-slug>`，如 `2026-08-01-add-share-button`。
 
-```text
-.openspec.yaml
-proposal.md
-design.md
-tasks.md
-specs/<domain>/spec.md
+**任务粒度**: 每个 task 控制在 30 分钟内。有依赖的放到不同 Phase。同一 Phase 内无依赖的标记为可并行。
+
+### 5. 展示结果
+
+```
+## 变更已创建: <name>
+
+### 动机
+<一句话>
+
+### 决策
+- 选了 <方案>，因为 <理由>
+
+### 任务
+- Phase 1: N 个任务（可并行）
+- Phase 2: M 个任务
+
+接下来 "开始执行"。
 ```
 
-proposal 阶段填充 `proposal.md` 与 `specs/<domain>/spec.md`；`design.md`、`tasks.md` 先按模板创建，留待 discuss 填充。YAML 填充：
+**最后**：询问是否发布 GitHub Issue。先 plan，用户确认后 execute；禁止直接运行 `gh issue create` 或手改 brief：
 
-```yaml
-schema: agent-loop/v1
-change:
-  id: <name>
-  title: <title>
-  type: feature | bug
-  status: proposed
-proposal:
-  status: completed
-  source: {}
-  intent: <summary>
-  background: <background>
-  goals: []
-  nonGoals: []
-  scope: { packages: [], files: [] }
-  acceptanceCriteria: []
-  constraints: []
-  risks: []
-  domain: { name: <name>, keywords: [], description: <description> }
-  uiux: { mode: skipped, triggers: [], rationale: <reason> }
-runtime:
-  phase: discuss
-  state: idle
+```bash
+node scripts/shadow-dev.mjs issue plan --name <name>
+node scripts/shadow-dev.mjs issue execute --name <name> --plan-hash <hash> --confirm
 ```
 
-`proposal.md` 与 `spec.md` 是 proposal 阶段的正式、人可读产物；YAML 仅保存它们的控制索引、摘要和阶段状态。
+---
 
-创建后必须运行模板契约校验器，分别校验 proposal 和每个 spec。将校验器 JSON 输出中的 `templateDigest`、`checkedAt`、`missingHeadings` / `invalidPatterns` 写入对应 `artifacts.*.template.digest` 与 `artifacts.*.validation`。校验失败时：
-
-```yaml
-runtime:
-  phase: propose
-  state: failed
-  failure:
-    kind: verification
-    message: <artifact contract failure>
-```
-
-不得创建 Issue 或进入 discuss，直到固定产物通过其模板契约。
-
-## [5/7] 创建 GitHub Issue
-
-创建 Issue 后将 URL 写入：
-
-```yaml
-change:
-  issue: https://github.com/<owner>/<repo>/issues/<number>
-```
-
-Issue 正文须包含 `proposal.intent`、目标、非目标、验收条件和变更 ID。若 `gh issue create` 失败，立即停止，写入：
-
-```yaml
-runtime:
-  phase: propose
-  state: blocked
-  failure:
-    kind: retryable
-    message: <failure message>
-  resume:
-    command: 继续提案
-```
-
-不要重试，不得创建未关联 Issue 的新 Agent Loop 变更。
-
-## [6/7] 完成与交接
-
-仅当 `proposal.status: completed`、`change.issue` 存在时：
-
-```yaml
-change:
-  status: proposed
-runtime:
-  phase: discuss
-  state: completed
-```
-
-输出变更 ID、Issue、已写入的 proposal 字段，并提示用户使用“需求讨论”。
-
-## [7/7] 失败与恢复
-
-所有缺失输入、外部失败或需求矛盾必须写入 `runtime.failure` 与 `runtime.requiredInputs`。用户补齐信息后，从 `runtime.phase` 恢复；不得重新创建 change 或重复 Issue。
+✅ **propose 完成** — 下一步: "开始执行" (shadow-dev-apply)
