@@ -77,14 +77,29 @@ shadow-docs/
 ├── INDEX.md          # 变更索引
 ├── knowledge/        # 项目专有领域知识
 ├── menu.md           # 项目级路由（非必须，追加到通用菜单）
-├── changes/           # 进行中的变更
-└── archive/          # 已完成的变更
+└── changes/
+    ├── <name>/brief.md          # 进行中的变更
+    └── archive/<name>/brief.md  # 已完成的变更
 ```
+
+## Deterministic CLI
+
+所有 brief、INDEX、Git 和 GitHub 工作流操作统一由 Node.js CLI 执行：
+
+```bash
+node scripts/shadow-dev.mjs --help
+node scripts/shadow-dev.mjs repo inspect --json
+node scripts/shadow-dev.mjs branch plan --name <name> --json
+node scripts/shadow-dev.mjs branch execute --name <name> --plan-hash <hash> --confirm --json
+```
+
+所有写操作需要 `--confirm`。plan/execute 会保存并重新验证 `planHash`；commit 只接受明确文件列表，不允许全量暂存；sync 不自动解决冲突；archive 仅在 GitHub API证明 PR 已合并后执行。历史无 JSON frontmatter 的 brief 只读。
 
 ## 依赖
 
 - Node.js 20+
-- `gh` CLI（可选，用于 Issue 和 PR 集成）
+- Git
+- GitHub token（Issue、PR、发布与归档校验时使用）
 
 ## License
 

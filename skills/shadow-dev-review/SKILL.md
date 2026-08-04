@@ -2,7 +2,7 @@
 name: shadow-dev-review
 description: 质量门禁 — 验证 + 对照方案论据检查 + 结论分级。触发词：代码审查、review、验收、verify。
 ---
-# ✅ Wuh Review — 质量门禁
+# Shadow Dev Review — 质量门禁
 
 apply 完成后的质量检查。只审查本次改动，不扫全仓。
 
@@ -23,9 +23,9 @@ pnpm exec eslint <改动的文件> --format stylish 2>&1  # ESLint
 ### 2. 获取变更上下文
 
 ```
-1. 读 shadow-docs/changes/<name>/brief.md → 动机、决策、任务
-2. git diff --name-only 获取改动文件
-3. 阅读理解 diff 内容
+1. `node scripts/shadow-dev.mjs review plan --name <name>` 获取 brief、任务和改动范围
+2. 阅读理解计划列出的 diff 内容
+3. 验证后执行 `node scripts/shadow-dev.mjs review execute --name <name> --plan-hash <hash> --conclusion <passed|blocked> --confirm`
 ```
 
 ### 3. 对照检查（6 维）

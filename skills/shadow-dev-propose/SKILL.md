@@ -2,7 +2,7 @@
 name: shadow-dev-propose
 description: 新需求对齐 + 方案设计 — 从模糊需求到可执行的 brief.md。触发词：新需求、提案、设计一下、讨论方案。
 ---
-# 💡 Wuh Propose — 需求对齐 + 方案设计
+# Shadow Dev Propose — 需求对齐 + 方案设计
 
 从模糊需求收敛到可执行的 brief。**必须先聊清楚需求，再做方案设计。**
 
@@ -44,7 +44,14 @@ description: 新需求对齐 + 方案设计 — 从模糊需求到可执行的 b
 
 ### 4. 收敛为 brief.md
 
-用户确认方案后，在项目 `shadow-docs/changes/<name>/` 下创建 brief.md：
+用户确认方案后，先生成 brief 正文，再通过 CLI 创建并批准变更。brief 的 JSON frontmatter 是状态唯一真相：
+
+```bash
+node scripts/shadow-dev.mjs change create --name <name> --type <type> --scope <scope> --base-branch <branch> --files <逗号分隔路径> --body-file <正文文件> --confirm
+node scripts/shadow-dev.mjs change approve --name <name> --confirm
+```
+
+正文结构：
 
 ```markdown
 # <变更标题>
@@ -95,7 +102,12 @@ description: 新需求对齐 + 方案设计 — 从模糊需求到可执行的 b
 接下来 "开始执行"。
 ```
 
-**最后**：询问是否发布 GitHub Issue（`gh issue create`），创建成功后将 Issue URL 写入 brief.md 顶部 `> Issue: <url>`。
+**最后**：询问是否发布 GitHub Issue。先 plan，用户确认后 execute；禁止直接运行 `gh issue create` 或手改 brief：
+
+```bash
+node scripts/shadow-dev.mjs issue plan --name <name>
+node scripts/shadow-dev.mjs issue execute --name <name> --plan-hash <hash> --confirm
+```
 
 ---
 

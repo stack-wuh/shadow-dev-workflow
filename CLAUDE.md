@@ -35,3 +35,10 @@
 | 代码审查 / review / 验收 | `shadow-dev-review` |
 | 提交 / PR / 发布 / 归档 | `shadow-dev-ship` |
 | 知识库查询 | `shadow-dev-knowledge`（propose 自动调用）|
+
+## Deterministic CLI
+
+- brief JSON frontmatter 是变更状态唯一真相；无 frontmatter 的历史 brief 只读。
+- brief、`shadow-docs/INDEX.md`、Git 与 GitHub 操作统一通过 `node scripts/shadow-dev.mjs`。
+- 所有写操作必须带 `--confirm`；plan/execute 命令必须携带并重新校验 `planHash`。
+- 禁止原始 `git`/`gh` 写命令、`git add .`、`git add -A`、`--no-verify` 和自动冲突解决。

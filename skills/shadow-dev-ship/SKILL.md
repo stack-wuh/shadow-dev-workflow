@@ -2,7 +2,7 @@
 name: shadow-dev-ship
 description: 归档 + 提交 + PR — 将 brief.md 移到 archive/，更新索引，提 PR。触发词：提交、commit、push、PR、发布、归档。
 ---
-# 📦 Wuh Ship — 归档 + 提交
+# Shadow Dev Ship — 归档 + 提交
 
 review 通过后将变更归档，提交代码，提 PR。**纯文档管理 + git 操作。**
 
@@ -11,8 +11,8 @@ review 通过后将变更归档，提交代码，提 PR。**纯文档管理 + gi
 ### 1. 展示变更预览
 
 ```bash
-git status
-git diff --stat
+node scripts/shadow-dev.mjs repo inspect
+node scripts/shadow-dev.mjs commit plan --name <name> --files <逗号分隔路径> --message "<message>"
 ```
 
 ```
@@ -32,9 +32,11 @@ AskUserQuestion：确认执行。
 
 ### 2. 归档 brief
 
+归档仅在 GitHub API 已证明 PR merged 后执行，正确路径为 `shadow-docs/changes/archive/<name>/brief.md`：
+
 ```bash
-# 移到 archive
-mv shadow-docs/changes/<name> shadow-docs/archive/<name>
+node scripts/shadow-dev.mjs archive plan --name <name>
+node scripts/shadow-dev.mjs archive execute --name <name> --plan-hash <hash> --confirm
 ```
 
 ### 3. 提炼知识
@@ -65,26 +67,29 @@ ASKUserQuestion 让用户确认要沉淀的知识条目。
 | 2026-08-01 | add-share-button | 分享, 博客, UI | ✅ 完成 |
 ```
 
-活跃变更标记为 🔄 进行中。每次 ship 时更新对应行状态。
+INDEX 只能通过 CLI 重建：
+
+```bash
+node scripts/shadow-dev.mjs index rebuild plan
+node scripts/shadow-dev.mjs index rebuild execute --plan-hash <hash> --confirm
+```
 
 ### 5. 提交代码
 
-```bash
-git add shadow-docs/archive/<name>/ shadow-docs/knowledge/ shadow-docs/INDEX.md
-git commit -m "docs(changes): 归档变更 <name>"
+只提交明确文件，禁止 `git add .`、`git add -A`、`--no-verify` 或原始 Git 写命令：
 
-git add <改动的源代码>
-git commit -m "<type>(<scope>): <description>"
+```bash
+node scripts/shadow-dev.mjs commit execute --name <name> --plan-hash <hash> --confirm
 ```
 
 ### 6. 推送 + 创建 PR
 
 ```bash
-git push origin <branch>
-gh pr create --title "<type>: <description>" --body "<summary>" --base main
+node scripts/shadow-dev.mjs publish plan --name <name>
+node scripts/shadow-dev.mjs publish execute --name <name> --plan-hash <hash> --confirm
 ```
 
-**错误处理**: 任何步骤失败 → 立即停止 → 展示手动命令。gh 操作最多尝试 1 次，不重试。
+**错误处理**: 任何步骤失败立即停止，不重试。所有 Git/GitHub 写操作只能通过 CLI。
 
 ### 7. 输出结果
 

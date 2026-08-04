@@ -20,7 +20,7 @@
 
 - **防什么**：随机改代码掩盖症状、反复试错浪费时间
 - **触发**：遇到任何 Bug、异常、测试失败、意外行为
-- **做什么**：系统化追溯根因，理解为什么出错再修（wuh-review 会检查根因分析是否完整）
+- **做什么**：系统化追溯根因，理解为什么出错再修（shadow-dev-review 会检查根因分析是否完整）
 - **阻断**：未执行根因分析就改代码的修复，review 阶段直接驳回
 
 ## 4. 不要直接在 main 上提交代码
@@ -32,7 +32,14 @@
 
 ## 5. 不要重复尝试 GH 操作
 
-- **防什么**：反复尝试 git push / gh pr create / gh pr merge，每次失败换一种方式重试
+- **防什么**：反复尝试 publish / PR / issue 网络操作，每次失败换一种方式重试
 - **触发**：任何 GH 网络操作（push/PR/merge/issue）
 - **做什么**：最多执行 1 次；失败后立即停止，输出手动命令，等待用户操作
 - **阻断**：同一命令执行超过 1 次视为违规
+
+## 6. 不要绕过 deterministic CLI
+
+- **防什么**：brief、INDEX、Git 与 GitHub 状态分裂，或绕过确认和计划校验
+- **触发**：任何 brief/INDEX 写入、Git 写操作或 GitHub API 写操作
+- **做什么**：统一通过 `node scripts/shadow-dev.mjs` 的 plan/execute 命令；execute 必须携带 planHash 和 `--confirm`
+- **阻断**：禁止原始 `git`/`gh` 写命令、直接修改 brief frontmatter/INDEX、`git add .`、`git add -A`、`--no-verify`
