@@ -1,50 +1,33 @@
 ---
 name: shadow-dev-propose
-description: 新需求对齐 + 方案设计 — 从模糊需求到可执行的 brief.md。触发词：新需求、提案、设计一下、讨论方案。
+description: 新需求对齐 + 方案设计 — 从模糊需求到可执行 brief。触发词：新需求、提案、设计一下、讨论方案。
 ---
-# Shadow Dev Propose — 需求对齐 + 方案设计
+# Shadow Dev Propose — 需求对齐与方案设计
 
-从模糊需求收敛到可执行的 brief。**必须先聊清楚需求，再做方案设计。**
+必须先聊清需求，再做方案设计。
 
 ## 流程
 
-### 1. 查知识库
+### 1. 查询 active Knowledge
 
-调用 shadow-dev-knowledge 查询流程，用需求关键词匹配规范约束。结果作为方案讨论的输入。
+调用 `shadow-dev-knowledge`：从通用和项目 menu 路由，只读取任务域、关键词和 scope 命中的 active 卡片。
 
-### 2. 澄清需求（一次一个问题）
+结果进入方案输入。若 source 缺失、无菜单路由、scope 不明确或卡片冲突，先阻塞并处理，不把不可靠内容当作规范。
 
-- 逐一提问，每轮一个问题
-- 重点关注：目的、边界、成功标准、不做什么
-- 涉及代码探索时，先用 Grep/Glob 检索 → 列出匹配文件让用户确认 → 再读
-- 直到需求足够清晰才进入方案讨论
+### 2. 澄清需求
 
-**反模式**: 用户说"简单"就跳过澄清；一次抛多个问题；不确认文件清单就读代码。
+- 每轮只问一个问题。
+- 明确目的、边界、成功标准和非目标。
+- 存量修改先检索，列出文件清单让用户确认后再读。
+- 需求清晰后才进入方案讨论。
 
-### 3. 提出方案（含论据）
+### 3. 比较方案
 
-提出 2-3 个方案，每个标注：
+提出 2–3 个方案，分别说明做法、优势和代价；给出推荐及关键权衡。每个方案说明如何遵循或不适用已命中的 Knowledge。
 
-```
-方案 A（推荐）：
-- 做法: <怎么做>
-- 优势: <为什么好>
-- 代价: <什么代价>
+### 4. 收敛为 brief
 
-方案 B：
-- 做法: <怎么做>
-- 优势: <为什么好>
-- 代价: <什么代价>
-
-推荐 A，因为: <关键权衡>。
-聊一下 B 也行吗？<让用户参与>
-```
-
-**论据必须包含**: 每个方案对比了什么、为什么选这个不选那个、知识库规范约束如何体现。
-
-### 4. 收敛为 brief.md
-
-用户确认方案后，先生成 brief 正文，再通过 CLI 创建并批准变更。brief 的 JSON frontmatter 是状态唯一真相：
+用户确认方案后，生成正文，再通过 deterministic CLI 创建并批准变更：
 
 ```bash
 node scripts/shadow-dev.mjs change create --name <name> --type <type> --scope <scope> --base-branch <branch> --files <逗号分隔路径> --body-file <正文文件> --confirm
@@ -57,58 +40,43 @@ node scripts/shadow-dev.mjs change approve --name <name> --confirm
 # <变更标题>
 
 ## 动机
-<为什么现在做，1-2 句话>
+<为什么现在做>
 
 ## 引用规范
-- <来源文件>: <约束内容>
-- <来源文件>: <约束内容>
+- <卡片路径>
+  - 当前结论: <结论>
+  - 适用 scope: <scope>
 
 ## 决策
-- **选型:** <方案 A>
-- **对比方案:** B（<为什么不选>）、C（<为什么不选>）
-- **理由:** <关键权衡、规范遵循情况>
+- **选型:** <方案>
+- **对比方案:** <未选方案和原因>
+- **理由:** <关键权衡和规范遵循>
 
 ## 任务
 ### Phase 1
-- [ ] task 1 — `文件路径` — <做什么>
-
-### Phase 2（依赖 Phase 1）
-- [ ] task 2 — `文件路径` — <做什么>
+- [ ] task 1 — `文件路径` — <动作>
 
 ## 结果
 - 实际耗时: —
-- 验证: Lint — / TypeScript — / 测试 —
+- 验证: —
+
+## 知识评估
+- **预期影响:** 新增 / 更新 / 废弃 / 无需变更
+- **候选卡片:** <路径或无>
+- **理由:** <为什么>
 ```
 
-**命名**: `YYYY-MM-DD-<kebab-slug>`，如 `2026-08-01-add-share-button`。
+propose 只做知识影响预评估，不创建或改写 Knowledge。发现代码事实与 active Knowledge 已知冲突时，在 brief 中记录待确认点。
 
-**任务粒度**: 每个 task 控制在 30 分钟内。有依赖的放到不同 Phase。同一 Phase 内无依赖的标记为可并行。
+**命名：** `YYYYMMDD-<P|B>-<kebab-slug>`。每个 task 控制在 30 分钟内；有依赖的分 Phase。
 
 ### 5. 展示结果
 
-```
-## 变更已创建: <name>
+展示动机、决策、任务阶段和知识影响预评估，提示下一步使用 `shadow-dev-apply`。
 
-### 动机
-<一句话>
-
-### 决策
-- 选了 <方案>，因为 <理由>
-
-### 任务
-- Phase 1: N 个任务（可并行）
-- Phase 2: M 个任务
-
-接下来 "开始执行"。
-```
-
-**最后**：询问是否发布 GitHub Issue。先 plan，用户确认后 execute；禁止直接运行 `gh issue create` 或手改 brief：
+GitHub Issue 必须先 plan、确认后 execute，禁止原始 `gh` 写命令：
 
 ```bash
 node scripts/shadow-dev.mjs issue plan --name <name>
 node scripts/shadow-dev.mjs issue execute --name <name> --plan-hash <hash> --confirm
 ```
-
----
-
-✅ **propose 完成** — 下一步: "开始执行" (shadow-dev-apply)

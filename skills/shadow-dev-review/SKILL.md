@@ -1,96 +1,63 @@
 ---
 name: shadow-dev-review
-description: 质量门禁 — 验证 + 对照方案论据检查 + 结论分级。触发词：代码审查、review、验收、verify。
+description: 质量门禁 — 验证实现、方案与 active Knowledge，并给出最终知识影响。触发词：代码审查、review、验收、verify。
 ---
 # Shadow Dev Review — 质量门禁
 
-apply 完成后的质量检查。只审查本次改动，不扫全仓。
+只审查本次改动，不扫全仓。
 
 ## 流程
 
 ### 1. 自检验证
 
-**铁律: 无验证输出不得声称完成。**
-
-```bash
-pnpm exec tsc --noEmit 2>&1   # 类型检查
-pnpm exec eslint <改动的文件> --format stylish 2>&1  # ESLint
-# 运行相关测试（如有）
-```
-
-不通过 ➡️ 回去修。修完重新自检。
+代码变更运行类型检查、lint 和相关测试；Knowledge 治理运行字段、source、路由、死链接和残留扫描。无验证输出不得声称完成。
 
 ### 2. 获取变更上下文
 
+```bash
+node scripts/shadow-dev.mjs review plan --name <name>
+node scripts/shadow-dev.mjs review execute --name <name> --plan-hash <hash> --conclusion <passed|blocked> --confirm
 ```
-1. `node scripts/shadow-dev.mjs review plan --name <name>` 获取 brief、任务和改动范围
-2. 阅读理解计划列出的 diff 内容
-3. 验证后执行 `node scripts/shadow-dev.mjs review execute --name <name> --plan-hash <hash> --conclusion <passed|blocked> --confirm`
-```
 
-### 3. 对照检查（6 维）
+阅读 plan 列出的 brief、引用 Knowledge 和 diff。
 
-**维度 1 — 任务完成度：**
-- brief.md 所有 checkbox 是否 `[x]`
-- 有没有遗漏的任务
+### 3. 七维检查
 
-**维度 2 — 方案一致性：**
-- 代码实现是否匹配 brief.md 的「决策」部分
-- 有没有偏离选定的方案
+1. **任务完成度：** checkbox 与实际任务一致。
+2. **方案一致性：** 实现符合 brief 决策。
+3. **规范遵循：** 实现符合引用的 active Knowledge；不适用项有明确理由。
+4. **正确性：** 边界、类型、错误路径和并发行为正确。
+5. **代码质量：** 无无关修改、重复和明显性能问题。
+6. **验证完整性：** 相关验证真实运行且结果可查。
+7. **Knowledge 门禁：**
+   - 卡片中的验证方式仍成立。
+   - 本次是否产生新的长期有效事实。
+   - 最终结论是新增、更新、废弃或无需变更。
+   - 动作必须给出确定目标路径和理由。
 
-**维度 3 — 规范遵循：**
-- 对照 brief.md 的「引用规范」，检查代码是否遵循了每条约束
-- 不遵循的约束是否在决策中说明了理由
+以下情况阻塞：
 
-**维度 4 — 正确性：**
-- 边界条件处理（空值、异常路径、并发冲突）
-- 类型安全（无无理由 `as`、无 `any`）
-- 错误处理不吞异常
+- 稳定事实已变化但 brief 仍填“无需变更”。
+- 候选卡片缺少 source、scope、verified。
+- active 卡片没有 menu 路由。
+- 实现违反 active Knowledge 且 brief 未说明有意变更。
 
-**维度 5 — 代码质量：**
-- 重复代码、过长函数（>50 行需说明理由）
-- 无明显性能问题（N+1 查询、缺失分页）
-- 变更范围未超出 brief.md 声明
+## 审查报告
 
-**维度 6 — 知识贡献：**
-- 本次变更是否有值得沉淀到 `shadow-docs/knowledge/` 的领域知识
-- 如有，记录到审查报告中
-
-### 4. 审查报告
-
-```
+```markdown
 ## 审查: <name>
 
-### 任务完成度: N/M ✓
-
-### 方案一致性 ✓
-
-### 规范遵循 ✓
-
-### 正确性
-- ⚠ file.ts:42 — xxx 边界未处理
-
-### 代码质量 ✓
-
-### 知识贡献
-- 建议新增: knowledge/xxx.md — <为什么值得沉淀>
-
-### 审查结论: ⚠ 建议
-
-建议项（用户决定）:
-1. file.ts:42 — xxx 边界处理
+### 任务完成度: N/M
+### 方案一致性: 通过 / 阻塞
+### 规范遵循: 通过 / 阻塞
+### 正确性: <结果>
+### 代码质量: <结果>
+### 验证: <命令与结果>
+### Knowledge 评估
+- 结果: 新增 / 更新 / 废弃 / 无需变更
+- 目标: <卡片路径或无>
+- 理由: <确定理由>
+### 结论: 通过 / 建议 / 阻塞
 ```
 
-### 5. 结论分级
-
-| 结果 | 含义 | 动作 |
-|------|------|------|
-| ✓ 通过 | 无问题 | → "发布" (shadow-dev-ship) |
-| ⚠ 建议 | 有建议无阻塞 | 用户决定: 修复后发布 / 直接发布 |
-| ✗ 阻塞 | 有必须修复的问题 | → 回到 apply 修复阻塞项 → 重新审查 |
-
-**✗ 阻塞回环**: 修复 → 重新审查 → 最多 2 轮。
-
----
-
-✅ **review 完成** — 下一步: "发布" (shadow-dev-ship)
+阻塞项修复后重新审查，最多两轮。通过后进入 `shadow-dev-ship`。
