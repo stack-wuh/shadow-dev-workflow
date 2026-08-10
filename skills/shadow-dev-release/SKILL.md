@@ -45,7 +45,7 @@ node scripts/shadow-dev.mjs publish plan --name <name>
 node scripts/shadow-dev.mjs publish execute --name <name> --plan-hash <hash> --confirm
 ```
 
-禁止原始 Git/GitHub 写命令、`git add .`、`git add -A` 和 `--no-verify`。网络步骤失败立即停止，不换方式重试。
+禁止原始 Git/GitHub 写命令、`git add .`、`git add -A` 和 `--no-verify`。网络步骤失败立即停止，不换方式重试。publish 使用 brief 中 `data.type` 自动映射到仓库已定义的 label。
 
 ## 4. 输出
 
