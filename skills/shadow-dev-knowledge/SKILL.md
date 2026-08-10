@@ -1,70 +1,83 @@
 ---
 name: shadow-dev-knowledge
-description: 知识库查询 — 根据需求关键词匹配菜单路由，拉取规范和项目知识。被 propose 自动调用，不直接面向用户。
+description: 知识库查询 — 根据任务域、关键词和 scope 匹配菜单路由，只拉取 active 规范和知识。被 propose 自动调用。
 ---
-# 📚 Wuh Knowledge — 知识库查询
+# Shadow Dev Knowledge — 知识库查询
 
-只被 `shadow-dev-propose` 在需求对齐阶段调用，提供规范约束注入。
+只被 `shadow-dev-propose` 在需求对齐阶段调用，为方案注入当前有效约束。
 
 ## 查询流程
 
-### 1. 提取技术域关键词
+### 1. 提取查询条件
 
-从用户需求中提取技术域关键词：功能类型（UI/API/数据库/性能/交互）、涉及模块、变更范围。
+从需求中提取：
 
-### 2. 查菜单路由表
+- 任务域：UI、API、数据库、性能、交互、Bug、Knowledge 治理等。
+- 关键词：业务词、技术词和故障现象。
+- scope：涉及的目录、包、路由或业务模块。
 
-读 `menu.md`，用关键词匹配技术域 → 得到应查阅的规范文件清单：
+### 2. 按菜单路由
 
-| 关键词匹配 | 规范文件 |
-|-----------|---------|
-| 匹配到 UI 域 | `norms/ui-patterns.md` + `norms/interaction.md` |
-| 匹配到 API 域 | `norms/api-design.md` |
-| Bug | `norms/tdd-verification.md` |
-| 所有变更 | `norms/code-style.md` |
+1. 读取通用 `menu.md`，得到通用 norms 和通用 Knowledge。
+2. 如项目存在 `shadow-docs/menu.md`，追加项目路由。
+3. 只读取菜单命中的文件，不全文扫描全部 Knowledge。
+4. Knowledge 必须同时综合 `domain`、`keywords` 和 `scope` 判断相关性。
+5. 默认只读取 `status: active`；deprecated 仅用于追溯替代关系。
+6. 所有变更默认读取 `norms/code-style.md`。
 
-同时扫描 `shadow-docs/knowledge/` 下所有 `.md` 文件，用需求关键词与文件标题/关键词字段做匹配。文件开头有 YAML frontmatter：
+## Knowledge 卡片要求
 
 ```yaml
 ---
+title: 博客封面图
+domain: blog
 keywords: [封面图, cover, metadata]
+scope: [packages/wuh.site.next/app/post]
+status: active
+source:
+  - changes/archive/example/brief.md
+verified: 2026-08-08
 ---
 ```
 
-至少一个关键词匹配即视为相关。
+读取前检查：
 
-### 3. 读取并提取约束
+- source 指向存在的 brief。
+- active 卡片出现在 menu 的至少一条路由中。
+- scope 是明确的路径、包、路由或业务域。
+- 同一 scope 下不存在相互冲突的 active 结论。
 
-读所有匹配到的规范文件，从每条规范中提取：
+任一检查失败时输出阻塞项，不把卡片作为可靠执行依据。
 
-- **约束**: 一句话说明限制了什么
-- **适用范围**: 本次需求是否适用
+## 输出格式
 
-### 4. 输出格式
+```markdown
+## Knowledge 匹配结果
 
-```
-## 知识库匹配结果
+### 技术域与 scope
+- 技术域: blog, UI
+- scope: packages/wuh.site.next/app/post
 
-### 技术域
-UI 变更, API 变更
+### 通用规范
+- norms/ui-patterns.md: <适用约束>
 
-### 通用规范约束
-- ui-patterns.md: 暗黑模式下文字对比度不低于 4.5:1
-- ui-patterns.md: 禁止硬编码颜色值
-- interaction.md: 触摸目标不小于 44x44px
-- api-design.md: 分页返回统一 { data, total, page, pageSize } 格式
-- code-style.md: 文件不超过 300 行
+### Active Knowledge
+- shadow-docs/knowledge/post-cover.md
+  - scope: packages/wuh.site.next/app/post
+  - source: changes/archive/<name>/brief.md
+  - verified: YYYY-MM-DD
+  - 执行约束: <约束摘要>
 
-### 项目知识约束
-- cover-image.md: 封面图从 metadata.cover 取，fallback 到正文首图
-- theme-tokens.md: 颜色使用 CSS 变量三层架构
+### 阻塞项
+- 无；或列出 source、路由、scope、冲突问题
 
-### 未匹配的规范（不适用）
-- api-design.md 版本策略 → 本次无 API 版本变更
+### 不适用
+- <文件>: <为什么不适用>
 ```
 
 ## 约束处理
 
-- 每条「适用」的约束必须体现在方案设计中
-- 如果决定不遵循某条约束，必须在 brief.md 的「决策」部分说明理由
-- 任何新组件/新样式必须检查项目组件库是否有现成的可复用
+- 每条适用约束必须进入 brief 的「引用规范」，记录路径、当前结论和 scope。
+- 不遵循约束时必须在「决策」中说明理由。
+- 新增 Knowledge 前按 `domain + keywords + scope` 查重，能更新现有卡片时不新增。
+- 新组件和样式必须先确认项目组件库是否已有可复用实现。
