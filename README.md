@@ -83,6 +83,8 @@ brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `
 
 ## 安装
 
+作为 Claude Code 插件：
+
 ```bash
 claude plugins install stack-wuh/shadow-dev-workflow
 ```
