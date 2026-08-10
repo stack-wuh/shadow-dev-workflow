@@ -9,7 +9,8 @@ skills/
 ├── shadow-dev-propose/     # 需求对齐、方案设计、知识影响预评估
 ├── shadow-dev-apply/       # 加载 active Knowledge，执行与验证
 ├── shadow-dev-review/      # 质量门禁和最终知识评估
-├── shadow-dev-ship/        # Knowledge 闭环、提交与发布
+├── shadow-dev-release/     # Knowledge 闭环 + 提交 + PR
+├── shadow-dev-archive/     # 归档 merged change + 重建 INDEX
 └── shadow-dev-knowledge/   # 精确查询 active Knowledge
 
 norms/                      # 跨项目硬规则与工程规范
@@ -52,13 +53,14 @@ shadow-docs/
 ## 工作流
 
 ```text
-propose → apply → review → ship
+propose → apply → review → release → archive
 ```
 
 - **propose：** 按 menu 读取和引用 active Knowledge，记录预期知识影响。
 - **apply：** 按引用约束执行；冲突时暂停并查明原因。
 - **review：** 验证实现、约束和卡片检查方法，给出最终知识动作。
-- **ship：** 新增、原位更新、废弃卡片或记录无需变更，然后提交发布。
+- **release：** 新增、原位更新、废弃卡片或记录无需变更，然后提交发布 PR。
+- **archive：** PR merged 后将 brief 移到 archive/ 并重建 INDEX；也可由 GitHub Actions 在 issue close 时自动触发。
 
 ## brief
 

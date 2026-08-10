@@ -60,4 +60,4 @@ node scripts/shadow-dev.mjs review execute --name <name> --plan-hash <hash> --co
 ### 结论: 通过 / 建议 / 阻塞
 ```
 
-阻塞项修复后重新审查，最多两轮。通过后进入 `shadow-dev-ship`。
+阻塞项修复后重新审查，最多两轮。通过后进入 `shadow-dev-release`。

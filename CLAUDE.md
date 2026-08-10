@@ -4,7 +4,7 @@
 
 ## 分层规则
 
-- `skills/`：定义 propose、apply、review、ship 和 Knowledge 查询流程。
+- `skills/`：定义 propose、apply、review、release、archive 和 Knowledge 查询流程。
 - `norms/`：跨项目硬规则与工程规范。
 - `knowledge/`：跨项目经验与协作知识。
 - 项目 `shadow-docs/knowledge/`：项目独有的执行真相。
@@ -39,7 +39,8 @@
 | 新需求、提案、方案设计 | `shadow-dev-propose` |
 | 开始执行、实现 | `shadow-dev-apply` |
 | 审查、验收 | `shadow-dev-review` |
-| 提交、PR、发布、归档 | `shadow-dev-ship` |
+| 提交、PR、发布 | `shadow-dev-release` |
+| 归档 | `shadow-dev-archive` |
 | Knowledge 查询 | `shadow-dev-knowledge`（propose 自动调用） |
 
 ## Deterministic CLI
