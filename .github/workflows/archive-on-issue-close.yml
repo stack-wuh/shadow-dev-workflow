@@ -1,0 +1,82 @@
+name: Archive Change on Issue Close
+
+on:
+  workflow_dispatch:
+    inputs:
+      change-name:
+        description: 'Change directory name in shadow-docs/changes/'
+        required: true
+        type: string
+      project-repo:
+        description: 'Target project repo (owner/repo format)'
+        required: true
+        type: string
+  repository_dispatch:
+    types: [archive-change]
+
+concurrency:
+  group: archive-${{ inputs.change-name || github.event.client_payload.change-name }}
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write  # commit & push to project repo
+    steps:
+      - name: Resolve inputs
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "change=${{ github.event.client_payload.change-name }}" >> $GITHUB_OUTPUT
+            echo "repo=${{ github.event.client_payload.project-repo }}" >> $GITHUB_OUTPUT
+          else
+            echo "change=${{ inputs.change-name }}" >> $GITHUB_OUTPUT
+            echo "repo=${{ inputs.project-repo }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout project repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.resolve.outputs.repo }}
+          token: ${{ secrets.GH_TOKEN || github.token }}
+          path: project
+          ref: main
+
+      - name: Checkout shadow-dev-workflow
+        uses: actions/checkout@v4
+        with:
+          path: workflow
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: workflow/package.json
+
+      - name: Archive change
+        run: |
+          cd project
+          node ../workflow/scripts/shadow-dev.mjs archive plan --name "${{ steps.resolve.outputs.change }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+
+      - name: Execute archive
+        run: |
+          cd project
+
+          HASH=$(node ../workflow/scripts/shadow-dev.mjs archive plan --name "${{ steps.resolve.outputs.change }}" --json | jq -r '.planHash')
+
+          node ../workflow/scripts/shadow-dev.mjs archive execute \
+            --name "${{ steps.resolve.outputs.change }}" \
+            --plan-hash "$HASH" \
+            --confirm
+
+          git config user.email "shadow-dev[bot]@users.noreply.github.com"
+          git config user.name "shadow-dev[bot]"
+          git add shadow-docs/
+          git diff --staged --quiet || git commit -m "archive: ${{ steps.resolve.outputs.change }}"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
