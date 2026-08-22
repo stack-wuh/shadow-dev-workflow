@@ -33,7 +33,6 @@ node scripts/shadow-dev.mjs archive execute --name <name> --plan-hash <hash> --c
 具体操作：
 - 将 `shadow-docs/changes/<YYYYMMDD-{type}-{slug}>/` 移动到 `shadow-docs/changes/archive/<YYYYMMDD-{type}-{slug}>/`
 - 重建 `INDEX.md`
-- 重建 `INDEX.md`
 
 ### 3. 自动归档（GitHub Actions）
 
