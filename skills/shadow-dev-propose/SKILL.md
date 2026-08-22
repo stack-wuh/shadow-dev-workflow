@@ -6,6 +6,8 @@ description: 新需求对齐 + 方案设计 — 从模糊需求到可执行 brie
 
 必须先聊清需求，再做方案设计。
 
+**进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-propose · 需求对齐与方案设计`
+
 ## 流程
 
 ### 1. 查询 active Knowledge
@@ -83,4 +85,4 @@ node scripts/shadow-dev.mjs issue execute --name <name> --plan-hash <hash> --con
 
 ---
 
-✅ **propose 完成** — 下一步: "开始执行" (shadow-dev-apply)
+**离场：** 完成时输出：`✅ [离场] shadow-dev-propose · 下一步: shadow-dev-apply`

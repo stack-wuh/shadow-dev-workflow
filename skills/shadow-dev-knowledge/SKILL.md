@@ -6,6 +6,8 @@ description: 知识库查询 — 根据任务域、关键词和 scope 匹配菜�
 
 只被 `shadow-dev-propose` 在需求对齐阶段调用，为方案注入当前有效约束。
 
+**进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-knowledge · 知识库查询`
+
 ## 查询流程
 
 ### 1. 提取查询条件
@@ -81,3 +83,5 @@ verified: 2026-08-08
 - 不遵循约束时必须在「决策」中说明理由。
 - 新增 Knowledge 前按 `domain + keywords + scope` 查重，能更新现有卡片时不新增。
 - 新组件和样式必须先确认项目组件库是否已有可复用实现。
+
+**离场：** 完成时输出：`✅ [离场] shadow-dev-knowledge · 命中 N 条 active 卡片 · 返回 shadow-dev-propose`

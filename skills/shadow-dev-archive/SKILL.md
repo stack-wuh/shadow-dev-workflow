@@ -6,6 +6,8 @@ description: 归档已合并的 change — PR merged 后将 brief 移到 archive
 
 PR 合并后将 change 归档。可由 `shadow-dev-release` 完成后手动调用，或由 GitHub Actions 在 issue close 时自动触发。
 
+**进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-archive · 归档 merged change`
+
 ## 前置条件
 
 - PR 已 merged（CLI 通过 GitHub API 验证）
@@ -41,3 +43,5 @@ issue close 时 webhook 自动 dispatch `archive-change` 事件，由 `.github/w
 
 - PR 未合并时执行归档
 - 手动移动 change 目录或手改 INDEX
+
+**离场：** 完成时输出：`✅ [离场] shadow-dev-archive · change <name> 已归档 · 工作流结束`

@@ -4,6 +4,8 @@ description: 开始执行 — 按 brief 的 Phase 执行任务，加载 active K
 ---
 # Shadow Dev Apply — 执行
 
+**进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-apply · 按 brief 执行`
+
 ## 流程
 
 ### 1. 确认变更和约束
@@ -64,4 +66,6 @@ node scripts/shadow-dev.mjs task set --name <name> --task <task-id> --state done
 
 每个 task 完成后更新，禁止直接改 brief 的受管状态。
 
-apply 完成后进入 `shadow-dev-review`。
+apply 完成后输出离场日志并进入 `shadow-dev-review`。
+
+**离场：** 完成时输出：`✅ [离场] shadow-dev-apply · task N/N 完成 · 下一步: shadow-dev-review`

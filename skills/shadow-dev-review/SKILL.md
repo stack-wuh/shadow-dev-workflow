@@ -6,6 +6,8 @@ description: 质量门禁 — 验证实现、方案与 active Knowledge，并给
 
 只审查本次改动，不扫全仓。
 
+**进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-review · 质量门禁`
+
 ## 流程
 
 ### 1. 自检验证
@@ -61,3 +63,5 @@ node scripts/shadow-dev.mjs review execute --name <name> --plan-hash <hash> --co
 ```
 
 阻塞项修复后重新审查，最多两轮。通过后进入 `shadow-dev-release`。
+
+**离场：** 完成时输出：`✅ [离场] shadow-dev-review · 结论: <passed|blocked> · 下一步: shadow-dev-release`

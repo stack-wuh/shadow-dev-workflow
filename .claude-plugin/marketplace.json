@@ -1,0 +1,12 @@
+{
+  "name": "shadow-dev-workflow-local",
+  "owner": {
+    "name": "Shadow (stack-wuh)"
+  },
+  "plugins": [
+    {
+      "name": "shadow-dev-workflow",
+      "source": "./"
+    }
+  ]
+}
