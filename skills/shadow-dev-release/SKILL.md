@@ -33,8 +33,8 @@ Knowledge 不保存一次性实现过程或验证输出。写入和 menu 更新�
 ## 2. 展示提交预览
 
 ```bash
-node scripts/shadow-dev.mjs repo inspect
-node scripts/shadow-dev.mjs commit plan --name <name> --files <逗号分隔路径> --message "<message>"
+shadow-dev repo inspect
+shadow-dev commit plan --name <name> --files <逗号分隔路径> --message "<message>"
 ```
 
 列出分支、change、明确文件和知识评估结果，使用 AskUserQuestion 确认执行。
@@ -42,9 +42,9 @@ node scripts/shadow-dev.mjs commit plan --name <name> --files <逗号分隔路�
 ## 3. 提交和创建 PR
 
 ```bash
-node scripts/shadow-dev.mjs commit execute --name <name> --plan-hash <hash> --confirm
-node scripts/shadow-dev.mjs publish plan --name <name>
-node scripts/shadow-dev.mjs publish execute --name <name> --plan-hash <hash> --confirm
+shadow-dev commit execute --name <name> --plan-hash <hash> --confirm
+shadow-dev publish plan --name <name>
+shadow-dev publish execute --name <name> --plan-hash <hash> --confirm
 ```
 
 禁止原始 Git/GitHub 写命令、`git add .`、`git add -A` 和 `--no-verify`。网络步骤失败立即停止，不换方式重试。publish 使用 brief 中 `data.type` 自动映射到仓库已定义的 label。
