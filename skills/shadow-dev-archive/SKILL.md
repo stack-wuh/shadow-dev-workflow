@@ -19,7 +19,7 @@ PR 合并后将 change 归档。可由 `shadow-dev-release` 完成后手动调�
 ### 1. 展示归档预览
 
 ```bash
-node scripts/shadow-dev.mjs archive plan --name <name>
+shadow-dev archive plan --name <name>
 ```
 
 预览将移动的 change 目录和 INDEX 变更。
@@ -27,7 +27,7 @@ node scripts/shadow-dev.mjs archive plan --name <name>
 ### 2. 执行归档
 
 ```bash
-node scripts/shadow-dev.mjs archive execute --name <name> --plan-hash <hash> --confirm
+shadow-dev archive execute --name <name> --plan-hash <hash> --confirm
 ```
 
 具体操作：

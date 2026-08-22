@@ -17,8 +17,8 @@ description: 质量门禁 — 验证实现、方案与 active Knowledge，并给
 ### 2. 获取变更上下文
 
 ```bash
-node scripts/shadow-dev.mjs review plan --name <name>
-node scripts/shadow-dev.mjs review execute --name <name> --plan-hash <hash> --conclusion <passed|blocked> --confirm
+shadow-dev review plan --name <name>
+shadow-dev review execute --name <name> --plan-hash <hash> --conclusion <passed|blocked> --confirm
 ```
 
 阅读 plan 列出的 brief、引用 Knowledge 和 diff。

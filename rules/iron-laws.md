@@ -41,5 +41,5 @@
 
 - **防什么**：brief、INDEX、Git 与 GitHub 状态分裂，或绕过确认和计划校验
 - **触发**：任何 brief/INDEX 写入、Git 写操作或 GitHub API 写操作
-- **做什么**：统一通过 `node scripts/shadow-dev.mjs` 的 plan/execute 命令；execute 必须携带 planHash 和 `--confirm`
+- **做什么**：统一通过 `shadow-dev` 的 plan/execute 命令；execute 必须携带 planHash 和 `--confirm`
 - **阻断**：禁止原始 `git`/`gh` 写命令、直接修改 brief frontmatter/INDEX、`git add .`、`git add -A`、`--no-verify`

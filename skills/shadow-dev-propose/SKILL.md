@@ -32,8 +32,8 @@ description: 新需求对齐 + 方案设计 — 从模糊需求到可执行 brie
 用户确认方案后，生成正文，再通过 deterministic CLI 创建并批准变更：
 
 ```bash
-node scripts/shadow-dev.mjs change create --name <name> --type <feature|fix|build|chore|docs|refactor|style|test> --scope <scope> --base-branch <branch> --files <逗号分隔路径> --body-file <正文文件> --confirm
-node scripts/shadow-dev.mjs change approve --name <name> --confirm
+shadow-dev change create --name <name> --type <feature|fix|build|chore|docs|refactor|style|test> --scope <scope> --base-branch <branch> --files <逗号分隔路径> --body-file <正文文件> --confirm
+shadow-dev change approve --name <name> --confirm
 ```
 
 正文结构：
@@ -79,8 +79,8 @@ propose 只做知识影响预评估，不创建或改写 Knowledge。发现代�
 GitHub Issue 必须先 plan、确认后 execute，禁止原始 `gh` 写命令。issue labels 从 change type 映射：feature→`feature`、fix→`fix`、build→`build`、chore→`chore`、docs→`docs`、refactor→`refactor`、style→`style`、test→`test`。
 
 ```bash
-node scripts/shadow-dev.mjs issue plan --name <name> --labels <type>
-node scripts/shadow-dev.mjs issue execute --name <name> --plan-hash <hash> --confirm
+shadow-dev issue plan --name <name> --labels <type>
+shadow-dev issue execute --name <name> --plan-hash <hash> --confirm
 ```
 
 ---

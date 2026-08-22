@@ -72,11 +72,22 @@ propose → apply → review → release → archive
 
 ## Deterministic CLI
 
+CLI 随本插件分发（`scripts/shadow-dev.mjs`），不复制进消费仓库。在消费仓库中使用时：
+
+- 优先使用 bin 命令 `shadow-dev`（插件安装时注册）。
+- 若 bin 不在 PATH，使用插件目录路径调用：
+
 ```bash
-node scripts/shadow-dev.mjs --help
-node scripts/shadow-dev.mjs repo inspect --json
-node scripts/shadow-dev.mjs branch plan --name <name> --json
-node scripts/shadow-dev.mjs branch execute --name <name> --plan-hash <hash> --confirm --json
+node "$(echo ~/.claude/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/*/scripts/shadow-dev.mjs | tr ' ' '\n' | tail -1)" --help
+```
+
+示例：
+
+```bash
+shadow-dev --help
+shadow-dev repo inspect --json
+shadow-dev branch plan --name <name> --json
+shadow-dev branch execute --name <name> --plan-hash <hash> --confirm --json
 ```
 
 brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `--confirm`；plan/execute 重新验证 planHash；commit 只接受明确文件列表；archive 仅在 GitHub API 证明 PR merged 后执行。

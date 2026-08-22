@@ -17,7 +17,7 @@ description: 开始执行 — 按 brief 的 Phase 执行任务，加载 active K
 ### 2. 检查冲突
 
 ```bash
-node scripts/shadow-dev.mjs conflict inspect --name <name>
+shadow-dev conflict inspect --name <name>
 ```
 
 同时检查：
@@ -30,9 +30,9 @@ node scripts/shadow-dev.mjs conflict inspect --name <name>
 ### 3. 创建功能分支
 
 ```bash
-node scripts/shadow-dev.mjs repo inspect
-node scripts/shadow-dev.mjs branch plan --name <name>
-node scripts/shadow-dev.mjs branch execute --name <name> --plan-hash <hash> --confirm
+shadow-dev repo inspect
+shadow-dev branch plan --name <name>
+shadow-dev branch execute --name <name> --plan-hash <hash> --confirm
 ```
 
 分支类型使用 feat、fix、refactor、docs 或 chore。
@@ -61,7 +61,7 @@ node scripts/shadow-dev.mjs branch execute --name <name> --plan-hash <hash> --co
 ### 7. 更新进度
 
 ```bash
-node scripts/shadow-dev.mjs task set --name <name> --task <task-id> --state done --confirm
+shadow-dev task set --name <name> --task <task-id> --state done --confirm
 ```
 
 每个 task 完成后更新，禁止直接改 brief 的受管状态。
