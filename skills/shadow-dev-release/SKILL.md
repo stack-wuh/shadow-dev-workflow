@@ -6,6 +6,8 @@ description: Knowledge 闭环 + 提交 + PR — review 通过后完成知识评�
 
 review 通过后先完成最终知识评估，再提交和发布 PR。归档由 `shadow-dev-archive` 在 PR merged 后独立处理。
 
+**进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-release · 知识闭环与发布`
+
 ## 1. 检查最终知识评估
 
 brief 必须包含最终结果和理由：新增、更新、废弃或无需变更。新增或更新前按 `domain + keywords + scope` 查重。
@@ -45,7 +47,7 @@ node scripts/shadow-dev.mjs publish plan --name <name>
 node scripts/shadow-dev.mjs publish execute --name <name> --plan-hash <hash> --confirm
 ```
 
-禁止原始 Git/GitHub 写命令、`git add .`、`git add -A` 和 `--no-verify`。网络步骤失败立即停止，不换方式重试。
+禁止原始 Git/GitHub 写命令、`git add .`、`git add -A` 和 `--no-verify`。网络步骤失败立即停止，不换方式重试。publish 使用 brief 中 `data.type` 自动映射到仓库已定义的 label。
 
 ## 4. 输出
 
@@ -54,3 +56,5 @@ node scripts/shadow-dev.mjs publish execute --name <name> --plan-hash <hash> --c
 ## 5. 下一步
 
 PR merged 后执行 `shadow-dev-archive` 归档。也可由 GitHub Actions 在 issue close 时自动触发。
+
+**离场：** 完成时输出：`✅ [离场] shadow-dev-release · PR: <url> · 下一步: shadow-dev-archive（PR merged 后）`

@@ -10,7 +10,8 @@
 | UI 变更 | 页面 组件 布局 样式 配色 字体 按钮 卡片 弹窗 导航 列表 | norms/ui-patterns.md, norms/interaction.md, 项目相关 active Knowledge |
 | API 变更 | 接口 端点 API 路由 REST 查询 请求体 响应体 | norms/api-design.md, 项目相关 active Knowledge |
 | 前后端对接 | 对接 联调 数据获取 fetch | UI 变更 + API 变更 |
-| 数据库变更 | Schema Model 字段 索引 迁移 MongoDB | 项目数据模型 active Knowledge |
+| 代码变更 | 代码 风格 重构 命名 类型 import 依赖 包边界 | norms/code-style.md, 按 scope 追加 norms/code-style-frontend.md、norms/code-style-backend.md 或 norms/code-style-packages.md |
+| 数据库变更 | 数据库 MongoDB Mongoose Schema Model 字段 索引 迁移 回填 同步 seed | norms/code-style-database.md, 项目数据模型 active Knowledge |
 | 性能优化 | 首屏 加载 缓存 LCP CLS SSR ISR | norms/code-style.md, 项目性能 active Knowledge |
 | Bug 修复 | 报错 崩溃 异常 不对 显示不正常 | norms/tdd-verification.md, knowledge/bug-investigation.md, 项目相关 active Knowledge |
 | 交互/动画 | 动效 过渡 动画 手势 滚动 | norms/interaction.md, 项目动效 active Knowledge |
