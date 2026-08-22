@@ -4,7 +4,7 @@
   "name": "20260822-feat-workflow-entry-exit-logs",
   "type": "feat",
   "scope": "skills",
-  "status": "draft",
+  "status": "committed",
   "baseBranch": "main",
   "branch": null,
   "files": [
@@ -30,7 +30,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "78039fa5572fc0fddc9b6d127401579b7d6deff5",
     "planHash": null,
     "updatedAt": null,
     "lastError": null
