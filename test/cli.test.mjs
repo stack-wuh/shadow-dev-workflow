@@ -396,3 +396,25 @@ test('reconcile invalidates review when HEAD differs', () => {
   const executed = run(['reconcile', 'execute', '--name', 'sample', '--plan-hash', JSON.parse(planned.stdout).planHash, '--confirm', '--json'], root)
   assert.equal(executed.status, 0, executed.stderr)
 })
+
+test('review execute blocks when brief tasks are incomplete', () => {
+  const root = fixture()
+  const planned = run(['review', 'plan', '--name', 'sample', '--json'], root)
+  assert.equal(planned.status, 0, planned.stderr)
+  const executed = run(['review', 'execute', '--name', 'sample', '--plan-hash', JSON.parse(planned.stdout).planHash, '--conclusion', 'passed', '--confirm', '--json'], root)
+  assert.equal(executed.status, 1)
+  assert.equal(JSON.parse(executed.stdout).error.code, 'TASKS_NOT_COMPLETE')
+  const text = readFileSync(join(root, 'shadow-docs', 'changes', 'sample', 'brief.md'), 'utf8')
+  assert.match(text, /"conclusion": "pending"/)
+})
+
+test('review execute passes when all brief tasks are done', () => {
+  const root = fixture()
+  run(['task', 'set', '--name', 'sample', '--task', 'task-1', '--state', 'done', '--confirm', '--json'], root)
+  const planned = run(['review', 'plan', '--name', 'sample', '--json'], root)
+  assert.equal(planned.status, 0, planned.stderr)
+  const executed = run(['review', 'execute', '--name', 'sample', '--plan-hash', JSON.parse(planned.stdout).planHash, '--conclusion', 'passed', '--confirm', '--json'], root)
+  assert.equal(executed.status, 0, executed.stderr)
+  const text = readFileSync(join(root, 'shadow-docs', 'changes', 'sample', 'brief.md'), 'utf8')
+  assert.match(text, /"conclusion": "passed"/)
+})

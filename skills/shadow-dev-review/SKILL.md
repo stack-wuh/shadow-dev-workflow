@@ -23,6 +23,8 @@ shadow-dev review execute --name <name> --plan-hash <hash> --conclusion <passed|
 
 阅读 plan 列出的 brief、引用 Knowledge 和 diff。
 
+**机械门禁：** `review execute` 会检查 brief 中的任务清单——存在未完成任务时返回 `TASKS_NOT_COMPLETE` 并拒绝写入 `passed`。先通过 `task set` 确认所有任务真实完成，再执行 review。
+
 ### 3. 七维检查
 
 1. **任务完成度：** checkbox 与实际任务一致。
