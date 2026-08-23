@@ -4,7 +4,7 @@
   "name": "20260823-feature-review-task-gate",
   "type": "feature",
   "scope": "scripts",
-  "status": "draft",
+  "status": "committed",
   "baseBranch": "main",
   "branch": null,
   "files": [
@@ -26,7 +26,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "7b4576cfb8c9c961e0b0a355a0d9a799b38fc4ce",
     "planHash": null,
     "updatedAt": null,
     "lastError": null
