@@ -90,7 +90,7 @@ shadow-dev branch plan --name <name> --json
 shadow-dev branch execute --name <name> --confirm --json
 ```
 
-brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `--confirm`；plan/execute 重新验证 planHash；commit 只接受明确文件列表；archive 仅在 GitHub API 证明 PR merged 后执行。
+brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `--confirm`；plan/execute 重新验证 planHash；commit 只接受明确文件列表；archive 仅在 GitHub API 证明 PR merged 后执行。完整命令参考与典型工作流见 [docs/cli-guide.md](docs/cli-guide.md)。
 
 ## 安装
 
