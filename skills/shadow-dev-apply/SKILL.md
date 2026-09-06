@@ -64,7 +64,7 @@ shadow-dev branch execute --name <name> --confirm
 shadow-dev task set --name <name> --task <task-id> --state done --confirm
 ```
 
-每个 task 完成后更新，禁止直接改 brief 的受管状态。
+每个 task 完成后更新，禁止直接改 brief 的受管状态。`task-id` 的格式固定为 `task-N`（N 为正文任务清单中复选框的 1-based 序号），先用 `shadow-dev task list --name <name>` 确认。
 
 apply 完成后输出离场日志并进入 `shadow-dev-review`。
 
