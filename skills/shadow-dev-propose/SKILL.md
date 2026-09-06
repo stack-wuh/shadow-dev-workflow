@@ -80,7 +80,7 @@ GitHub Issue 必须先 plan、确认后 execute，禁止原始 `gh` 写命令。
 
 ```bash
 shadow-dev issue plan --name <name> --labels <type>
-shadow-dev issue execute --name <name> --plan-hash <hash> --confirm
+shadow-dev issue execute --name <name> --confirm
 ```
 
 ---

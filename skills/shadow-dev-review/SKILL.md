@@ -18,10 +18,10 @@ description: 质量门禁 — 验证实现、方案与 active Knowledge，并给
 
 ```bash
 shadow-dev review plan --name <name>
-shadow-dev review execute --name <name> --plan-hash <hash> --conclusion <passed|blocked> --confirm
+shadow-dev review execute --name <name> --conclusion <passed|blocked> --knowledge <新增|更新|废弃|无需变更> --target <卡片路径，无需变更时省略> --reason "<确定理由>" --confirm
 ```
 
-阅读 plan 列出的 brief、引用 Knowledge 和 diff。
+阅读 plan 列出的 brief、引用 Knowledge 和 diff。`--knowledge` 把第 7 项 Knowledge 门禁的最终结论写入 brief，`shadow-dev-release` 直接消费该结论，不再重复评估。
 
 **机械门禁：** `review execute` 会检查 brief 中的任务清单——存在未完成任务时返回 `TASKS_NOT_COMPLETE` 并拒绝写入 `passed`。先通过 `task set` 确认所有任务真实完成，再执行 review。
 

@@ -27,7 +27,7 @@ shadow-dev archive plan --name <name>
 ### 2. 执行归档
 
 ```bash
-shadow-dev archive execute --name <name> --plan-hash <hash> --confirm
+shadow-dev archive execute --name <name> --confirm
 ```
 
 具体操作：

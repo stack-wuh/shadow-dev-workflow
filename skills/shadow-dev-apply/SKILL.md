@@ -32,7 +32,7 @@ shadow-dev conflict inspect --name <name>
 ```bash
 shadow-dev repo inspect
 shadow-dev branch plan --name <name>
-shadow-dev branch execute --name <name> --plan-hash <hash> --confirm
+shadow-dev branch execute --name <name> --confirm
 ```
 
 分支类型使用 feat、fix、refactor、docs 或 chore。

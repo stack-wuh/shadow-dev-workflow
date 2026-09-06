@@ -177,7 +177,7 @@ test('task list exposes stable task identifiers', () => {
 
 test('mutating execute commands require confirmation', () => {
   const root = fixture()
-  for (const args of [['branch'], ['sync'], ['review'], ['commit'], ['publish'], ['reconcile'], ['archive']]) {
+  for (const args of [['branch'], ['sync'], ['review'], ['commit'], ['publish'], ['release'], ['reconcile'], ['archive']]) {
     const result = run([...args, 'execute', '--json'], root)
     assert.equal(result.status, 2)
     assert.equal(JSON.parse(result.stdout).error.code, 'CONFIRMATION_REQUIRED')
@@ -417,4 +417,71 @@ test('review execute passes when all brief tasks are done', () => {
   assert.equal(executed.status, 0, executed.stderr)
   const text = readFileSync(join(root, 'shadow-docs', 'changes', 'sample', 'brief.md'), 'utf8')
   assert.match(text, /"conclusion": "passed"/)
+})
+
+test('plan persists the hash so execute runs without copying it', () => {
+  const root = fixture()
+  const planned = run(['branch', 'plan', '--name', 'sample', '--json'], root)
+  assert.equal(planned.status, 0, planned.stderr)
+  const result = run(['branch', 'execute', '--name', 'sample', '--confirm', '--json'], root)
+  assert.equal(result.status, 0, result.stderr)
+  const text = readFileSync(join(root, 'shadow-docs', 'changes', 'sample', 'brief.md'), 'utf8')
+  assert.match(text, /"planHash": "[0-9a-f]{64}"/)
+  assert.match(text, /"status": "branched"/)
+})
+
+test('execute without a prior plan requires one', () => {
+  const root = fixture()
+  const result = run(['branch', 'execute', '--name', 'sample', '--confirm', '--json'], root)
+  assert.equal(result.status, 2)
+  assert.equal(JSON.parse(result.stdout).error.code, 'PLAN_HASH_REQUIRED')
+})
+
+test('review execute persists the knowledge conclusion for release', () => {
+  const root = fixture()
+  run(['task', 'set', '--name', 'sample', '--task', 'task-1', '--state', 'done', '--confirm', '--json'], root)
+  const planned = run(['review', 'plan', '--name', 'sample', '--json'], root)
+  assert.equal(planned.status, 0, planned.stderr)
+  const executed = run(['review', 'execute', '--name', 'sample', '--conclusion', 'passed', '--knowledge', '更新', '--target', 'knowledge/ci.md', '--reason', '补充缓存策略', '--confirm', '--json'], root)
+  assert.equal(executed.status, 0, executed.stderr)
+  const text = readFileSync(join(root, 'shadow-docs', 'changes', 'sample', 'brief.md'), 'utf8')
+  assert.match(text, /"action": "更新"/)
+  assert.match(text, /"target": "knowledge\/ci\.md"/)
+  assert.match(text, /"conclusion": "passed"/)
+})
+
+test('release execute commits, pushes and creates the PR in one step, then reuses it', () => {
+  const root = fixture()
+  const remote = addOrigin(root)
+  execFileSync('git', ['switch', '-c', 'feat/sample'], { cwd: root })
+  updateBrief(root, data => { data.github.repository = 'owner/repo'; data.branch = 'feat/sample'; data.status = 'reviewed'; data.review = { conclusion: 'passed', verifiedCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(), verifiedAt: 'now' } })
+  const api = apiStub([
+    { method: 'GET', path: '/repos/owner/repo/pulls?', body: [] },
+    { method: 'POST', path: '/repos/owner/repo/pulls', body: { number: 9, html_url: 'https://github.test/pulls/9' } },
+  ])
+  try {
+    const args = ['--name', 'sample', '--files', 'shadow-docs/changes/sample/brief.md', '--message', 'feat: sample', '--title', 'Sample PR']
+    const planned = run(['release', 'plan', ...args, '--json'], root)
+    assert.equal(planned.status, 0, planned.stderr)
+    const result = run(['release', 'execute', '--name', 'sample', '--confirm', '--json'], root, { GITHUB_TOKEN: 'token', SHADOW_GITHUB_API_URL: api.url })
+    assert.equal(result.status, 0, result.stderr)
+    const output = JSON.parse(result.stdout)
+    assert.equal(output.data.number, 9)
+    assert.equal(output.data.created, true)
+    assert.equal(output.data.commit, execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim())
+    assert.equal(execFileSync('git', ['log', '-1', '--pretty=%s'], { cwd: root, encoding: 'utf8' }).trim(), 'feat: sample')
+    assert.equal(execFileSync('git', ['rev-parse', 'origin/feat/sample'], { cwd: root, encoding: 'utf8' }).trim(), execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim())
+    assert.match(readFileSync(join(root, 'shadow-docs', 'changes', 'sample', 'brief.md'), 'utf8'), /"status": "published"/)
+    assert.deepEqual(api.requests().map(request => request.method), ['GET', 'POST'])
+  } finally { api.close() }
+  const reuse = apiStub([{ method: 'GET', path: '/repos/owner/repo/pulls?', body: [{ number: 9, html_url: 'https://github.test/pulls/9' }] }])
+  try {
+    const replanned = run(['release', 'plan', '--name', 'sample', '--json'], root)
+    assert.equal(replanned.status, 0, replanned.stderr)
+    const rerun = run(['release', 'execute', '--name', 'sample', '--confirm', '--json'], root, { GITHUB_TOKEN: 'token', SHADOW_GITHUB_API_URL: reuse.url })
+    assert.equal(rerun.status, 0, rerun.stderr)
+    assert.equal(JSON.parse(rerun.stdout).data.created, false)
+    assert.equal(execFileSync('git', ['log', '-1', '--pretty=%s'], { cwd: root, encoding: 'utf8' }).trim(), 'feat: sample')
+    assert.deepEqual(reuse.requests().map(request => request.method), ['GET'])
+  } finally { reuse.close() }
 })
