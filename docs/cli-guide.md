@@ -56,15 +56,15 @@ shadow-dev --help
 
 | 命令 | 说明 |
 |------|------|
-| `change create --name <n> --type <feat\|fix\|…> --scope <s> --files <逗号分隔> --confirm` | 创建 brief 脚手架（status=draft），重复创建报 `CHANGE_EXISTS` |
+| `change create --name <n> --type <feat\|fix\|…> --scope <s> --files <逗号分隔> --base-branch <branch> --body-file <文件> --repository <owner/repo> --confirm` | 创建 brief 脚手架（status=draft），`--body-file` 导入正文（缺省用骨架），重复创建报 `CHANGE_EXISTS` |
 | `change approve --name <n> --confirm` | draft → proposed |
 
 ### Issue / 分支 / 同步（apply 阶段）
 
 | 命令 | 说明 |
 |------|------|
-| `issue plan --name <n> --title <t> --body <b> --labels <逗号分隔>` | 预览 issue 载荷 |
-| `issue execute --name <n> --title <t> --body <b> --labels <l> --confirm` | 创建 GitHub issue，写回 `github.issue` |
+| `issue plan --name <n> --title <t> --body <b> --labels <逗号分隔>` | 预览 issue 载荷；标题、正文、labels 与 planHash 持久化到 brief |
+| `issue execute --name <n> --confirm` | 创建 GitHub issue（参数从 brief 恢复，无需重复传入），`github.repository` 自动从 `origin` remote 推导并写回 brief |
 | `branch plan --name <n>` | 预览分支名 `{type}/{name}` |
 | `branch execute --name <n> --confirm` | 创建并切换分支，写回 `brief.branch` |
 | `sync plan --name <n>` | fetch origin 并检查可快进；非 shadow-docs 脏文件报 `DIRTY_WORKTREE` |
@@ -110,9 +110,11 @@ shadow-dev --help
 
 ```bash
 # propose：建 change、开 issue
-shadow-dev change create --name 20260906-feat-export --type feat --scope cli --files src/export.ts --confirm
-shadow-dev issue plan --name 20260906-feat-export --labels feat
-shadow-dev issue execute --name 20260906-feat-export --title "导出功能" --body "详见 brief" --confirm
+shadow-dev change create --name 20260906-feat-export --type feat --scope cli \
+  --files src/export.ts --body-file brief-body.md --confirm
+shadow-dev change approve --name 20260906-feat-export --confirm
+shadow-dev issue plan --name 20260906-feat-export --title "导出功能" --body "详见 brief" --labels feat
+shadow-dev issue execute --name 20260906-feat-export --confirm
 
 # apply：建分支、执行任务
 shadow-dev branch plan --name 20260906-feat-export

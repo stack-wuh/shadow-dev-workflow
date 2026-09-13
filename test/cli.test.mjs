@@ -234,12 +234,14 @@ test('conflict inspect reports overlapping active brief files', () => {
 
 test('issue plan is stable and includes GitHub payload', () => {
   const root = fixture()
+  execFileSync('git', ['remote', 'add', 'origin', 'git@github.com:owner/repo.git'], { cwd: root })
   const args = ['issue', 'plan', '--name', 'sample', '--title', 'Feature', '--body', 'Details', '--json']
   const first = run(args, root)
   const second = run(args, root)
   assert.equal(first.status, 0, first.stderr)
   assert.equal(JSON.parse(first.stdout).planHash, JSON.parse(second.stdout).planHash)
   assert.equal(JSON.parse(first.stdout).data.title, 'Feature')
+  assert.equal(JSON.parse(first.stdout).data.repository, 'owner/repo')
 })
 test('unsupported explicit add forms return code 4', () => {
   const root = fixture()
@@ -303,6 +305,33 @@ test('issue execute persists issue data', () => {
     assert.match(brief, /"issue": 12/)
     assert.match(brief, /"checkpoint": "issue:12"/)
   } finally { api.close() }
+})
+
+test('issue execute runs without params and derives the repository from origin', () => {
+  const root = fixture()
+  execFileSync('git', ['remote', 'add', 'origin', 'git@github.com:owner/repo.git'], { cwd: root })
+  const api = apiStub([{ method: 'POST', path: '/repos/owner/repo/issues', body: { number: 5, html_url: 'https://github.test/issues/5' } }])
+  try {
+    const planned = run(['issue', 'plan', '--name', 'sample', '--title', 'Feature', '--body', 'Details', '--labels', 'feat', '--json'], root, { GITHUB_TOKEN: 'token', SHADOW_GITHUB_API_URL: api.url })
+    assert.equal(planned.status, 0, planned.stderr)
+    assert.equal(JSON.parse(planned.stdout).data.repository, 'owner/repo')
+    const result = run(['issue', 'execute', '--name', 'sample', '--confirm', '--json'], root, { GITHUB_TOKEN: 'token', SHADOW_GITHUB_API_URL: api.url })
+    assert.equal(result.status, 0, result.stderr)
+    const brief = readFileSync(join(root, 'shadow-docs', 'changes', 'sample', 'brief.md'), 'utf8')
+    assert.match(brief, /"issue": 5/)
+    assert.match(brief, /"repository": "owner\/repo"/)
+  } finally { api.close() }
+})
+
+test('change create imports a body file, base branch and repository', () => {
+  const root = fixture()
+  writeFileSync(join(root, 'body.md'), '# 导出\n\n## 动机\n测试\n')
+  const result = run(['change', 'create', '--name', 'with-body', '--base-branch', 'develop', '--repository', 'acme/widget', '--body-file', 'body.md', '--confirm', '--json'], root)
+  assert.equal(result.status, 0, result.stderr)
+  const brief = readFileSync(join(root, 'shadow-docs', 'changes', 'with-body', 'brief.md'), 'utf8')
+  assert.match(brief, /"baseBranch": "develop"/)
+  assert.match(brief, /"repository": "acme\/widget"/)
+  assert.match(brief, /## 动机/)
 })
 
 test('pr inspect reads the brief repository and PR number', () => {

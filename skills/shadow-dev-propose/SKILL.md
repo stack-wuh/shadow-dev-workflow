@@ -76,10 +76,10 @@ propose 只做知识影响预评估，不创建或改写 Knowledge。发现代�
 
 展示动机、决策、任务阶段和知识影响预评估，提示下一步使用 `shadow-dev-apply`。
 
-GitHub Issue 必须先 plan、确认后 execute，禁止原始 `gh` 写命令。issue labels 从 change type 映射：feature→`feature`、fix→`fix`、build→`build`、chore→`chore`、docs→`docs`、refactor→`refactor`、style→`style`、test→`test`。
+GitHub Issue 必须先 plan、确认后 execute，禁止原始 `gh` 写命令。plan 把标题、正文、labels 和 planHash 持久化到 brief，execute 只需 `--name --confirm`。仓库自动从 `origin` remote 推导（`github.com[:/]owner/repo`），非 GitHub remote 或多仓库场景用 `change create --repository <owner/repo>` 显式指定。issue labels 从 change type 映射：feature→`feature`、fix→`fix`、build→`build`、chore→`chore`、docs→`docs`、refactor→`refactor`、style→`style`、test→`test`。
 
 ```bash
-shadow-dev issue plan --name <name> --labels <type>
+shadow-dev issue plan --name <name> --title "<issue 标题>" --body "<简述，指向 brief>" --labels <type>
 shadow-dev issue execute --name <name> --confirm
 ```
 
