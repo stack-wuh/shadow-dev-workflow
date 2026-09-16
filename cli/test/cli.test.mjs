@@ -4,11 +4,12 @@ import { existsSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
+import { fileURLToPath } from 'node:url'
 
-const CLI = new URL('../scripts/shadow-dev.mjs', import.meta.url)
+const CLI = fileURLToPath(new URL('../src/index.mjs', import.meta.url))
 
 function run(args, cwd = process.cwd(), env = {}) {
-  return spawnSync(process.execPath, [CLI.pathname, ...args], {
+  return spawnSync(process.execPath, [CLI, ...args], {
     cwd,
     encoding: 'utf8',
     env: { ...process.env, ...env },
@@ -60,7 +61,7 @@ server.listen(0, '127.0.0.1', () => writeFileSync(process.env.PORT_FILE, String(
 
 function addOrigin(root) {
   const remote = mkdtempSync(join(tmpdir(), 'shadow-remote-'))
-  execFileSync('git', ['init', '--bare'], { cwd: remote })
+  execFileSync('git', ['init', '--bare', '-b', 'main'], { cwd: remote })
   execFileSync('git', ['remote', 'add', 'origin', remote], { cwd: root })
   execFileSync('git', ['push', '-u', 'origin', 'main'], { cwd: root })
   return remote
@@ -107,6 +108,25 @@ test('help lists deterministic workflow commands', () => {
   assert.match(result.stdout, /repo inspect/)
   assert.match(result.stdout, /reconcile plan/)
   assert.match(result.stdout, /archive plan\|execute/)
+})
+
+test('version works inside and outside a repository', () => {
+  for (const args of [['version'], ['--version']]) {
+    for (const cwd of [process.cwd(), tmpdir()]) {
+      const result = run(args, cwd)
+      assert.equal(result.status, 0, result.stderr)
+      const output = JSON.parse(result.stdout)
+      assert.equal(output.ok, true)
+      assert.equal(output.command, 'version')
+      assert.match(output.data.version, /^\d+\.\d+\.\d+/)
+    }
+  }
+})
+
+test('version matches the CLI package metadata', async () => {
+  const pkg = JSON.parse(readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8'))
+  const { VERSION } = await import('../src/version.mjs')
+  assert.equal(VERSION, pkg.version)
 })
 
 test('unknown commands return a stable JSON error', () => {

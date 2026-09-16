@@ -1,13 +1,13 @@
 # shadow-dev CLI 使用指南
 
-`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。本文档是 6.2.0 版本的完整命令参考。
+`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。本文档是 shadow-dev-cli 1.0.0 的完整命令参考。
 
 ```bash
-# 通过插件缓存路径调用
-node "$(echo ~/.claude/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/*/scripts/shadow-dev.mjs | tr ' ' '\n' | tail -1)" --help
+# 全局注册后直接使用（npm link、独立 exe 或 PATH 中任意形式）
+shadow-dev version
 
-# 或在仓库内 npm link 后直接使用
-shadow-dev --help
+# 开发态：仓库内直接运行入口
+node cli/src/index.mjs --help
 ```
 
 ## 输出协议
@@ -33,7 +33,7 @@ shadow-dev --help
 
 所有变异（写）操作分两步：`plan` 生成快照和哈希，`execute` 校验后落地。
 
-6.2.0 起，`plan` 会把 `planHash` 自动写入 brief 的 `workflow.planHash`，`execute` 自行从 brief 读取校验——**调用方不再需要读取、搬运或回传哈希**。显式传入 `--plan-hash` 仍然支持，作为附加校验。
+`plan` 会把 `planHash` 自动写入 brief 的 `workflow.planHash`，`execute` 自行从 brief 读取校验——**调用方不再需要读取、搬运或回传哈希**。显式传入 `--plan-hash` 仍然支持，作为附加校验。
 
 - plan 后任何相关状态变化（brief、文件、HEAD）都会使哈希失效，execute 返回 `PLAN_HASH_INVALID`，此时重新 plan 即可。
 - 尚未执行过 plan 就 execute 返回 `PLAN_HASH_REQUIRED`（退出码 2）。
@@ -42,6 +42,13 @@ shadow-dev --help
 所有写操作都需要 `--confirm`，缺省返回 `CONFIRMATION_REQUIRED`。
 
 ## 命令参考
+
+### 基础（只读）
+
+| 命令 | 说明 |
+|------|------|
+| `version` / `--version` | CLI 版本（可在任意目录执行，不要求 git 仓库） |
+| `help` | 命令清单（需 git 仓库内，与历史行为一致） |
 
 ### 仓库与检查（只读）
 
@@ -155,11 +162,27 @@ shadow-dev archive execute --name 20260906-feat-export --confirm
 - 网络步骤失败立即停止并报告错误码，不换方式重试；修复后按断点续跑语义重新 plan + execute。
 - archive 仅在 GitHub API 证明 PR merged 后执行。
 
-## 本地开发
+## 本地开发与构建
 
 ```bash
-npm test        # 全部测试（node --test）
-npm run test:cli # 仅 CLI 测试
+npm test          # 全部测试（node --test）
+bun run build     # 编译单文件可执行 dist/shadow-dev.exe（需 Bun）
 ```
 
 测试通过本地 HTTP stub 模拟 GitHub API（`SHADOW_GITHUB_API_URL`），不需要网络与真实令牌。
+
+## 项目结构
+
+```
+cli/
+├── package.json          # 独立包定义（shadow-dev-cli）
+├── src/
+│   ├── index.mjs         # 入口：参数解析、命令分发、错误协议
+│   ├── version.mjs       # 版本常量（与 package.json 一致性由测试保证）
+│   ├── core/             # 基础设施：输出协议、参数、git、brief、GitHub API
+│   └── commands/         # 命令层：inspect/change/task/rebuild/domain + 九域模块
+└── test/
+    └── cli.test.mjs      # 全契约测试
+```
+
+`cli/` 是自包含子包：未来迁移为独立仓库时整目录搬出即可。

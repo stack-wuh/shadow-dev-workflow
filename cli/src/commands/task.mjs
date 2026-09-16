@@ -1,0 +1,22 @@
+import { brief, tasks, write } from '../core/brief.mjs'
+import { confirm, name } from '../core/args.mjs'
+
+export function list(r, o) {
+  return { tasks: tasks(brief(r, name(o)).body) }
+}
+
+export function set(r, o) {
+  confirm(o)
+  const b = brief(r, name(o))
+  const n = Number(String(o.task || '').replace('task-', ''))
+  if (!Number.isInteger(n) || !['todo', 'done'].includes(o.state)) throw Error('INVALID_TASK')
+  let i = 0
+  b.body = b.body.replace(/^(\s*- \[)([ xX])(\]\s+.+)$/gm, (m, x, y, z) => {
+    i++
+    return i === n ? `${x}${o.state === 'done' ? 'x' : ' '}${z}` : m
+  })
+  if (i < n) throw Error('TASK_NOT_FOUND')
+  if (b.data.status === 'draft') b.data.status = 'implementing'
+  write(b)
+  return { task: `task-${n}`, state: o.state }
+}

@@ -72,13 +72,13 @@ propose → apply → review → release → archive
 
 ## Deterministic CLI
 
-CLI 随本插件分发（`scripts/shadow-dev.mjs`），不复制进消费仓库。在消费仓库中使用时：
+CLI 随本插件分发（`cli/` 子包，入口 `cli/src/index.mjs`），不复制进消费仓库。在消费仓库中使用时：
 
 - 优先使用 bin 命令 `shadow-dev`（插件安装时注册）。
 - 若 bin 不在 PATH，使用插件目录路径调用：
 
 ```bash
-node "$(echo ~/.claude/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/*/scripts/shadow-dev.mjs | tr ' ' '\n' | tail -1)" --help
+node "$(echo ~/.claude/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/*/cli/src/index.mjs | tr ' ' '\n' | tail -1)" --help
 ```
 
 示例：
@@ -90,7 +90,7 @@ shadow-dev branch plan --name <name> --json
 shadow-dev branch execute --name <name> --confirm --json
 ```
 
-brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `--confirm`；plan/execute 重新验证 planHash；commit 只接受明确文件列表；archive 仅在 GitHub API 证明 PR merged 后执行。完整命令参考与典型工作流见 [docs/cli-guide.md](docs/cli-guide.md)。
+brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `--confirm`；plan/execute 重新验证 planHash；commit 只接受明确文件列表；archive 仅在 GitHub API 证明 PR merged 后执行。完整命令参考与典型工作流见 [cli/README.md](cli/README.md)。
 
 ## 安装
 
