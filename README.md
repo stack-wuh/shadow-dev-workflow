@@ -59,8 +59,8 @@ propose → apply → review → release → archive
 - **propose：** 按 menu 读取和引用 active Knowledge，记录预期知识影响。
 - **apply：** 按引用约束执行；冲突时暂停并查明原因。
 - **review：** 验证实现、约束和卡片检查方法，给出最终知识动作。
-- **release：** 新增、原位更新、废弃卡片或记录无需变更，然后提交发布 PR。
-- **archive：** PR merged 后将 brief 移到 archive/ 并重建 INDEX；也可由 GitHub Actions 在 issue close 时自动触发。
+- **release：** 新增、原位更新、废弃卡片或记录无需变更，然后提交发布 PR；若项目 Knowledge 声明部署触发（如 GitHub Release），继续创建 Release 并验证部署链全绿。
+- **archive：** PR merged（有部署触发时还需部署链全绿）后将 brief 移到 archive/ 并重建 INDEX；也可由 GitHub Actions 在 issue close 时自动触发。
 
 ## brief
 

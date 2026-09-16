@@ -4,7 +4,7 @@ description: 归档已合并的 change — PR merged 后将 brief 移到 archive
 ---
 # Shadow Dev Archive — 归档
 
-PR 合并后将 change 归档。可由 `shadow-dev-release` 完成后手动调用，或由 GitHub Actions 在 issue close 时自动触发。
+PR 合并后将 change 归档。可由 `shadow-dev-release` 完成交付发布后手动调用，或由 GitHub Actions 在 issue close 时自动触发。
 
 **进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-archive · 归档 merged change`
 
@@ -13,6 +13,7 @@ PR 合并后将 change 归档。可由 `shadow-dev-release` 完成后手动调�
 - PR 已 merged（CLI 通过 GitHub API 验证）
 - review conclusion 为 passed
 - HEAD 与 review 时的 verifiedCommit 一致
+- 项目 Knowledge 若声明部署触发（如 GitHub Release published 触发 CI/CD）：部署流水线全绿，且 brief「结果」段已记录 release URL——**PR merged ≠ 已交付**，归档不替代发布（发布属 `shadow-dev-release` 第 4 步，缺失时先补再做）
 
 ## 流程
 
@@ -41,6 +42,7 @@ issue close 时 webhook 自动 dispatch `archive-change` 事件，由 `.github/w
 ## 禁止
 
 - PR 未合并时执行归档
+- 项目声明了部署触发时，跳过发布阶段直接归档
 - 手动移动 change 目录或手改 INDEX
 
-**离场：** 完成时输出：`✅ [离场] shadow-dev-archive · change <name> 已归档 · 工作流结束`
+**离场：** 完成时输出：`✅ [离场] shadow-dev-archive · change <name> 已归档 · 工作流结束（交付结论见 release 阶段）`
