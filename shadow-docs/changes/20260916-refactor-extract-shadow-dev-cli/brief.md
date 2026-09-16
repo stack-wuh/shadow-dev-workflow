@@ -4,7 +4,7 @@
   "name": "20260916-refactor-extract-shadow-dev-cli",
   "type": "refactor",
   "scope": "shadow-dev-workflow/scripts",
-  "status": "branched",
+  "status": "reviewed",
   "baseBranch": "main",
   "branch": "refactor/20260916-refactor-extract-shadow-dev-cli",
   "files": [
@@ -24,16 +24,21 @@
     "pullRequestUrl": null
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "bac559b9249d35b008c0193615753b9c3705aa55",
+    "verifiedAt": "2026-09-16T16:54:01.980Z"
   },
   "workflow": {
     "operation": null,
     "checkpoint": null,
-    "planHash": "08172560259ccdc5e54d03fa81bb5653b2fb8d98dca333430dfa161fff86366f",
+    "planHash": "41503d055598fb25415abb541359629ce2d1173c0359867a49d92b1446d859d3",
     "updatedAt": null,
     "lastError": null
+  },
+  "knowledge": {
+    "action": "无需变更",
+    "target": null,
+    "reason": "CLI 独立分发、安装方式、版本锁定等新事实均由产品文档承载（README、docs/cli-guide.md 本次已更新），不构成跨项目执行约束；menu 无匹配路由域，无需新增卡片"
   }
 }
 ---
@@ -83,8 +88,10 @@
 
 ## 结果
 
-- 实际耗时: —
-- 验证: —
+- 实际耗时: 约半天（含本机环境问题排查）
+- 验证: 新仓库 CI 9/9 全绿（ubuntu/macos/windows × node 20/22/24，35 契约测试）；插件仓库 install 脚本测试 2/2；真实安装链路端到端通过（拉取 v1.0.0 + sha256 校验 + 冒烟）；新 CLI 自举管理本 brief 成功
+- 迁移中发现并修复原契约测试两个隐性平台 bug：new URL().pathname 的 Windows 路径、addOrigin bare 仓库缺 -b main（sync 测试 refspec 失败）
+- 本机 node 多模块 ESM 启动期偶发 SIGSEGV/空转（环境问题，非代码缺陷），最终验证以干净 CI runner 为准
 
 ## 知识评估
 
