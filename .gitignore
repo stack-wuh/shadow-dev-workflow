@@ -1,0 +1,5 @@
+# shadow-dev-cli 本地安装缓存（由 scripts/install-cli.sh 拉取）
+scripts/shadow-dev-cli/
+
+node_modules/
+.DS_Store

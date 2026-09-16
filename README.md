@@ -72,13 +72,20 @@ propose → apply → review → release → archive
 
 ## Deterministic CLI
 
-CLI 随本插件分发（`scripts/shadow-dev.mjs`），不复制进消费仓库。在消费仓库中使用时：
+CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（纯脚手架实现：brief、INDEX、Git 与 GitHub 写操作的确定性执行层）。插件仓库不再内置 CLI 源码，通过安装脚本从 release 拉取目录产物（含 sha256 校验）：
+
+```bash
+sh scripts/install-cli.sh                 # 安装 latest 到 scripts/shadow-dev-cli/
+SHADOW_CLI_VERSION=v1.0.0 sh scripts/install-cli.sh   # 锁定版本
+```
+
+`scripts/shadow-dev-cli/` 是本地缓存（gitignored），可随时重跑安装脚本更新。安装后使用：
 
 - 优先使用 bin 命令 `shadow-dev`（插件安装时注册）。
 - 若 bin 不在 PATH，使用插件目录路径调用：
 
 ```bash
-node "$(echo ~/.claude/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/*/scripts/shadow-dev.mjs | tr ' ' '\n' | tail -1)" --help
+node "$(echo ~/.claude/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/*/scripts/shadow-dev-cli/cli.mjs | tr ' ' '\n' | tail -1)" --help
 ```
 
 示例：
@@ -100,10 +107,17 @@ brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `
 claude plugins install stack-wuh/shadow-dev-workflow
 ```
 
+插件装好后初始化确定性 CLI：
+
+```bash
+sh scripts/install-cli.sh
+```
+
 ## 依赖
 
 - Node.js 20+
 - Git
+- curl（安装 CLI 时拉取 release）
 - GitHub token（Issue、PR、发布和归档校验）
 
 ## License

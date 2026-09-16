@@ -1,10 +1,13 @@
 # shadow-dev CLI 使用指南
 
-`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。本文档是 6.2.0 版本的完整命令参考。
+`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（CLI v1.0.0 起，对应插件 6.3.0），本文档是完整命令参考。
 
 ```bash
+# 首次使用：安装 CLI 到插件目录（支持 SHADOW_CLI_VERSION 锁定版本）
+sh scripts/install-cli.sh
+
 # 通过插件缓存路径调用
-node "$(echo ~/.claude/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/*/scripts/shadow-dev.mjs | tr ' ' '\n' | tail -1)" --help
+node "$(echo ~/.claude/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/*/scripts/shadow-dev-cli/cli.mjs | tr ' ' '\n' | tail -1)" --help
 
 # 或在仓库内 npm link 后直接使用
 shadow-dev --help
@@ -157,9 +160,9 @@ shadow-dev archive execute --name 20260906-feat-export --confirm
 
 ## 本地开发
 
-```bash
-npm test        # 全部测试（node --test）
-npm run test:cli # 仅 CLI 测试
-```
+CLI 的实现与契约测试已迁至 [shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli) 仓库（35 个契约测试，CI 覆盖 ubuntu/macos/windows × node 20/22/24）。本仓库只保留安装脚本的测试：
 
-测试通过本地 HTTP stub 模拟 GitHub API（`SHADOW_GITHUB_API_URL`），不需要网络与真实令牌。
+```bash
+npm test                       # 安装脚本测试（本地 tarball fixture，无网络依赖）
+sh scripts/install-cli.sh      # 从 release 真实安装
+```
