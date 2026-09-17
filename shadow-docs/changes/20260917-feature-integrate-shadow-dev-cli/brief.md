@@ -4,7 +4,7 @@
   "name": "20260917-feature-integrate-shadow-dev-cli",
   "type": "feature",
   "scope": "shadow-dev-workflow",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "refactor/20260916-refactor-extract-shadow-dev-cli",
   "branch": "feature/20260917-feature-integrate-shadow-dev-cli",
   "files": [
@@ -22,8 +22,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 13,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/13",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 14,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/14"
   },
   "review": {
     "conclusion": "passed",
@@ -32,8 +32,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:13",
-    "planHash": "1aa0a9e45e14141a86e0f904798c4246a41d774014c4c9c35c2630495b4be297",
+    "checkpoint": "pr:14",
+    "planHash": "a5bbbf94182971921da35cd4e69f42d03b2fb841cf3490eb9f7031b2d1bf823d",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
