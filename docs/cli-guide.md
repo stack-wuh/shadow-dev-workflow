@@ -1,17 +1,33 @@
 # shadow-dev CLI 使用指南
 
-`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（CLI v1.0.0 起，对应插件 6.3.0），本文档是完整命令参考。
+`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（CLI v1.1.0，对应插件 `package.json` 的 `cliVersion` pin），本文档是完整命令参考。
+
+## 安装（SessionStart 自动自举）
+
+插件通过 SessionStart hook 自动确保锁版本 CLI 就位，无需手动初始化：
+
+- **布局**：`~/.local/share/shadow-dev-cli/shadow-dev-cli-<ver>/`（版本化目录，`CURRENT`/`PREVIOUS` 指针文件）+ 托管 shim `~/.local/bin/shadow-dev`（运行时读 `CURRENT`，更新与回滚不动 shim 文件）。
+- **幂等**：已就位时 hook 秒退，不触安装器、不触网；pin 变更或指针漂移时才精确安装 pin 版本。
+- **失败语义**：hook 恒不阻塞会话——离线等失败仅 stderr 警告，此时 skills 中 `shadow-dev` 命令不可用。
+
+手动管理（vendored 安装器 `scripts/install-cli.sh` 随插件分发，供 hook 与人工共用）：
 
 ```bash
-# 首次使用：安装 CLI 到插件目录（支持 SHADOW_CLI_VERSION 锁定版本）
-sh scripts/install-cli.sh
-
-# 通过插件缓存路径调用
-node "$(echo ~/.claude/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/*/scripts/shadow-dev-cli/cli.mjs | tr ' ' '\n' | tail -1)" --help
-
-# 或在仓库内 npm link 后直接使用
-shadow-dev --help
+bash scripts/install-cli.sh install                       # 装锁版本（同 hook 行为）
+bash scripts/install-cli.sh install --version v1.1.0      # 显式锁版本
+bash scripts/install-cli.sh rollback                      # 切回上一版（离线，不动 shim）
+bash scripts/install-cli.sh status                        # 查看 CURRENT/PREVIOUS
+bash scripts/install-cli.sh install --from dist/shadow-dev-cli-v1.1.0.tar.gz  # 离线安装
 ```
+
+排障：
+
+| 症状 | 处置 |
+|------|------|
+| `shadow-dev: command not found` | 把 `~/.local/bin` 加入 PATH：`export PATH="$HOME/.local/bin:$PATH"` |
+| hook 日志出现「未能就位」 | 网络受限；在线后重开会话，或手动跑上面 install 命令 |
+| 双仓开发（跑未发布 CLI） | `export SHADOW_CLI_HOOK_DISABLE=1`，再用 `install --channel main` 或 `--from` 手动安装；hook 不会把开发安装拉回 pin |
+| 怀疑版本异常 | `bash scripts/install-cli.sh status` 后用 `rollback` 回退 |
 
 ## 输出协议
 
@@ -160,9 +176,11 @@ shadow-dev archive execute --name 20260906-feat-export --confirm
 
 ## 本地开发
 
-CLI 的实现与契约测试已迁至 [shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli) 仓库（35 个契约测试，CI 覆盖 ubuntu/macos/windows × node 20/22/24）。本仓库只保留安装脚本的测试：
+CLI 的实现与契约测试在 [shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli) 仓库（含安装器测试 install.test.mjs）。本仓库保留 hook 自举与 vendored 安装器的契约测试：
 
 ```bash
-npm test                       # 安装脚本测试（本地 tarball fixture，无网络依赖）
-sh scripts/install-cli.sh      # 从 release 真实安装
+npm test                       # wrapper 契约 + 安装器 --from fixture 测试（无网络依赖）
+bash scripts/install-cli.sh install   # 从 release 真实安装（同 hook）
 ```
+
+`.shadow-dev/` 项目配置目录约定为另案提案，当前未实现；项目级事实仍以 `shadow-docs/` 为准。
