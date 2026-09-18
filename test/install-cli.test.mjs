@@ -123,12 +123,14 @@ test('installer: --from 离线安装到版本化布局并生成托管 shim', () 
   writeFileSync(join(staging, 'shadow-dev-cli', 'cli.mjs'), '#!/usr/bin/env node\nconsole.log(JSON.stringify({ ok: true, command: "help", data: "fixture" }))\n')
   writeFileSync(join(staging, 'shadow-dev-cli', 'package.json'), JSON.stringify({ name: 'shadow-dev-cli', version: '9.9.9' }))
   const tarball = join(root, 'fixture.tar.gz')
-  execFileSync('tar', ['-czf', tarball, '-C', staging, 'shadow-dev-cli'])
+  // 相对路径 + cwd：Git Bash 的 GNU tar 会把 `C:\...` 绝对路径误解析为 host:path
+  execFileSync('tar', ['-czf', 'fixture.tar.gz', '-C', 'staging', 'shadow-dev-cli'], { cwd: root })
 
   const prefix = join(root, 'prefix')
   const bin = join(root, 'bin')
+  // --from 传相对名并设 cwd：Git Bash 的 tar 对 `C:\...` 形态会按 host:path 解析
   const run = (...extra) =>
-    spawnSync('bash', [INSTALLER, 'install', '--from', tarball, '--prefix', prefix, '--bin', bin, ...extra], { encoding: 'utf8' })
+    spawnSync('bash', [INSTALLER, 'install', '--from', 'fixture.tar.gz', '--prefix', prefix, '--bin', bin, ...extra], { cwd: root, encoding: 'utf8' })
 
   const first = run('--json')
   assert.equal(first.status, 0, first.stderr)
@@ -137,7 +139,8 @@ test('installer: --from 离线安装到版本化布局并生成托管 shim', () 
   assert.equal(readFileSync(join(prefix, 'CURRENT'), 'utf8').trim(), '9.9.9')
   const shim = join(bin, 'shadow-dev')
   assert.equal(existsSync(shim), true)
-  const smoke = spawnSync(shim, ['--help'], { encoding: 'utf8' })
+  // 经 bash 显式执行：Windows 无法直接 spawn 无扩展名 shebang 脚本（与安装器写 .cmd shim 同一约束）
+  const smoke = spawnSync('bash', [shim, '--help'], { encoding: 'utf8' })
   assert.equal(smoke.status, 0, smoke.stderr)
   assert.match(smoke.stdout, /"ok":true/)
 
