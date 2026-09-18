@@ -8,7 +8,5 @@
   "scripts": {
     "test": "node --test test/install-cli.test.mjs"
   },
-  "bin": {
-    "shadow-dev": "scripts/shadow-dev-cli/cli.mjs"
-  }
+  "cliVersion": "v1.1.0"
 }

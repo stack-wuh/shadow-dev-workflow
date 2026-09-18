@@ -4,7 +4,7 @@
   "name": "20260916-refactor-extract-shadow-dev-cli",
   "type": "refactor",
   "scope": "shadow-dev-workflow/scripts",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "refactor/20260916-refactor-extract-shadow-dev-cli",
   "files": [
@@ -20,8 +20,8 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 12,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/12"
   },
   "review": {
     "conclusion": "passed",
@@ -30,8 +30,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
-    "planHash": "41503d055598fb25415abb541359629ce2d1173c0359867a49d92b1446d859d3",
+    "checkpoint": "pr:12",
+    "planHash": "e6aa75e4385f0e9ebb1011ab395b50bc35c4209b74f43328d742bc536bc6de5b",
     "updatedAt": null,
     "lastError": null
   },
