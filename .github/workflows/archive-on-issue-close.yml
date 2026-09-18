@@ -55,10 +55,18 @@ jobs:
           cache: 'npm'
           cache-dependency-path: workflow/package.json
 
+      - name: Install shadow-dev CLI (pinned by workflow/package.json cliVersion)
+        run: |
+          PIN=$(node -pe 'require("./package.json").cliVersion' ../workflow/package.json)
+          bash ../workflow/scripts/install-cli.sh install --version "$PIN"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
+
       - name: Archive change
         run: |
           cd project
-          node ../workflow/scripts/shadow-dev.mjs archive plan --name "${{ steps.resolve.outputs.change }}"
+          shadow-dev archive plan --name "${{ steps.resolve.outputs.change }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
 
@@ -66,9 +74,9 @@ jobs:
         run: |
           cd project
 
-          HASH=$(node ../workflow/scripts/shadow-dev.mjs archive plan --name "${{ steps.resolve.outputs.change }}" --json | jq -r '.planHash')
+          HASH=$(shadow-dev archive plan --name "${{ steps.resolve.outputs.change }}" --json | jq -r '.planHash')
 
-          node ../workflow/scripts/shadow-dev.mjs archive execute \
+          shadow-dev archive execute \
             --name "${{ steps.resolve.outputs.change }}" \
             --plan-hash "$HASH" \
             --confirm

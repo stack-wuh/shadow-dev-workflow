@@ -8,5 +8,5 @@
   "scripts": {
     "test": "node --test test/install-cli.test.mjs"
   },
-  "cliVersion": "v1.1.0"
+  "cliVersion": "v1.2.0"
 }
