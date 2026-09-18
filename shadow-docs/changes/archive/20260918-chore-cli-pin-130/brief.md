@@ -4,7 +4,7 @@
   "name": "20260918-chore-cli-pin-130",
   "type": "chore",
   "scope": "cli",
-  "status": "reviewed",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20260918-chore-cli-pin-130",
   "files": [
@@ -14,18 +14,18 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 15,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/15",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 16,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/16"
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "100fa69a204b2a5e45b3d1be7758669a583ec93b",
-    "verifiedAt": "2026-09-18T03:53:52.698Z"
+    "verifiedCommit": "6bdb826f6aac5ef1fad5fd21e1fce0b94c69ba5f",
+    "verifiedAt": "2026-09-18T03:55:33.938Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:15",
-    "planHash": "d4313712e5c2a9fa70bc0d82d60a5152853f094b6acb7a6d210bafc1588d7e25",
+    "checkpoint": "merged-pr:16",
+    "planHash": "262c43f1d26085f24826b3f2ceebd9b8e484a062397e9c103acb593a36973e45",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -50,7 +50,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "pin 值即 release 版本事实，由 package.json 与 CLI release 承载"
+    "reason": "re-confirm on merge commit"
   }
 }
 ---
