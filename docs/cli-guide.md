@@ -1,14 +1,33 @@
 # shadow-dev CLI 使用指南
 
-`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。本文档是 shadow-dev-cli 1.0.0 的完整命令参考。
+`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（CLI v1.1.0，对应插件 `package.json` 的 `cliVersion` pin），本文档是完整命令参考。
+
+## 安装（SessionStart 自动自举）
+
+插件通过 SessionStart hook 自动确保锁版本 CLI 就位，无需手动初始化：
+
+- **布局**：`~/.local/share/shadow-dev-cli/shadow-dev-cli-<ver>/`（版本化目录，`CURRENT`/`PREVIOUS` 指针文件）+ 托管 shim `~/.local/bin/shadow-dev`（运行时读 `CURRENT`，更新与回滚不动 shim 文件）。
+- **幂等**：已就位时 hook 秒退，不触安装器、不触网；pin 变更或指针漂移时才精确安装 pin 版本。
+- **失败语义**：hook 恒不阻塞会话——离线等失败仅 stderr 警告，此时 skills 中 `shadow-dev` 命令不可用。
+
+手动管理（vendored 安装器 `scripts/install-cli.sh` 随插件分发，供 hook 与人工共用）：
 
 ```bash
-# 全局注册后直接使用（npm link、独立 exe 或 PATH 中任意形式）
-shadow-dev version
-
-# 开发态：仓库内直接运行入口
-node cli/src/index.mjs --help
+bash scripts/install-cli.sh install                       # 装锁版本（同 hook 行为）
+bash scripts/install-cli.sh install --version v1.1.0      # 显式锁版本
+bash scripts/install-cli.sh rollback                      # 切回上一版（离线，不动 shim）
+bash scripts/install-cli.sh status                        # 查看 CURRENT/PREVIOUS
+bash scripts/install-cli.sh install --from dist/shadow-dev-cli-v1.1.0.tar.gz  # 离线安装
 ```
+
+排障：
+
+| 症状 | 处置 |
+|------|------|
+| `shadow-dev: command not found` | 把 `~/.local/bin` 加入 PATH：`export PATH="$HOME/.local/bin:$PATH"` |
+| hook 日志出现「未能就位」 | 网络受限；在线后重开会话，或手动跑上面 install 命令 |
+| 双仓开发（跑未发布 CLI） | `export SHADOW_CLI_HOOK_DISABLE=1`，再用 `install --channel main` 或 `--from` 手动安装；hook 不会把开发安装拉回 pin |
+| 怀疑版本异常 | `bash scripts/install-cli.sh status` 后用 `rollback` 回退 |
 
 ## 输出协议
 
@@ -33,7 +52,7 @@ node cli/src/index.mjs --help
 
 所有变异（写）操作分两步：`plan` 生成快照和哈希，`execute` 校验后落地。
 
-`plan` 会把 `planHash` 自动写入 brief 的 `workflow.planHash`，`execute` 自行从 brief 读取校验——**调用方不再需要读取、搬运或回传哈希**。显式传入 `--plan-hash` 仍然支持，作为附加校验。
+6.2.0 起，`plan` 会把 `planHash` 自动写入 brief 的 `workflow.planHash`，`execute` 自行从 brief 读取校验——**调用方不再需要读取、搬运或回传哈希**。显式传入 `--plan-hash` 仍然支持，作为附加校验。
 
 - plan 后任何相关状态变化（brief、文件、HEAD）都会使哈希失效，execute 返回 `PLAN_HASH_INVALID`，此时重新 plan 即可。
 - 尚未执行过 plan 就 execute 返回 `PLAN_HASH_REQUIRED`（退出码 2）。
@@ -42,13 +61,6 @@ node cli/src/index.mjs --help
 所有写操作都需要 `--confirm`，缺省返回 `CONFIRMATION_REQUIRED`。
 
 ## 命令参考
-
-### 基础（只读）
-
-| 命令 | 说明 |
-|------|------|
-| `version` / `--version` | CLI 版本（可在任意目录执行，不要求 git 仓库） |
-| `help` | 命令清单（需 git 仓库内，与历史行为一致） |
 
 ### 仓库与检查（只读）
 
@@ -162,27 +174,13 @@ shadow-dev archive execute --name 20260906-feat-export --confirm
 - 网络步骤失败立即停止并报告错误码，不换方式重试；修复后按断点续跑语义重新 plan + execute。
 - archive 仅在 GitHub API 证明 PR merged 后执行。
 
-## 本地开发与构建
+## 本地开发
+
+CLI 的实现与契约测试在 [shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli) 仓库（含安装器测试 install.test.mjs）。本仓库保留 hook 自举与 vendored 安装器的契约测试：
 
 ```bash
-npm test          # 全部测试（node --test）
-bun run build     # 编译单文件可执行 dist/shadow-dev.exe（需 Bun）
+npm test                       # wrapper 契约 + 安装器 --from fixture 测试（无网络依赖）
+bash scripts/install-cli.sh install   # 从 release 真实安装（同 hook）
 ```
 
-测试通过本地 HTTP stub 模拟 GitHub API（`SHADOW_GITHUB_API_URL`），不需要网络与真实令牌。
-
-## 项目结构
-
-```
-cli/
-├── package.json          # 独立包定义（shadow-dev-cli）
-├── src/
-│   ├── index.mjs         # 入口：参数解析、命令分发、错误协议
-│   ├── version.mjs       # 版本常量（与 package.json 一致性由测试保证）
-│   ├── core/             # 基础设施：输出协议、参数、git、brief、GitHub API
-│   └── commands/         # 命令层：inspect/change/task/rebuild/domain + 九域模块
-└── test/
-    └── cli.test.mjs      # 全契约测试
-```
-
-`cli/` 是自包含子包：未来迁移为独立仓库时整目录搬出即可。
+`.shadow-dev/` 项目配置目录约定为另案提案，当前未实现；项目级事实仍以 `shadow-docs/` 为准。

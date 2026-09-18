@@ -6,11 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node --test cli/test/*.test.mjs",
-    "test:cli": "node --test cli/test/cli.test.mjs",
-    "build:cli": "bun build --compile cli/src/index.mjs --outfile dist/shadow-dev.exe"
+    "test": "node --test test/install-cli.test.mjs"
   },
-  "bin": {
-    "shadow-dev": "cli/src/index.mjs"
-  }
+  "cliVersion": "v1.2.0"
 }

@@ -24,6 +24,8 @@ norms/                      # 跨项目硬规则与工程规范
 knowledge/                  # 跨项目经验与协作知识
 menu.md                     # 任务到规范和 Knowledge 的路由
 rules/                      # 行为准则与铁律
+hooks/                      # SessionStart 自举：确保锁版本 shadow-dev-cli 就位
+scripts/install-cli.sh      # vendored CLI 仓库安装器（hook 与手工共用）
 ```
 
 项目使用：
@@ -59,8 +61,8 @@ propose → apply → review → release → archive
 - **propose：** 按 menu 读取和引用 active Knowledge，记录预期知识影响。
 - **apply：** 按引用约束执行；冲突时暂停并查明原因。
 - **review：** 验证实现、约束和卡片检查方法，给出最终知识动作。
-- **release：** 新增、原位更新、废弃卡片或记录无需变更，然后提交发布 PR；若项目 Knowledge 声明部署触发（如 GitHub Release），继续创建 Release 并验证部署链全绿。
-- **archive：** PR merged（有部署触发时还需部署链全绿）后将 brief 移到 archive/ 并重建 INDEX；也可由 GitHub Actions 在 issue close 时自动触发。
+- **release：** 新增、原位更新、废弃卡片或记录无需变更，然后提交发布 PR。
+- **archive：** PR merged 后将 brief 移到 archive/ 并重建 INDEX；也可由 GitHub Actions 在 issue close 时自动触发。
 
 ## brief
 
@@ -72,14 +74,26 @@ propose → apply → review → release → archive
 
 ## Deterministic CLI
 
-CLI 随本插件分发（`cli/` 子包，入口 `cli/src/index.mjs`），不复制进消费仓库。在消费仓库中使用时：
+CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（纯脚手架实现：brief、INDEX、Git 与 GitHub 写操作的确定性执行层）。插件不再内置或 vendored CLI，而是通过 **SessionStart hook 自动安装锁版本 CLI**：
 
-- 优先使用 bin 命令 `shadow-dev`（插件安装时注册）。
-- 若 bin 不在 PATH，使用插件目录路径调用：
+- `package.json` 的 `cliVersion` 字段锁定 CLI 版本（当前 `v1.1.0`），与插件版本配对发布，兼容配对由 manifest 机检。
+- 首次会话自动安装到 `~/.local/share/shadow-dev-cli/shadow-dev-cli-<ver>/`（版本化目录 + `CURRENT`/`PREVIOUS` 指针），并在 `~/.local/bin/shadow-dev` 生成托管 shim；此后每次会话幂等秒退（不触网）。
+- hook 永不阻塞会话：安装失败仅 stderr 警告；CLI 未就位时 skills 中 `shadow-dev` 命令不可用。
+- `SHADOW_CLI_HOOK_DISABLE=1` 跳过自举（双仓开发时保护手动 `--channel main` / `--from` 安装）。
+
+手动管理（vendored 安装器随插件分发）：
 
 ```bash
-node "$(echo ~/.claude/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/*/cli/src/index.mjs | tr ' ' '\n' | tail -1)" --help
+bash scripts/install-cli.sh install                       # 装锁版本（同 hook 行为）
+bash scripts/install-cli.sh install --version v1.1.0      # 显式锁版本
+bash scripts/install-cli.sh rollback                      # 切回上一版（离线）
+bash scripts/install-cli.sh status                        # 查看当前/上一版本指针
 ```
+
+排障：
+
+- `shadow-dev: command not found`：确认 `~/.local/bin` 在 PATH（`export PATH="$HOME/.local/bin:$PATH"`）。
+- 升级 CLI 与更新 pin：CLI 仓库发新版 → 验证 → 本仓库改 `cliVersion` 并同步 `scripts/install-cli.sh`，随插件发版。
 
 示例：
 
@@ -90,7 +104,7 @@ shadow-dev branch plan --name <name> --json
 shadow-dev branch execute --name <name> --confirm --json
 ```
 
-brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `--confirm`；plan/execute 重新验证 planHash；commit 只接受明确文件列表；archive 仅在 GitHub API 证明 PR merged 后执行。完整命令参考与典型工作流见 [cli/README.md](cli/README.md)。
+brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `--confirm`；plan/execute 重新验证 planHash；commit 只接受明确文件列表；archive 仅在 GitHub API 证明 PR merged 后执行。完整命令参考与典型工作流见 [docs/cli-guide.md](docs/cli-guide.md)。
 
 ## 安装
 
@@ -100,10 +114,13 @@ brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `
 claude plugins install stack-wuh/shadow-dev-workflow
 ```
 
+插件装好后**无需手动初始化**：首次会话的 SessionStart hook 自动安装锁版本 CLI 并生成 `shadow-dev` shim。
+
 ## 依赖
 
 - Node.js 20+
 - Git
+- bash + curl（安装器拉取 release 产物）
 - GitHub token（Issue、PR、发布和归档校验）
 
 ## License

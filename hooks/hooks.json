@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "process",
+            "command": "bash",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/bootstrap-cli.sh"],
+            "timeoutMs": 60000,
+            "statusMessage": "shadow-dev CLI 自举"
+          }
+        ]
+      }
+    ]
+  }
+}
