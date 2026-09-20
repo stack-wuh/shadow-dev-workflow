@@ -1,6 +1,6 @@
 # shadow-dev CLI 使用指南
 
-`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（CLI v1.1.0，对应插件 `package.json` 的 `cliVersion` pin），本文档是完整命令参考。
+`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)，版本以插件 `package.json` 的 `cliVersion` pin 为唯一真相（本文档不重复硬编码当前值），本文档是完整命令参考。安装到使用的一站式引导（自举、升级/回滚、离线、LINK 双轨、Windows 告警排障、输出模型）见技能 `skills/shadow-dev-setup/SKILL.md`。
 
 ## 安装（SessionStart 自动自举）
 
@@ -14,10 +14,10 @@
 
 ```bash
 bash scripts/install-cli.sh install                       # 装锁版本（同 hook 行为）
-bash scripts/install-cli.sh install --version v1.1.0      # 显式锁版本
+bash scripts/install-cli.sh install --version <pin>       # 显式锁版本（= package.json cliVersion）
 bash scripts/install-cli.sh rollback                      # 切回上一版（离线，不动 shim）
 bash scripts/install-cli.sh status                        # 查看 CURRENT/PREVIOUS
-bash scripts/install-cli.sh install --from dist/shadow-dev-cli-v1.1.0.tar.gz  # 离线安装
+bash scripts/install-cli.sh install --from dist/shadow-dev-cli-v<pin>.tar.gz  # 离线安装
 ```
 
 排障：

@@ -11,7 +11,8 @@ skills/
 ├── shadow-dev-review/      # 质量门禁和最终知识评估
 ├── shadow-dev-release/     # Knowledge 闭环 + 提交 + PR
 ├── shadow-dev-archive/     # 归档 merged change + 重建 INDEX
-└── shadow-dev-knowledge/   # 精确查询 active Knowledge
+├── shadow-dev-knowledge/   # 精确查询 active Knowledge
+└── shadow-dev-setup/       # CLI 从安装到使用：自举/升级回滚/离线/双轨/排障/输出模型
 
 norms/                      # 跨项目硬规则与工程规范
 ├── knowledge-cards.md
@@ -76,7 +77,7 @@ propose → apply → review → release → archive
 
 CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（纯脚手架实现：brief、INDEX、Git 与 GitHub 写操作的确定性执行层）。插件不再内置或 vendored CLI，而是通过 **SessionStart hook 自动安装锁版本 CLI**：
 
-- `package.json` 的 `cliVersion` 字段锁定 CLI 版本（当前 `v1.1.0`），与插件版本配对发布，兼容配对由 manifest 机检。
+- `package.json` 的 `cliVersion` 字段锁定 CLI 版本（**版本唯一真相，当前值以该字段为准**，勿引用文档硬编码），与插件版本配对发布，兼容配对由 manifest 机检。
 - 首次会话自动安装到 `~/.local/share/shadow-dev-cli/shadow-dev-cli-<ver>/`（版本化目录 + `CURRENT`/`PREVIOUS` 指针），并在 `~/.local/bin/shadow-dev` 生成托管 shim；此后每次会话幂等秒退（不触网）。
 - hook 永不阻塞会话：安装失败仅 stderr 警告；CLI 未就位时 skills 中 `shadow-dev` 命令不可用。
 - `SHADOW_CLI_HOOK_DISABLE=1` 跳过自举（双仓开发时保护手动 `--channel main` / `--from` 安装）。
@@ -85,7 +86,7 @@ CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shad
 
 ```bash
 bash scripts/install-cli.sh install                       # 装锁版本（同 hook 行为）
-bash scripts/install-cli.sh install --version v1.1.0      # 显式锁版本
+bash scripts/install-cli.sh install --version v1.3.0      # 显式锁版本（与 cliVersion 一致）
 bash scripts/install-cli.sh rollback                      # 切回上一版（离线）
 bash scripts/install-cli.sh status                        # 查看当前/上一版本指针
 ```
@@ -94,6 +95,7 @@ bash scripts/install-cli.sh status                        # 查看当前/上一�
 
 - `shadow-dev: command not found`：确认 `~/.local/bin` 在 PATH（`export PATH="$HOME/.local/bin:$PATH"`）。
 - 升级 CLI 与更新 pin：CLI 仓库发新版 → 验证 → 本仓库改 `cliVersion` 并同步 `scripts/install-cli.sh`，随插件发版。
+- Windows CMD 出现 `'m' 不是内部或外部命令` 告警、离线安装、LINK 双轨、输出模型与环境变量等：见 `skills/shadow-dev-setup/SKILL.md`（或对话里触发词「shadow-dev 怎么安装/升级/排障」）。
 
 示例：
 
