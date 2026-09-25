@@ -4,6 +4,8 @@ description: 开始执行 — 按 brief 的 Phase 执行任务，加载 active K
 ---
 # Shadow Dev Apply — 执行
 
+**执行纪律：** AI 只负责推导、决策与审查 CLI 返回的结果。一切仓库与 GitHub 写操作一律经 `shadow-dev` CLI 完成；禁止原始 `git`/`gh` 写命令，禁止脚本旁路。运行项目测试、lint 与诊断脚本属于收集验证证据，允许直接执行，但结论必须引用真实输出。
+
 **进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-apply · 按 brief 执行`
 
 ## 流程

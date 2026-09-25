@@ -6,6 +6,8 @@ description: 新需求对齐 + 方案设计 — 从模糊需求到可执行 brie
 
 必须先聊清需求，再做方案设计。
 
+**执行纪律：** AI 只负责推导、决策与审查 CLI 返回的结果。一切仓库与 GitHub 写操作一律经 `shadow-dev` CLI 完成；禁止原始 `git`/`gh` 写命令，禁止脚本旁路。
+
 **进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-propose · 需求对齐与方案设计`
 
 ## 流程
@@ -29,7 +31,7 @@ description: 新需求对齐 + 方案设计 — 从模糊需求到可执行 brie
 
 ### 4. 收敛为 brief
 
-用户确认方案后，生成正文，再通过 deterministic CLI 创建并批准变更：
+用户确认方案后，生成正文，再通过 deterministic CLI 创建并批准变更（`--body-file` 指向的临时正文文件是 AI 唯一需要准备的输入，其余一律由 CLI 落盘）：
 
 ```bash
 shadow-dev change create --name <name> --type <feature|fix|build|chore|docs|refactor|style|test> --scope <scope> --base-branch <branch> --files <逗号分隔路径> --body-file <正文文件> --confirm
