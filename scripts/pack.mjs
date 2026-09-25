@@ -12,7 +12,7 @@ const staging = join(dist, 'staging')
 
 // 运行必需集：hook fallback 依赖 scripts/install-cli.sh；排除 test/shadow-docs/changes 等开发产物
 const FILES = ['marketplace.json', 'package.json', 'README.md', 'menu.md']
-const DIRS = ['skills', 'hooks', 'rules', 'knowledge', 'norms', 'docs', 'scripts']
+const DIRS = ['skills', 'adapters', 'hooks', 'rules', 'knowledge', 'norms', 'docs', 'scripts']
 
 rmSync(dist, { recursive: true, force: true })
 mkdirSync(staging, { recursive: true })
