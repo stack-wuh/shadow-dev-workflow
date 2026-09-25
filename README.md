@@ -108,13 +108,21 @@ brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `
 
 ## 安装
 
-作为 Claude Code 插件：
+原生宿主是 **Claude Code**（本插件为其开发），zcode 等兼容宿主可直接消费同一产物。安装入口正从「插件引导 CLI」反转为「CLI 驱动分发」：
+
+当前形态（v6.3.0）：作为 Claude Code 插件安装，SessionStart hook 自动就位锁版本 CLI，无需手动初始化。
+
+目标形态（随 shadow-dev-cli 的 workflow/bind 域发布启用）：
 
 ```bash
-claude plugins install stack-wuh/shadow-dev-workflow
+shadow-dev workflow install   # 拉取本仓 release tarball，物化到 ~/.local/share/shadow-dev-workflow/
+shadow-dev workflow bind      # 按 adapters/<host>.json 把 skills 绑入宿主发现目录
 ```
 
-插件装好后**无需手动初始化**：首次会话的 SessionStart hook 自动安装锁版本 CLI 并生成 `shadow-dev` shim。
+产物与 adapters 契约：
+
+- release 产物 `shadow-dev-workflow-v<ver>.tar.gz` 由 `scripts/pack.mjs` 打包，解包为 `shadow-dev-workflow/`，只含运行必需集（marketplace.json / package.json / README / menu.md / skills / hooks / rules / knowledge / norms / docs / scripts）。
+- `adapters/<host>.json`（schema `shadow-dev-adapter/v1`）声明宿主的 skills 发现目录、复制策略、托管标记与 hook 支持位；**新增宿主 = 新增描述符，CLI 零改动**。
 
 ## 依赖
 

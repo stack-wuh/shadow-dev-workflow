@@ -1,0 +1,22 @@
+{
+  "schema": "shadow-dev-adapter/v1",
+  "host": "zcode",
+  "displayName": "ZCode",
+  "tier": "compatible",
+  "skillsDir": "~/.zcode/skills",
+  "skillLayout": "{skillsDir}/{skill}/SKILL.md",
+  "bind": {
+    "strategy": "copy",
+    "marker": "managed-by: shadow-dev-workflow"
+  },
+  "hooks": {
+    "supported": true,
+    "mode": "manual",
+    "note": "兼容 claude code 插件形态：hooks.json 语义一致；自动装配留待后续 adapter 版本"
+  },
+  "plugin": {
+    "optional": true,
+    "manifest": "marketplace.json",
+    "note": "插件型安装为可选形态；bind 不依赖它"
+  }
+}
