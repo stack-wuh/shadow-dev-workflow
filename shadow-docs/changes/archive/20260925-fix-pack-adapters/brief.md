@@ -4,7 +4,7 @@
   "name": "20260925-fix-pack-adapters",
   "type": "fix",
   "scope": "distribution",
-  "status": "branched",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "fix/20260925-fix-pack-adapters",
   "files": [
@@ -16,18 +16,18 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 20,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/20"
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "795a4841d85703d3ceb77d7c05eb2a53cb1a813b",
+    "verifiedAt": "2026-09-25T07:51:18.649Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
-    "planHash": "3c055352ce1f6732715fef40bb78bd1afe8553a1a85433411f2da907b6c7ed50",
+    "checkpoint": "merged-pr:20",
+    "planHash": "2a7bbfed342b234c416d5f7f629cdb3beeeddc21cf358290cb5aa6dd27358b9e",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -41,6 +41,11 @@
       "title": "20260925-fix-pack-adapters",
       "body": ""
     }
+  },
+  "knowledge": {
+    "action": "更新",
+    "target": "shadow-dev-cli/shadow-docs/knowledge/install-distribution.md",
+    "reason": "workflow 产物契约新增 adapters/ 必备项"
   }
 }
 ---

@@ -10,3 +10,4 @@
 | 20260918-chore-cli-pin-130 | ✅ 完成 | shadow-docs/changes/archive/20260918-chore-cli-pin-130/brief.md |
 | 20260925-feature-pack-release | ✅ 完成 | shadow-docs/changes/archive/20260925-feature-pack-release/brief.md |
 | 20260925-feature-validation-strategy-signals | ✅ 完成 | shadow-docs/changes/archive/20260925-feature-validation-strategy-signals/brief.md |
+| 20260925-fix-pack-adapters | ✅ 完成 | shadow-docs/changes/archive/20260925-fix-pack-adapters/brief.md |
