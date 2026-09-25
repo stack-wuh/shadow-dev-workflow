@@ -21,6 +21,8 @@ status: active
 source:
   - changes/<name>/brief.md
 verified: YYYY-MM-DD
+verified-depth: unit            # code-read | unit | runtime | field
+verified-scope: <本次验证观察到的具体现象与证据形态>
 ---
 
 # <稳定领域事实名称>
@@ -42,6 +44,23 @@ verified: YYYY-MM-DD
 ```
 
 `status` 只允许 `active` 或 `deprecated`。`source` 使用相对于知识库根目录的 brief 路径；`verified` 只在通过代码或可重复检查确认结论仍有效时更新。
+
+## 验证深度分级（verified-depth，20260925-feature-validation-strategy-signals 起）
+
+`verified` 的日期只回答「何时确认」，`verified-depth` 必须同时回答「确认到什么程度」：
+
+| 深度 | 含义 | 证据要求 |
+|------|------|----------|
+| `code-read` | 仅代码/文档阅读推演，未运行 | 无（结论须标注推演性质） |
+| `unit` | 自动化测试通过 | 测试命令可重复执行 |
+| `runtime` | 应用实际运行并观察到目标行为 | 可追溯观察点（截图 / 日志 / CDP 输出路径） |
+| `field` | 真实业务场景使用验证过 | 使用场景描述 |
+
+写入门禁：
+
+- `verified-depth: runtime` 的声明必须附可追溯观察点；**模糊表述不合格**（反例：「帧渲染出内容」——无法区分静态 HTML 可见与 SDK 跑通，20260924 插件帧三层损坏即由此类失真声明漏检）。
+- 深度只升不虚报：实际只做到 `unit` 就不得写 `runtime`；多轮验证取最高深度，日期与 scope 更新为最近一次。
+- 存量卡片不回溯迁移（视为 `code-read` 处理），下次因相关变更触碰该卡时必须补齐两字段。
 
 ## 写入门禁
 
