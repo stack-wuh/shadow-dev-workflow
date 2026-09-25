@@ -1,0 +1,22 @@
+{
+  "schema": "shadow-dev-adapter/v1",
+  "host": "claude-code",
+  "displayName": "Claude Code",
+  "tier": "native",
+  "skillsDir": "~/.claude/skills",
+  "skillLayout": "{skillsDir}/{skill}/SKILL.md",
+  "bind": {
+    "strategy": "copy",
+    "marker": "managed-by: shadow-dev-workflow"
+  },
+  "hooks": {
+    "supported": true,
+    "mode": "manual",
+    "note": "SessionStart 自举脚本随产物分发于 hooks/bootstrap-cli.sh；hook 自动装配留待后续 adapter 版本"
+  },
+  "plugin": {
+    "optional": true,
+    "manifest": "marketplace.json",
+    "note": "插件型安装为可选形态；bind 不依赖它"
+  }
+}
