@@ -44,6 +44,11 @@ shadow-dev change approve --name <name> --confirm
 ## 动机
 <为什么现在做>
 
+## 复杂度评级
+- **评级:** S / M / L（按 norms/tdd-verification.md 三要素：契约变更 / 触及面 / 可发现性）
+- **理由:** <对照三要素的具体判断>
+- **期望验证深度:** code-read | unit | runtime | field
+
 ## 引用规范
 - <卡片路径>
   - 当前结论: <结论>
@@ -74,7 +79,7 @@ propose 只做知识影响预评估，不创建或改写 Knowledge。发现代�
 
 ### 5. 展示结果
 
-展示动机、决策、任务阶段和知识影响预评估，提示下一步使用 `shadow-dev-apply`。
+展示动机、复杂度评级（含理由与期望验证深度）、决策、任务阶段和知识影响预评估，提示下一步使用 `shadow-dev-apply`。评级随 propose 确认一并由用户批准；知识评估引用卡片更新时须写明 `verified-depth`。
 
 GitHub Issue 必须先 plan、确认后 execute，禁止原始 `gh` 写命令。plan 把标题、正文、labels 和 planHash 持久化到 brief，execute 只需 `--name --confirm`。仓库自动从 `origin` remote 推导（`github.com[:/]owner/repo`），非 GitHub remote 或多仓库场景用 `change create --repository <owner/repo>` 显式指定。issue labels 从 change type 映射：feature→`feature`、fix→`fix`、build→`build`、chore→`chore`、docs→`docs`、refactor→`refactor`、style→`style`、test→`test`。
 

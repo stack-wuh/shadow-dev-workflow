@@ -39,7 +39,9 @@ shadow-dev branch execute --name <name> --confirm
 
 ### 4. 分析依赖
 
-按 brief Phase 和 task 构建执行表。Bug 调查保持主代理或一个持续上下文，不把关联代码拆给多个子代理。只有无共享状态、不会影响根因判断的任务才并行。
+按 brief Phase 和 task 构建执行表。
+
+若项目存在 `shadow-docs/signals.md`：按任务域与 scope 匹配信号设定探索优先级——正信号排前，weight ≥ 4 且深度为 runtime 的负信号视为已排除路径；扇宽按 brief 复杂度评级（S 直走 / M 排序 / L 先张满扇形只剪已证死路）。探索中命中或证伪信号时记录，供 review 写回。Bug 调查保持主代理或一个持续上下文，不把关联代码拆给多个子代理。只有无共享状态、不会影响根因判断的任务才并行。
 
 ### 5. 验证门禁
 

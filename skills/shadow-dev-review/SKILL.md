@@ -38,6 +38,9 @@ shadow-dev review execute --name <name> --conclusion <passed|blocked> --knowledg
    - 本次是否产生新的长期有效事实。
    - 最终结论是新增、更新、废弃或无需变更。
    - 动作必须给出确定目标路径和理由。
+   - 知识卡更新须按 `norms/knowledge-cards.md` 补 `verified-depth` 与 `verified-scope`。
+8. **验证强度匹配：** 实际验证深度须达到 brief 复杂度评级的期望深度（S: diff 走查 / M: unit+走查 / L: runtime 可追溯观察点）；不匹配退回，S 级过度测试同样指出。
+9. **信号写回：** 本次探索中命中或证伪的路径按 `norms/signals.md` 提案信号（创建 / 加分 / 退役），随 review 结论一并输出。
 
 以下情况阻塞：
 

@@ -6,7 +6,9 @@
 
 | 技术域 | 关键词 | 应查阅 |
 |--------|--------|--------|
-| Knowledge 治理 | knowledge 知识库 沉淀 卡片 路由 过期 冲突 | norms/knowledge-cards.md |
+| Knowledge 治理 | knowledge 知识库 沉淀 卡片 路由 过期 冲突 verified 深度 | norms/knowledge-cards.md |
+| 验证策略 | TDD 测试 复杂度评级 S/M/L 验证深度 评级矩阵 | norms/tdd-verification.md |
+| 信号机制 | 信号 signals 探索 优先级 权重 衰减 负信号 | norms/signals.md |
 | UI 变更 | 页面 组件 布局 样式 配色 字体 按钮 卡片 弹窗 导航 列表 | norms/ui-patterns.md, norms/interaction.md, 项目相关 active Knowledge |
 | API 变更 | 接口 端点 API 路由 REST 查询 请求体 响应体 | norms/api-design.md, 项目相关 active Knowledge |
 | 前后端对接 | 对接 联调 数据获取 fetch | UI 变更 + API 变更 |
