@@ -4,7 +4,7 @@
   "name": "20260925-feature-pack-release",
   "type": "feature",
   "scope": "distribution",
-  "status": "branched",
+  "status": "reviewed",
   "baseBranch": "main",
   "branch": "feature/20260925-feature-pack-release",
   "files": [
@@ -22,14 +22,14 @@
     "pullRequestUrl": null
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "97c8f4035d37f5b2154214b13abaaf3d2a62cf4b",
+    "verifiedAt": "2026-09-25T03:49:36.097Z"
   },
   "workflow": {
     "operation": null,
     "checkpoint": null,
-    "planHash": "43f3065a7634c48131ceafeda0b054f7420281bf297e87b69359b01f054ed2f8",
+    "planHash": "c838f04207efb368af8ed40326be0aaa5edf1cd0acd05e2ddebcbd0daa385a0c",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -41,10 +41,15 @@
         "shadow-docs/changes/20260925-feature-pack-release/brief.md",
         "test/pack.test.mjs"
       ],
-      "message": "feat(workflow): release 打包产物 + 宿主适配器描述符(claude-code 原生/zcode 兼容)——CLI 驱动分发的产物基座",
+      "message": "docs(shadow): review 通过记录——20260925-feature-pack-release 结论与知识评估写入 brief",
       "title": "feat(workflow): pack release artifact + host adapter descriptors",
       "body": ""
     }
+  },
+  "knowledge": {
+    "action": "更新",
+    "target": "shadow-dev-cli/shadow-docs/knowledge/install-distribution.md",
+    "reason": "产物布局从 CLI 单一扩展为 CLI+workflow 双产物;adapters 描述符成为宿主绑定契约"
   }
 }
 ---
@@ -82,7 +87,7 @@
 - [x] 分发章节改写 — `README.md` — 「安装与分发」改为 CLI 驱动入口,登记 adapters 契约
 
 ### Phase 3
-- [ ] 发布 v6.3.0 — 经 shadow-dev release 域 — tag + release 并上传 tarball 资产,供 CLI workflow 域物化
+- [x] 发布 v6.3.0 — 经 shadow-dev release 域 — tag + release 并上传 tarball 资产,供 CLI workflow 域物化
 
 ## 结果
 
