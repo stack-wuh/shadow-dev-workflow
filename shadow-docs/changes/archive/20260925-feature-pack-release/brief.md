@@ -4,7 +4,7 @@
   "name": "20260925-feature-pack-release",
   "type": "feature",
   "scope": "distribution",
-  "status": "reviewed",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "feature/20260925-feature-pack-release",
   "files": [
@@ -18,18 +18,18 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 19,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/19"
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "97c8f4035d37f5b2154214b13abaaf3d2a62cf4b",
-    "verifiedAt": "2026-09-25T03:49:36.097Z"
+    "verifiedCommit": "6413705b502a1fbc6127f7cd0f402288c0b19621",
+    "verifiedAt": "2026-09-25T03:52:37.152Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
-    "planHash": "2946bd363902435e3103c4f61f40d73607311c923cfe66ec202569658d1991d0",
+    "checkpoint": "merged-pr:19",
+    "planHash": "f0d51329ef2a32b5794823baa4e6b6435c8d3bbade6a8ed5a72ac5bac7af56a3",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -49,7 +49,7 @@
   "knowledge": {
     "action": "更新",
     "target": "shadow-dev-cli/shadow-docs/knowledge/install-distribution.md",
-    "reason": "产物布局从 CLI 单一扩展为 CLI+workflow 双产物;adapters 描述符成为宿主绑定契约"
+    "reason": "产物布局从 CLI 单一扩展为 CLI+workflow 双产物;adapters 描述符成为宿主绑定契约;release 不作为 brief task(机械门禁死锁教训)"
   }
 }
 ---
