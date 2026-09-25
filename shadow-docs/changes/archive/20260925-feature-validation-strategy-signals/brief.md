@@ -4,7 +4,7 @@
   "name": "20260925-feature-validation-strategy-signals",
   "type": "feature",
   "scope": "workflow",
-  "status": "reviewed",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "feature/20260925-feature-validation-strategy-signals",
   "files": [
@@ -23,18 +23,18 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 17,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/17",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 18,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/18"
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "253567295df6f94e5d1cdc0db7a8e68ccc804ddf",
-    "verifiedAt": "2026-09-25T02:53:30.645Z"
+    "verifiedCommit": "12608e44baf61e6706b1c2371d426d95237d6cab",
+    "verifiedAt": "2026-09-25T03:01:55.000Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:17",
-    "planHash": "5e581050751bea3f4bbfeccdff2af943d4ae2250ef9ee4b09b3b6603b3db7076",
+    "checkpoint": "merged-pr:18",
+    "planHash": "260153ccdbcb058af424213dfbd89b885c2eac003756b65af8f8d25074009a2b",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
