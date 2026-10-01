@@ -42,6 +42,7 @@
 | 提交、PR、发布 | `shadow-dev-release` |
 | 归档 | `shadow-dev-archive` |
 | Knowledge 查询 | `shadow-dev-knowledge`（propose 自动调用） |
+| 线上急修、紧急修复、hotfix | `shadow-dev-hotfix`（快车道，准入判定见其 SKILL.md） |
 
 ## Deterministic CLI
 
