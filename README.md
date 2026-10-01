@@ -12,7 +12,8 @@ skills/
 ├── shadow-dev-review/      # 质量门禁和最终知识评估
 ├── shadow-dev-release/     # Knowledge 闭环 + 提交 + PR
 ├── shadow-dev-archive/     # 归档 merged change + 重建 INDEX
-└── shadow-dev-knowledge/   # 精确查询 active Knowledge
+├── shadow-dev-knowledge/   # 精确查询 active Knowledge
+└── shadow-dev-hotfix/      # 紧急修复快车道：最小修复直达 PR
 
 norms/                      # 跨项目硬规则与工程规范
 ├── knowledge-cards.md
