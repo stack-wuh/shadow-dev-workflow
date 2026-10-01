@@ -4,7 +4,7 @@
   "name": "20261001-feature-hotfix-skill",
   "type": "feature",
   "scope": "shadow-dev-workflow/skills",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "feature/20261001-feature-hotfix-skill",
   "files": [
@@ -17,8 +17,8 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 22,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/22"
   },
   "review": {
     "conclusion": "passed",
@@ -27,8 +27,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
-    "planHash": "0359e1e88729c416da7473c98ec107d83a61a4080e53263f9306c710db1114de",
+    "checkpoint": "pr:22",
+    "planHash": "934b1d9a9fd61d926c7e1a0f4b1141393f2c454ea37bce42b1f43ce07e28133f",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -41,6 +41,12 @@
       "message": "feat(skills): 新增 shadow-dev-hotfix 紧急修复快车道——准入判定 + mini-brief + 三铁门禁，省掉知识路由/多方案/issue/人工多维审查",
       "title": "feat(skills): 新增 shadow-dev-hotfix 紧急修复快车道",
       "body": ""
+    },
+    "commit": {
+      "files": [
+        "shadow-docs/changes/20261001-feature-hotfix-skill/brief.md"
+      ],
+      "message": "chore(brief): 回填 PR #22 发布状态"
     }
   },
   "knowledge": {
