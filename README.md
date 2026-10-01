@@ -7,6 +7,7 @@
 ```text
 skills/
 ├── shadow-dev-propose/     # 需求对齐、方案设计、知识影响预评估
+├── shadow-dev-design/      # UI 设计大师：高保真视觉提案与布局交互打磨
 ├── shadow-dev-apply/       # 加载 active Knowledge，执行与验证
 ├── shadow-dev-review/      # 质量门禁和最终知识评估
 ├── shadow-dev-release/     # Knowledge 闭环 + 提交 + PR

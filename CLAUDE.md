@@ -37,6 +37,7 @@
 | 场景 | Skill |
 |------|-------|
 | 新需求、提案、方案设计 | `shadow-dev-propose` |
+| 布局/交互设计稿、视觉提案、改版打磨 | `shadow-dev-design`（propose 设计伴侣） |
 | 开始执行、实现 | `shadow-dev-apply` |
 | 审查、验收 | `shadow-dev-review` |
 | 提交、PR、发布 | `shadow-dev-release` |
