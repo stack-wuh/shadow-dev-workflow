@@ -4,7 +4,7 @@
   "name": "20261001-feature-hotfix-skill",
   "type": "feature",
   "scope": "shadow-dev-workflow/skills",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "feature/20261001-feature-hotfix-skill",
   "files": [
@@ -22,13 +22,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "64dcaff1794ca66094b63d14feb188f9dea53b7e",
-    "verifiedAt": "2026-10-01T02:24:39.463Z"
+    "verifiedCommit": "27696fa973f59ecf2260fb57497d63141e6d8c60",
+    "verifiedAt": "2026-10-01T02:54:08.696Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:22",
-    "planHash": "934b1d9a9fd61d926c7e1a0f4b1141393f2c454ea37bce42b1f43ce07e28133f",
+    "checkpoint": "merged-pr:22",
+    "planHash": "62b90d88d2ebe693c2b019e779f66500ae017fff16fd9386d553798f6742fa50",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -52,7 +52,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "快车道规则由 skill 文档自身承载，无跨项目执行约束新事实，menu 无匹配路由域"
+    "reason": "squash 合并后 HEAD 同源重跑；结论与 feature 分支审查一致"
   }
 }
 ---
