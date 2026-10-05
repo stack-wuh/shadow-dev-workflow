@@ -66,7 +66,7 @@ mini 正文结构（复杂度评级恒 S、期望验证深度 unit；无 issue�
 
 ### 3. 修复（唯一保留的 TDD 铁律）
 
-复现测试先红后绿（`norms/tdd-verification.md`，非协商）；同一个 Bug 的复现、根因确认、修复、回归在同一上下文完成（`knowledge/bug-investigation.md`）。只修改 brief 声明的文件；发现波及面超出准入判定时停下，退回 propose 重新立项。
+复现测试先红后绿（`norms/tdd-verification.md`，非协商）；同一个 Bug 的复现、根因确认、修复、回归在同一上下文完成（`knowledge/bug-investigation.md`）。快车道不豁免进度可见性：开工报数（测试 N 项 / 任务 M 项）、逐完成一行 `▶ [TDD] n/N … red|green`、卡点先报 `⏸`（`norms/tdd-verification.md`「进度可见性」）。只修改 brief 声明的文件；发现波及面超出准入判定时停下，退回 propose 重新立项。
 
 ### 4. 收尾门禁（压缩串行）
 
