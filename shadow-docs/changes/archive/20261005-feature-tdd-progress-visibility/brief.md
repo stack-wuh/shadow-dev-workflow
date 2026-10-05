@@ -4,7 +4,7 @@
   "name": "20261005-feature-tdd-progress-visibility",
   "type": "feature",
   "scope": "shadow-dev-workflow/norms,skills",
-  "status": "reviewed",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "feature/20261005-feature-tdd-progress-visibility",
   "files": [
@@ -17,18 +17,18 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 23,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/23",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 24,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/24"
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "2d1b1746ab936904ec9cc8c1db8adf1111eb3f4b",
-    "verifiedAt": "2026-10-05T15:25:30.189Z"
+    "verifiedCommit": "dd08c76b261a47712e6f45f53273d8b768d4bffc",
+    "verifiedAt": "2026-10-05T15:30:33.076Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:23",
-    "planHash": "903b103d7c783afd2499c13ef8568fcdf249ec1489d998616e5ba06ac6ef0ea5",
+    "checkpoint": "merged-pr:24",
+    "planHash": "b195ece114197dfbf17b9d5104dcacef3e625bbead1ec0cb1bafb95f66142c18",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -55,7 +55,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "进度纪律直接落入 norms 本体，治理载体即修改对象，无额外跨项目卡片事实"
+    "reason": "squash 合并后 HEAD 同源重跑；结论与 feature 分支审查一致"
   }
 }
 ---
