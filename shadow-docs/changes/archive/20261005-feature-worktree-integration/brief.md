@@ -4,7 +4,7 @@
   "name": "20261005-feature-worktree-integration",
   "type": "feature",
   "scope": "shadow-dev-workflow/skills",
-  "status": "reviewed",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "feature/20261005-feature-worktree-integration",
   "files": [
@@ -18,18 +18,18 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 29,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/29",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 30,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/30"
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "b1bbe74c91d3afed5664167a5c2a7548225a2d95",
-    "verifiedAt": "2026-10-07T03:18:45.813Z"
+    "verifiedCommit": "12019d020b73067649a0a9cd59709dd2d52fb7ad",
+    "verifiedAt": "2026-10-07T04:49:22.627Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:29",
-    "planHash": "097b145c2278a311fa08be5dfef8a80e98ac54926427127503c20d6001a6520a",
+    "checkpoint": "merged-pr:30",
+    "planHash": "fd120091de6327c0f4f8f10cc2958da31f574814d9139142165e0e71a191a457",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -57,7 +57,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "编排集成文案与命令表由 skills/docs 承载,workspace 生命周期知识属 CLI 仓"
+    "reason": "squash 合并后 HEAD 同源重跑;结论与分支审查一致"
   }
 }
 ---
