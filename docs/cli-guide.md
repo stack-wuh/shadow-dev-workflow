@@ -70,6 +70,17 @@ bash scripts/install-cli.sh install --from dist/shadow-dev-cli-v1.1.0.tar.gz  # 
 | `pr inspect --name <n>` | 读取 brief 记录的 PR（GET /pulls/{n}） |
 | `conflict inspect --name <n>` | 报告与该 change 文件列表重叠的其他活动 change |
 | `task list --name <n>` | 列出 brief 正文的 checkbox 任务（task-1、task-2…） |
+| `worktree inspect --name <n>` | 列出 git worktree（分支/脏净/归属），按 brief 复杂度评级给 `recommendation`（create/reuse/inline）（CLI ≥ v1.5.0） |
+
+### 并行工作区（worktree，CLI ≥ v1.5.0）
+
+| 命令 | 说明 |
+|------|------|
+| `worktree plan --name <n> --path <dir>` | 预览为变更创建独立 worktree（brief 无分支则随 add 派生 `<type>/<name>`） |
+| `worktree execute --name <n> --path <dir> --confirm` | 创建或挂载并回写 `branch` + `workflow.worktree`；不切换当前工作区 |
+| `worktree remove plan --name <n>` / `worktree remove execute --name <n> --confirm` | 回收 brief 记录的 workspace；脏工作区 `WORKTREE_DIRTY` 拒绝，不隐式删除 |
+
+L 级变更或多变更并行时用 worktree 替代分支腾挪：apply §3 会先 `worktree inspect` 再决策；归档前回收（见 shadow-dev-archive 前置条件）。
 
 ### Change 管理
 
