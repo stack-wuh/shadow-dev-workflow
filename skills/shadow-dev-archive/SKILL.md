@@ -16,6 +16,7 @@ PR 合并后将 change 归档。可由 `shadow-dev-release` 完成交付发布�
 - PR 已 merged（CLI 通过 GitHub API 验证）
 - review conclusion 为 passed
 - 项目 Knowledge 若声明部署触发（如 GitHub Release published 触发 CI/CD）：部署流水线全绿，且 brief「结果」段已记录 release URL——**PR merged ≠ 已交付**，归档不替代发布（发布属 `shadow-dev-release` 第 4 步，缺失时先补再做）
+- brief `workflow.worktree` 有记录的独立 workspace 时，归档前先回收：`shadow-dev worktree remove plan --name <name>` + `shadow-dev worktree remove execute --name <name> --confirm`（脏 workspace 会以 `WORKTREE_DIRTY` 拒绝；用户明确要求保留现场时可跳过回收，但须在归档报告中写明 workspace 路径）
 
 ## 流程
 

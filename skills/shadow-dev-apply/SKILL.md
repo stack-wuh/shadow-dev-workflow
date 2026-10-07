@@ -29,15 +29,16 @@ shadow-dev conflict inspect --name <name>
 
 代码与 Knowledge 冲突时暂停相关 task，在同一调查上下文中确认代码是有意变更、回归还是卡片过期。不得为配合实现静默改写 Knowledge。
 
-### 3. 创建功能分支
+### 3. 创建功能分支（L 级先评估并行 workspace）
 
 ```bash
 shadow-dev repo inspect
+shadow-dev worktree inspect --name <name>   # 需 CLI ≥ v1.5.0；命令不可用时直接走 branch
 shadow-dev branch plan --name <name>
 shadow-dev branch execute --name <name> --confirm
 ```
 
-分支类型使用 feat、fix、refactor、docs 或 chore。
+`worktree inspect` 的 `recommendation` 决定路径：**create**（L 级且无自己的 workspace）→ `worktree plan --name <name> --path <dir>` + `worktree execute --name <name> --path <dir> --confirm` 建独立 workspace（替代 branch 流程，回写 `branch` 与 `workflow.worktree`），此后本变更全部命令在 `cd <dir>` 内执行；**reuse** → 直接 `cd` 到 `workflow.worktree` 记录的目录继续；**inline**（S/M 级）→ 照常 branch 切分支。分支类型使用 feat、fix、refactor、docs 或 chore。
 
 ### 4. 分析依赖
 
