@@ -16,6 +16,7 @@
 | 数据库变更 | 数据库 MongoDB Mongoose Schema Model 字段 索引 迁移 回填 同步 seed | norms/code-style-database.md, 项目数据模型 active Knowledge |
 | 性能优化 | 首屏 加载 缓存 LCP CLS SSR ISR | norms/code-style.md, 项目性能 active Knowledge |
 | 插件多宿主分发 | Codex Claude Code zcode 宿主 插件清单 marketplace hooks adapters 打包 分发 技能加载 命令 not found | knowledge/multi-host-plugin-distribution.md |
+| 分发一致性与能力声明 | pin cliVersion requiresCommands 能力声明 一致性门 check:requires ARTIFACT_INCOMPATIBLE missingCommands 静默降级 响亮阻塞 版本错位 命令 not found | knowledge/distribution-capability-contract.md |
 | Bug 修复 | 报错 崩溃 异常 不对 显示不正常 | norms/tdd-verification.md, knowledge/bug-investigation.md, 项目相关 active Knowledge |
 | 交互/动画 | 动效 过渡 动画 手势 滚动 | norms/interaction.md, 项目动效 active Knowledge |
 | 无障碍 | a11y aria 对比度 屏幕阅读 焦点 键盘 | norms/interaction.md, norms/ui-patterns.md |

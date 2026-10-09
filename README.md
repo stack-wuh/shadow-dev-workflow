@@ -78,7 +78,7 @@ propose → apply → review → release → archive
 
 CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（纯脚手架实现：brief、INDEX、Git 与 GitHub 写操作的确定性执行层）。插件不再内置或 vendored CLI，而是通过 **SessionStart hook 自动安装锁版本 CLI**：
 
-- `package.json` 的 `cliVersion` 字段锁定 CLI 版本（当前 `v1.1.0`），与插件版本配对发布，兼容配对由 manifest 机检。
+- `package.json` 的 `cliVersion` 字段锁定 CLI 版本（当前 `v1.5.0`），与插件版本配对发布，兼容配对由 manifest 机检；此外产物用 `requiresCommands` 自声明所需命令键，CLI 在物化/直通落盘前断言（缺失即 `ARTIFACT_INCOMPATIBLE`，指针不动）。
 - 首次会话自动安装到 `~/.local/share/shadow-dev-cli/shadow-dev-cli-<ver>/`（版本化目录 + `CURRENT`/`PREVIOUS` 指针），并在 `~/.local/bin/shadow-dev` 生成托管 shim；此后每次会话幂等秒退（不触网）。
 - hook 永不阻塞会话：安装失败仅 stderr 警告；CLI 未就位时 skills 中 `shadow-dev` 命令不可用。
 - `SHADOW_CLI_HOOK_DISABLE=1` 跳过自举（双仓开发时保护手动 `--channel main` / `--from` 安装）。
@@ -87,7 +87,7 @@ CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shad
 
 ```bash
 bash scripts/install-cli.sh install                       # 装锁版本（同 hook 行为）
-bash scripts/install-cli.sh install --version v1.1.0      # 显式锁版本
+bash scripts/install-cli.sh install --version v1.5.0      # 显式锁版本
 bash scripts/install-cli.sh rollback                      # 切回上一版（离线）
 bash scripts/install-cli.sh status                        # 查看当前/上一版本指针
 ```
@@ -95,7 +95,7 @@ bash scripts/install-cli.sh status                        # 查看当前/上一�
 排障：
 
 - `shadow-dev: command not found`：确认 `~/.local/bin` 在 PATH（`export PATH="$HOME/.local/bin:$PATH"`）。
-- 升级 CLI 与更新 pin：CLI 仓库发新版 → 验证 → 本仓库改 `cliVersion` 并同步 `scripts/install-cli.sh`，随插件发版。
+- 升级 CLI 与更新 pin：CLI 仓库发新版 → 验证 → 本仓库改 `cliVersion` 并同步 `scripts/install-cli.sh`，随插件发版；**改完必须跑 `npm run check:requires`**——它判 `skills 引用 ⊆ requiresCommands ⊆ 已装 CLI 命令目录`，pin 与能力声明不再靠人记忆同步。
 
 示例：
 
@@ -112,7 +112,7 @@ brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `
 
 原生宿主是 **Claude Code**（本插件为其开发），Codex 以 `.codex-plugin/` 清单 + `hooks/hooks.codex.json` 原生消费，zcode 等兼容宿主可直接消费同一产物。安装入口正从「插件引导 CLI」反转为「CLI 驱动分发」：
 
-当前形态（v6.3.0）：作为 Claude Code 插件安装，SessionStart hook 自动就位锁版本 CLI，无需手动初始化。
+当前形态（v6.5.0）：作为 Claude Code 插件安装，SessionStart hook 自动就位锁版本 CLI，无需手动初始化。
 
 ### Codex 宿主
 
@@ -133,11 +133,11 @@ codex plugin add shadow-dev-workflow@shadow-dev-workflow-local   # 装完重启�
 
 Windows 自举：Codex 走 `hooks.codex.json` 里的 `commandWindows` 覆盖，优先 `%ProgramFiles%\Git\bin\bash.exe`，找不到再退回 PATH 上的 `bash`。若 PATH 上只有 WSL 的 `System32\bash.exe`，自举会把 CLI 装进 WSL 文件系统、Windows 侧看不到 shim——此时手动 `bash scripts/install-cli.sh install`，或设 `SHADOW_CLI_HOOK_DISABLE=1` 关掉自举。
 
-目标形态（随 shadow-dev-cli 的 workflow/bind 域发布启用）：
+CLI 轨（shadow-dev-cli 的 workflow/bind 域，v1.4.0 起可用，已实测）：
 
 ```bash
-shadow-dev workflow install   # 拉取本仓 release tarball，物化到 ~/.local/share/shadow-dev-workflow/
-shadow-dev workflow bind      # 按 adapters/<host>.json 把 skills 绑入宿主发现目录
+shadow-dev workflow plan && shadow-dev workflow execute --plan-hash <哈希> --confirm   # 物化本仓 release tarball 到 ~/.local/share/shadow-dev-workflow/
+shadow-dev bind plan --host auto && shadow-dev bind execute --host <名> --plan-hash <哈希> --confirm   # 按 adapters/<host>.json 把 skills 绑入宿主发现目录
 ```
 
 产物与 adapters 契约：

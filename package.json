@@ -1,12 +1,44 @@
 {
   "name": "shadow-dev-workflow",
-  "version": "6.4.0",
+  "version": "6.5.0",
   "type": "module",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "test": "node --test test/install-cli.test.mjs"
+    "test": "node --test test/",
+    "check:requires": "node scripts/check-requires.mjs"
   },
-  "cliVersion": "v1.4.0"
+  "cliVersion": "v1.5.0",
+  "requiresCommands": [
+    "archive.execute",
+    "archive.plan",
+    "branch.execute",
+    "branch.plan",
+    "change.approve",
+    "change.create",
+    "conflict.inspect",
+    "issue.execute",
+    "issue.plan",
+    "release.execute",
+    "release.plan",
+    "repo.inspect",
+    "review.execute",
+    "review.plan",
+    "sync.execute",
+    "sync.plan",
+    "task.list",
+    "task.set",
+    "worktree.execute",
+    "worktree.inspect",
+    "worktree.plan",
+    "worktree.remove.execute",
+    "worktree.remove.plan",
+    "workflow.plan",
+    "workflow.execute",
+    "workflow.status",
+    "bind.plan",
+    "bind.execute",
+    "bind.status"
+  ]
 }
