@@ -14,3 +14,4 @@
 | 20261001-feature-hotfix-skill | ✅ 完成 | shadow-docs/changes/archive/20261001-feature-hotfix-skill/brief.md |
 | 20261005-feature-tdd-progress-visibility | ✅ 完成 | shadow-docs/changes/archive/20261005-feature-tdd-progress-visibility/brief.md |
 | 20261005-feature-worktree-integration | ✅ 完成 | shadow-docs/changes/archive/20261005-feature-worktree-integration/brief.md |
+| 20261009-feature-codex-host-support | branched | shadow-docs/changes/20261009-feature-codex-host-support/brief.md |

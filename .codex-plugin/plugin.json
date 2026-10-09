@@ -1,0 +1,39 @@
+{
+  "name": "shadow-dev-workflow",
+  "version": "6.4.0",
+  "description": "Self-contained development workflow with 3-tier knowledge base — propose → apply → review → release → archive with packaged planning, TDD, verification, and knowledge-driven design constraints. Zero external workflow dependencies.",
+  "author": {
+    "name": "Shadow (stack-wuh)",
+    "url": "https://github.com/stack-wuh"
+  },
+  "homepage": "https://github.com/stack-wuh/shadow-dev-workflow",
+  "repository": "https://github.com/stack-wuh/shadow-dev-workflow",
+  "license": "MIT",
+  "keywords": [
+    "workflow",
+    "skills",
+    "knowledge-base",
+    "tdd",
+    "planning",
+    "code-review",
+    "release",
+    "archive"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.codex.json",
+  "interface": {
+    "displayName": "Shadow Dev Workflow",
+    "shortDescription": "Knowledge 驱动的开发工作流五段式管线",
+    "longDescription": "以 active Knowledge 驱动的 propose → apply → review → release → archive 工作流：需求对齐产出 brief、按 brief 执行 TDD 与依赖调度、质量门禁验收、知识闭环后提交发布 PR、合并后归档并重建 INDEX。另含 hotfix 快车道、知识库查询与 UI 设计提案伴侣。",
+    "developerName": "Shadow (stack-wuh)",
+    "category": "Coding",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/stack-wuh/shadow-dev-workflow",
+    "defaultPrompt": [
+      "新需求：按 shadow-dev-propose 对齐需求并产出 brief",
+      "按当前 brief 开始执行（shadow-dev-apply）",
+      "对本次改动做质量门禁（shadow-dev-review）"
+    ],
+    "brandColor": "#7C3AED"
+  }
+}

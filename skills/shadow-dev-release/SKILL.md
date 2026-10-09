@@ -28,7 +28,7 @@ Knowledge 不保存一次性实现过程或验证输出。Knowledge 写入和 me
 shadow-dev release plan --name <name> --files <逗号分隔路径> --message "<message>" --title "<PR 标题>"
 ```
 
-plan 输出已包含分支、变更文件、仓库状态和 PR 参数，planHash 和执行参数自动写入 brief——不需要读取、搬运哈希或在 execute 时重复传参。列出 change、文件和知识结论，使用 AskUserQuestion 确认执行。
+plan 输出已包含分支、变更文件、仓库状态和 PR 参数，planHash 和执行参数自动写入 brief——不需要读取、搬运哈希或在 execute 时重复传参。列出 change、文件和知识结论，向用户提问确认执行。
 
 ## 3. 执行发布
 
@@ -44,7 +44,7 @@ shadow-dev release execute --name <name> --confirm
 
 **PR merged ≠ 已部署。** 本仓库是否以 push/Release/tag 触发生产部署，答案只在项目 Knowledge 里——不得凭「CI 已绿」推断交付完成。
 
-1. **判定：** 查询项目 `shadow-docs/menu.md` 构建/部署域路由（关键词：构建 部署 发布 release 上线 CI），命中卡片后按其「当前结论」确认部署触发方式。无命中或卡片无结论 → 用 AskUserQuestion 直接问用户「本仓库合并后如何上生产」，不猜。
+1. **判定：** 查询项目 `shadow-docs/menu.md` 构建/部署域路由（关键词：构建 部署 发布 release 上线 CI），命中卡片后按其「当前结论」确认部署触发方式。无命中或卡片无结论 → 直接向用户提问「本仓库合并后如何上生产」，不猜。
 2. **委托：** 项目声明了部署触发 → **AI 不亲手执行发布脚本或任何 `gh` 写命令**。把需要执行的动作整理成清单（命令/参数/影响面/版本号与标题格式按卡片记录的实际先例），交给用户执行或由项目 CI 自动完成，然后等待用户确认或 CI 通知。
 3. **审查：** 只审查外部提供给 AI 的结果——用户反馈、CI run 结论、release URL 与实际耗时——将交付结论写入 brief 的「结果」段。部署链红 → 停止并报告，不归档。
 

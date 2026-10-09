@@ -110,9 +110,28 @@ brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `
 
 ## 安装
 
-原生宿主是 **Claude Code**（本插件为其开发），zcode 等兼容宿主可直接消费同一产物。安装入口正从「插件引导 CLI」反转为「CLI 驱动分发」：
+原生宿主是 **Claude Code**（本插件为其开发），Codex 以 `.codex-plugin/` 清单 + `hooks/hooks.codex.json` 原生消费，zcode 等兼容宿主可直接消费同一产物。安装入口正从「插件引导 CLI」反转为「CLI 驱动分发」：
 
 当前形态（v6.3.0）：作为 Claude Code 插件安装，SessionStart hook 自动就位锁版本 CLI，无需手动初始化。
+
+### Codex 宿主
+
+同一份产物，两条路线：
+
+**插件路线（推荐，跨文件引用完整）** —— `.codex-plugin/plugin.json` 声明 `skills` 与 `hooks/hooks.codex.json`，`.agents/plugins/marketplace.json` 是 Codex 侧的 marketplace 目录：
+
+```bash
+codex plugin marketplace add stack-wuh/shadow-dev-workflow      # 本机开发：codex plugin marketplace add D:/works/shadow-dev-workflow
+codex plugin add shadow-dev-workflow@shadow-dev-workflow-local   # 装完重启桌面应用
+```
+
+- 整包（`norms/`、`menu.md`、`knowledge/`）随插件进 `~/.codex/plugins/cache/`，技能里的跨文件引用保持有效；
+- 插件钩子属**非托管钩子**，装完需在 CLI 里 `/hooks` 审查并信任才会执行，未信任时静默跳过（不报错、不阻塞会话）；
+- 带 lifecycle hooks 的插件不进公共 plugin directory，本地/GitHub marketplace 安装不受影响。
+
+**bind 路线** —— `shadow-dev workflow link`/`install` 就位产物后 `shadow-dev bind plan --host codex` + `bind execute`，描述符为 `adapters/codex.json`（`skillsDir: ~/.codex/skills`）。注意 bind 只复制 `skills/`，技能正文对 `norms/` 与 `menu.md` 的引用会脱离产物根目录，需要插件路线才等价。
+
+Windows 自举：Codex 走 `hooks.codex.json` 里的 `commandWindows` 覆盖，优先 `%ProgramFiles%\Git\bin\bash.exe`，找不到再退回 PATH 上的 `bash`。若 PATH 上只有 WSL 的 `System32\bash.exe`，自举会把 CLI 装进 WSL 文件系统、Windows 侧看不到 shim——此时手动 `bash scripts/install-cli.sh install`，或设 `SHADOW_CLI_HOOK_DISABLE=1` 关掉自举。
 
 目标形态（随 shadow-dev-cli 的 workflow/bind 域发布启用）：
 
@@ -132,6 +151,7 @@ shadow-dev workflow bind      # 按 adapters/<host>.json 把 skills 绑入宿主
 - Git
 - bash + curl（安装器拉取 release 产物）
 - GitHub token（Issue、PR、发布和归档校验）
+- Codex CLI（可选，插件路线需 `codex plugin marketplace add`；实测 0.160.1）
 
 ## License
 

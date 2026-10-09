@@ -15,6 +15,7 @@
 | 代码变更 | 代码 风格 重构 命名 类型 import 依赖 包边界 | norms/code-style.md, 按 scope 追加 norms/code-style-frontend.md、norms/code-style-backend.md 或 norms/code-style-packages.md |
 | 数据库变更 | 数据库 MongoDB Mongoose Schema Model 字段 索引 迁移 回填 同步 seed | norms/code-style-database.md, 项目数据模型 active Knowledge |
 | 性能优化 | 首屏 加载 缓存 LCP CLS SSR ISR | norms/code-style.md, 项目性能 active Knowledge |
+| 插件多宿主分发 | Codex Claude Code zcode 宿主 插件清单 marketplace hooks adapters 打包 分发 技能加载 命令 not found | knowledge/multi-host-plugin-distribution.md |
 | Bug 修复 | 报错 崩溃 异常 不对 显示不正常 | norms/tdd-verification.md, knowledge/bug-investigation.md, 项目相关 active Knowledge |
 | 交互/动画 | 动效 过渡 动画 手势 滚动 | norms/interaction.md, 项目动效 active Knowledge |
 | 无障碍 | a11y aria 对比度 屏幕阅读 焦点 键盘 | norms/interaction.md, norms/ui-patterns.md |
