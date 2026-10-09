@@ -4,7 +4,7 @@
   "name": "20261009-fix-distribution-gate-regex",
   "type": "fix",
   "scope": "scripts",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "fix/20261009-fix-distribution-gate-regex",
   "files": [
@@ -16,8 +16,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 37,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/37"
   },
   "review": {
     "conclusion": "passed",
@@ -26,7 +26,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "pr:37",
     "planHash": "8a160fc3ce8c2fe18c2368cb4d61fedf1f6fb3971a4c46aed99c9e15b94c9fdf",
     "updatedAt": null,
     "lastError": null,
