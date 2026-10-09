@@ -1,5 +1,42 @@
 ---
-{"schema":"shadow-dev/v1","name":"20260811-refactor-monorepo-code-style","type":"refactor","scope":"shadow-dev-workflow/norms","status":"implemented","baseBranch":"main","branch":"feat-standalone-cross-platform-workflow","files":["menu.md","norms/code-style.md","norms/code-style-frontend.md","norms/code-style-backend.md","norms/code-style-database.md","norms/code-style-packages.md","shadow-docs/changes/20260811-refactor-monorepo-code-style/brief.md"],"github":{"repository":null,"issue":null,"issueUrl":null,"pullRequest":null,"pullRequestUrl":null},"review":{"conclusion":"pending","verifiedCommit":null,"verifiedAt":null},"workflow":{"operation":null,"checkpoint":null,"planHash":null,"updatedAt":null,"lastError":null}}
+{
+  "schema": "shadow-dev/v1",
+  "name": "20260811-refactor-monorepo-code-style",
+  "type": "refactor",
+  "scope": "shadow-dev-workflow/norms",
+  "status": "implemented",
+  "baseBranch": "main",
+  "branch": "feat-standalone-cross-platform-workflow",
+  "files": [
+    "menu.md",
+    "norms/code-style.md",
+    "norms/code-style-frontend.md",
+    "norms/code-style-backend.md",
+    "norms/code-style-database.md",
+    "norms/code-style-packages.md",
+    "shadow-docs/changes/20260811-refactor-monorepo-code-style/brief.md"
+  ],
+  "github": {
+    "repository": null,
+    "issue": null,
+    "issueUrl": null,
+    "pullRequest": 10,
+    "pullRequestUrl": null
+  },
+  "review": {
+    "conclusion": "pending",
+    "verifiedCommit": null,
+    "verifiedAt": null
+  },
+  "workflow": {
+    "operation": null,
+    "checkpoint": null,
+    "planHash": null,
+    "updatedAt": null,
+    "lastError": null
+  }
+}
+
 ---
 
 # Monorepo 代码规范重构
@@ -37,6 +74,11 @@
 ## 结果
 
 完成五层规范文件和开发菜单路由更新，覆盖主站、管理端、组件库、Hooks、共享契约、配置包、NestJS API、MongoDB/Mongoose 及维护脚本。
+
+
+> 归档补记（2026-10-09 历史滞留清理）：原 brief 未记录 PR，经 GitHub 反查确认对应 by-head:20260822-feat-workflow-entry(共3个候选) 且已 merged；仅回填记录字段 `github.pullRequest=10`，未改任何状态机字段。
+
+> 归档补记（2026-10-09）：本 change 在 GitHub 上查不到对应 PR（早期直推 main 时代产物），`archive plan` 的 merged 证据门禁按设计无法通过；故经 20261009-chore-archive-pr-less-briefs 的 PR 以「历史整理」方式移入 archive。frontmatter 状态字段与任务勾选保持原样，未做任何追溯性修改。
 
 ## 知识评估
 
