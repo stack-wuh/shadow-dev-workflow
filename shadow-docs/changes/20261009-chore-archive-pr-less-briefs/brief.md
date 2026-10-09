@@ -4,7 +4,7 @@
   "name": "20261009-chore-archive-pr-less-briefs",
   "type": "chore",
   "scope": "shadow-docs",
-  "status": "branched",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "chore/20261009-chore-archive-pr-less-briefs",
   "files": [
@@ -27,7 +27,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "99ac254aa437f94e5593f123a502f6504a7bb4b9",
     "planHash": "e73bd65c1e06490da400279f01d84fcb72dbbf00224cdab733be6020a5bb3ec2",
     "updatedAt": null,
     "lastError": null,
