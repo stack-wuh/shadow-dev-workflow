@@ -4,7 +4,7 @@
   "name": "20261005-fix-iron-laws-tiered-validation",
   "type": "fix",
   "scope": "shadow-dev-workflow/rules",
-  "status": "reviewed",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "fix/20261005-fix-iron-laws-tiered-validation",
   "files": [
@@ -17,18 +17,18 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 25,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/25",
-    "pullRequest": null,
+    "pullRequest": 26,
     "pullRequestUrl": null
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "b1bbe74c91d3afed5664167a5c2a7548225a2d95",
-    "verifiedAt": "2026-10-06T16:10:26.170Z"
+    "verifiedCommit": "4d201ce509aa66e7587adef5b50f9e0c849a74a1",
+    "verifiedAt": "2026-10-09T15:51:11.299Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:25",
-    "planHash": "ee59c3c2982bb6c2605e94dd1c15cc87e2509d0d6c69df4b359c6173529c920d",
+    "checkpoint": "merged-pr:26",
+    "planHash": "3c49cb28fb0ea2af00528c14c1842ff11be37ac2780fd1288eaa89131ddcda8e",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -55,7 +55,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "rules 层与已批准的 norm 分级制逐字对齐，治理载体自身修复，无新长期事实"
+    "reason": "历史滞留清理：工作已随 PR #26 合入 main（经 head 分支反查核实），本次仅重钉 verifiedCommit 以完成归档；无新增稳定事实"
   }
 }
 ---
@@ -96,6 +96,9 @@
 - 实际耗时: 约 10 分钟（压缩流程单授权）
 - 验证: code-read——diff 走查 3 文件 +6/−6 与声明一致；全仓扫描确认一刀切措辞清零（norms L 级表格语境保留属预期）；扫描同时发现 hotfix skill 6 处同款强制（复现测试先红后绿非协商），因 files 清单锁定，转堆叠变更 20261005-fix-hotfix-tiered-validation 处理
 - 验证: —
+
+
+> 归档补记（2026-10-09 历史滞留清理）：原 brief 未记录 PR，经 GitHub 反查确认对应 by-body:fix(rules): 铁律对齐分级验证制——消除一刀切 且已 merged；仅回填记录字段 `github.pullRequest=26`，未改任何状态机字段。
 
 ## 知识评估
 

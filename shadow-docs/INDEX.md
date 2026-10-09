@@ -15,7 +15,7 @@
 | 20261005-feature-tdd-progress-visibility | ✅ 完成 | shadow-docs/changes/archive/20261005-feature-tdd-progress-visibility/brief.md |
 | 20261005-feature-worktree-integration | ✅ 完成 | shadow-docs/changes/archive/20261005-feature-worktree-integration/brief.md |
 | 20261005-fix-hotfix-tiered-validation | ✅ 完成 | shadow-docs/changes/archive/20261005-fix-hotfix-tiered-validation/brief.md |
-| 20261005-fix-iron-laws-tiered-validation | reviewed | shadow-docs/changes/20261005-fix-iron-laws-tiered-validation/brief.md |
+| 20261005-fix-iron-laws-tiered-validation | ✅ 完成 | shadow-docs/changes/archive/20261005-fix-iron-laws-tiered-validation/brief.md |
 | 20261009-build-artifact-capability-gate | ✅ 完成 | shadow-docs/changes/archive/20261009-build-artifact-capability-gate/brief.md |
 | 20261009-chore-manifest-version-sync | ✅ 完成 | shadow-docs/changes/archive/20261009-chore-manifest-version-sync/brief.md |
 | 20261009-feature-codex-host-support | published | shadow-docs/changes/20261009-feature-codex-host-support/brief.md |
