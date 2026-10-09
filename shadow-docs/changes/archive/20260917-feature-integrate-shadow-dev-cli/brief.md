@@ -4,7 +4,7 @@
   "name": "20260917-feature-integrate-shadow-dev-cli",
   "type": "feature",
   "scope": "shadow-dev-workflow",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "refactor/20260916-refactor-extract-shadow-dev-cli",
   "branch": "feature/20260917-feature-integrate-shadow-dev-cli",
   "files": [
@@ -27,13 +27,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "f8ac6cc2ed7e7ab3b46c4e4f873e905c910621ed",
-    "verifiedAt": "2026-09-17T16:17:52.025Z"
+    "verifiedCommit": "46084b3dcaec7ca61037bac5909919695a9d6c02",
+    "verifiedAt": "2026-10-09T15:50:42.699Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:14",
-    "planHash": "a5bbbf94182971921da35cd4e69f42d03b2fb841cf3490eb9f7031b2d1bf823d",
+    "checkpoint": "merged-pr:14",
+    "planHash": "adc590b8a3ccb0366e227109ddc1f67ea58f84f54ab154943a6fe1848db845fe",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -44,7 +44,11 @@
       ]
     }
   },
-  "knowledge": null
+  "knowledge": {
+    "action": "无需变更",
+    "target": null,
+    "reason": "历史滞留清理：工作已随 PR #14 合入 main（经 head 分支反查核实），本次仅重钉 verifiedCommit 以完成归档；无新增稳定事实"
+  }
 }
 ---
 
