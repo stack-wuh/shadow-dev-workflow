@@ -31,4 +31,5 @@ verified: 2026-08-08
 
 ## 关联知识
 
-- [TDD 与验证](../norms/tdd-verification.md)
+- [验证策略与复杂度评级](../norms/verification.md)
+- [领域模型是工作流的规格载体](domain-driven-shadow-dev.md)

@@ -7,6 +7,7 @@
 - `skills/`：定义 propose、apply、review、release、archive 和 Knowledge 查询流程。
 - `norms/`：跨项目硬规则与工程规范。
 - `knowledge/`：跨项目经验与协作知识。
+- 项目 `shadow-docs/domain.md`：限界上下文地图与统一语言（格式见 `norms/domain-model.md`）。
 - 项目 `shadow-docs/knowledge/`：项目独有的执行真相。
 - `menu.md` 与项目 `shadow-docs/menu.md`：任务到规范和 active Knowledge 的路由。
 - `brief.md` 与 INDEX：变更记录和历史索引，不覆盖 active Knowledge。
@@ -16,9 +17,9 @@
 | 位置 | 内容 |
 |------|------|
 | `rules/behavior.md` | 行为准则 |
-| `rules/iron-laws.md` | TDD、验证、调试、分支和 deterministic CLI 铁律 |
+| `rules/iron-laws.md` | 验证、调试、分支、deterministic CLI 和领域模型铁律 |
 | `norms/knowledge-cards.md` | Knowledge 卡片格式、生命周期和冲突处理 |
-| `norms/*.md` | UI、API、交互、代码风格和验证规范 |
+| `norms/*.md` | UI、API、交互、代码风格、领域模型和验证规范 |
 | `knowledge/*.md` | 跨项目经验与协作知识 |
 
 项目外 memory 不是工作流执行真相源。

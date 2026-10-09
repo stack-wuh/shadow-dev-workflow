@@ -1,6 +1,6 @@
 ---
 name: shadow-dev-knowledge
-description: 知识库查询 — 根据任务域、关键词和 scope 匹配菜单路由，只拉取 active 规范和知识。被 propose 自动调用。
+description: 知识库查询 — 根据限界上下文、任务域、关键词和 scope 匹配菜单路由，只拉取 active 规范和知识。被 propose 自动调用。
 ---
 # Shadow Dev Knowledge — 知识库查询
 
@@ -15,6 +15,7 @@ description: 知识库查询 — 根据任务域、关键词和 scope 匹配菜�
 从需求中提取：
 
 - 任务域：UI、API、数据库、性能、交互、Bug、Knowledge 治理等。
+- 限界上下文：项目 `shadow-docs/domain.md` 中登记的上下文名称；无地图时按 `norms/domain-model.md` 的判据先给出候选归属（只作查询键，不写入地图）。
 - 关键词：业务词、技术词和故障现象。
 - scope：涉及的目录、包、路由或业务模块。
 
@@ -23,7 +24,7 @@ description: 知识库查询 — 根据任务域、关键词和 scope 匹配菜�
 1. 读取通用 `menu.md`，得到通用 norms 和通用 Knowledge。
 2. 如项目存在 `shadow-docs/menu.md`，追加项目路由。
 3. 只读取菜单命中的文件，不全文扫描全部 Knowledge。
-4. Knowledge 必须同时综合 `domain`、`keywords` 和 `scope` 判断相关性。
+4. Knowledge 必须同时综合 `domain`、`keywords` 和 `scope` 判断相关性；`domain`（限界上下文）优先于技术域收敛范围，跨上下文的卡片只用于说明依赖，不作为本任务约束。
 5. 默认只读取 `status: active`；deprecated 仅用于追溯替代关系。
 6. 所有变更默认读取 `norms/code-style.md`。
 
@@ -56,6 +57,10 @@ verified: 2026-08-08
 ```markdown
 ## Knowledge 匹配结果
 
+### 限界上下文
+- 归属: <上下文名>
+- 上下游: <依赖方向与反腐边界>
+
 ### 技术域与 scope
 - 技术域: blog, UI
 - scope: packages/wuh.site.next/app/post
@@ -82,6 +87,7 @@ verified: 2026-08-08
 - 每条适用约束必须进入 brief 的「引用规范」，记录路径、当前结论和 scope。
 - 不遵循约束时必须在「决策」中说明理由。
 - 新增 Knowledge 前按 `domain + keywords + scope` 查重，能更新现有卡片时不新增。
+- 命中卡片中的公开名词必须与 `norms/domain-model.md` 术语表及项目上下文地图一致；不一致时列为阻塞项返回 propose，不自行改词或改地图。
 - 新组件和样式必须先确认项目组件库是否已有可复用实现。
 
 **离场：** 完成时输出：`✅ [离场] shadow-dev-knowledge · 命中 N 条 active 卡片 · 返回 shadow-dev-propose`

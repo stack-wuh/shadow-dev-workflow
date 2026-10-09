@@ -7,7 +7,8 @@
 | 技术域 | 关键词 | 应查阅 |
 |--------|--------|--------|
 | Knowledge 治理 | knowledge 知识库 沉淀 卡片 路由 过期 冲突 verified 深度 | norms/knowledge-cards.md |
-| 验证策略 | TDD 测试 复杂度评级 S/M/L 验证深度 评级矩阵 | norms/tdd-verification.md |
+| 领域建模 | 领域驱动 DDD 限界上下文 统一语言 聚合 不变量 观察点 上下文地图 领域模型 规格来源 | norms/domain-model.md, knowledge/domain-driven-shadow-dev.md |
+| 验证策略 | 测试 复杂度评级 S/M/L 验证深度 评级矩阵 不变量观察点 验证强度 | norms/verification.md |
 | 信号机制 | 信号 signals 探索 优先级 权重 衰减 负信号 | norms/signals.md |
 | UI 变更 | 页面 组件 布局 样式 配色 字体 按钮 卡片 弹窗 导航 列表 | norms/ui-patterns.md, norms/interaction.md, 项目相关 active Knowledge |
 | API 变更 | 接口 端点 API 路由 REST 查询 请求体 响应体 | norms/api-design.md, 项目相关 active Knowledge |
@@ -17,7 +18,7 @@
 | 性能优化 | 首屏 加载 缓存 LCP CLS SSR ISR | norms/code-style.md, 项目性能 active Knowledge |
 | 插件多宿主分发 | Codex Claude Code zcode 宿主 插件清单 marketplace hooks adapters 打包 分发 技能加载 命令 not found | knowledge/multi-host-plugin-distribution.md |
 | 分发一致性与能力声明 | pin cliVersion requiresCommands 能力声明 一致性门 check:requires ARTIFACT_INCOMPATIBLE missingCommands 静默降级 响亮阻塞 版本错位 命令 not found | knowledge/distribution-capability-contract.md |
-| Bug 修复 | 报错 崩溃 异常 不对 显示不正常 | norms/tdd-verification.md, knowledge/bug-investigation.md, 项目相关 active Knowledge |
+| Bug 修复 | 报错 崩溃 异常 不对 显示不正常 | norms/verification.md, knowledge/bug-investigation.md, 项目相关 active Knowledge |
 | 交互/动画 | 动效 过渡 动画 手势 滚动 | norms/interaction.md, 项目动效 active Knowledge |
 | 无障碍 | a11y aria 对比度 屏幕阅读 焦点 键盘 | norms/interaction.md, norms/ui-patterns.md |
 
@@ -30,3 +31,4 @@
 5. deprecated 卡片仅在追溯替代关系时读取。
 6. 将适用卡片路径、当前结论和 scope 记录到 brief 的「引用规范」。
 7. 每条约束必须遵循，或在「决策」中说明为什么不适用。
+8. 项目存在 `shadow-docs/domain.md` 时先读上下文地图，确定任务所属限界上下文再路由；L 级变更必须在 brief 写「## 领域模型」段（`norms/domain-model.md`）。

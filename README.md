@@ -21,7 +21,8 @@ norms/                      # 跨项目硬规则与工程规范
 ├── api-design.md
 ├── interaction.md
 ├── code-style.md
-└── tdd-verification.md
+├── domain-model.md
+└── verification.md
 
 knowledge/                  # 跨项目经验与协作知识
 menu.md                     # 任务到规范和 Knowledge 的路由
@@ -60,9 +61,9 @@ shadow-docs/
 propose → apply → review → release → archive
 ```
 
-- **propose：** 按 menu 读取和引用 active Knowledge，记录预期知识影响。
-- **apply：** 按引用约束执行；冲突时暂停并查明原因。
-- **review：** 验证实现、约束和卡片检查方法，给出最终知识动作。
+- **propose：** 按 menu 读取和引用 active Knowledge，做领域对齐（限界上下文 / 不变量），记录预期知识影响。
+- **apply：** 按引用约束执行，以 brief 的不变量为验收对象逐条留观察点；冲突时暂停并查明原因。
+- **review：** 验证实现、约束、模型一致性和卡片检查方法，给出最终知识动作。
 - **release：** 新增、原位更新、废弃卡片或记录无需变更，然后提交发布 PR。
 - **archive：** PR merged 后将 brief 移到 archive/ 并重建 INDEX；也可由 GitHub Actions 在 issue close 时自动触发。
 
