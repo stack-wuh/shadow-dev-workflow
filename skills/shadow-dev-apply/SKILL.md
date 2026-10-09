@@ -1,6 +1,6 @@
 ---
 name: shadow-dev-apply
-description: 开始执行 — 按 brief 的 Phase 执行任务，加载 active Knowledge，执行 TDD 与依赖调度。触发词：开始执行、apply、实现、写代码。
+description: 开始执行 — 按 brief 的 Phase 执行任务，加载 active Knowledge，执行分级验证与依赖调度。触发词：开始执行、apply、实现、写代码。
 ---
 # Shadow Dev Apply — 执行
 
