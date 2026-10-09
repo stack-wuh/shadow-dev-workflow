@@ -4,7 +4,7 @@
   "name": "20261009-feature-codex-host-support",
   "type": "feature",
   "scope": "shadow-dev-workflow/adapters,hooks,skills,rules,scripts,test",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "feature/20261009-feature-codex-host-support",
   "files": [
@@ -35,13 +35,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "00efab66e107635c5c44a75e929b9bd185e54d39",
-    "verifiedAt": "2026-10-09T07:49:49.669Z"
+    "verifiedCommit": "8098040afdcc2d29b7585377ea5138ea3c0d8e53",
+    "verifiedAt": "2026-10-09T15:51:24.791Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:32",
-    "planHash": "e17e75dfa7a1f7a630e95eef67bd000b12748b007090a0f9cf39bd1766b10615",
+    "checkpoint": "merged-pr:32",
+    "planHash": "df95ff57b39be520b4f66c1001b8389dad16885e35058e2d1ef760987963b403",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -59,9 +59,9 @@
     }
   },
   "knowledge": {
-    "action": "新增",
-    "target": "knowledge/multi-host-plugin-distribution.md",
-    "reason": "Claude Code 与 Codex 的清单目录、marketplace 形态、hook handler schema 差异，以及 bind 与插件两路线的引用完整性差异，属可跨项目复用的稳定事实，本轮已达 runtime 深度（4 条可追溯观察点）；另按 norms/signals.md 写入本仓 SGN-009/010 两条信号"
+    "action": "无需变更",
+    "target": null,
+    "reason": "历史滞留清理：工作已随 PR #32 合入 main（经 head 分支反查核实），本次仅重钉 verifiedCommit 以完成归档；无新增稳定事实"
   }
 }
 ---
