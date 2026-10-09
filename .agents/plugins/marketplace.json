@@ -1,0 +1,23 @@
+{
+  "name": "shadow-dev-workflow-local",
+  "owner": {
+    "name": "Shadow (stack-wuh)"
+  },
+  "plugins": [
+    {
+      "name": "shadow-dev-workflow",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools",
+      "interface": {
+        "displayName": "Shadow Dev Workflow"
+      }
+    }
+  ]
+}

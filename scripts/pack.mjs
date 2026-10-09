@@ -10,9 +10,9 @@ const { version } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const dist = join(root, 'dist')
 const staging = join(dist, 'staging')
 
-// 运行必需集：hook fallback 依赖 scripts/install-cli.sh；排除 test/shadow-docs/changes 等开发产物
+// 运行必需集：hook fallback 依赖 scripts/install-cli.sh；.codex-plugin/ 与 .agents/ 随产物分发供 Codex 宿主消费；排除 test/shadow-docs/changes 等开发产物
 const FILES = ['marketplace.json', 'package.json', 'README.md', 'menu.md']
-const DIRS = ['skills', 'adapters', 'hooks', 'rules', 'knowledge', 'norms', 'docs', 'scripts']
+const DIRS = ['.agents', '.codex-plugin', 'skills', 'adapters', 'hooks', 'rules', 'knowledge', 'norms', 'docs', 'scripts']
 
 rmSync(dist, { recursive: true, force: true })
 mkdirSync(staging, { recursive: true })

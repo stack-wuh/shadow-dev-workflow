@@ -1,0 +1,23 @@
+{
+  "schema": "shadow-dev-adapter/v1",
+  "host": "codex",
+  "displayName": "Codex",
+  "tier": "native",
+  "skillsDir": "~/.codex/skills",
+  "skillLayout": "{skillsDir}/{skill}/SKILL.md",
+  "bind": {
+    "strategy": "copy",
+    "marker": "managed-by: shadow-dev-workflow"
+  },
+  "hooks": {
+    "supported": true,
+    "mode": "plugin",
+    "note": "Codex 侧 hooks 走插件清单显式声明的 hooks/hooks.codex.json（type=command + PLUGIN_ROOT，Windows 用 commandWindows 走 Git Bash）；插件路线需 /hooks 审查信任后才执行，bind 路线不携带 hook"
+  },
+  "plugin": {
+    "optional": true,
+    "manifest": ".codex-plugin/plugin.json",
+    "marketplace": ".agents/plugins/marketplace.json",
+    "note": "Codex 原生插件形态：清单与 marketplace 随产物分发；bind 不依赖它。注意 bind 只复制 skills/，norms/ 与 menu.md 引用需插件路线才完整"
+  }
+}

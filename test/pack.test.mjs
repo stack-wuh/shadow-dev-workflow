@@ -29,6 +29,14 @@ test('pack: 产物存在且与 package.json 版本一致', () => {
   assert.equal(packed.version, version)
 })
 
+test('pack: 三处 manifest 版本与 package.json 对齐（发版漏同步的机检）', () => {
+  for (const rel of [['.claude-plugin', 'plugin.json'], ['.codex-plugin', 'plugin.json']]) {
+    const p = join(PLUGIN_ROOT, ...rel)
+    assert.equal(existsSync(p), true, `missing manifest: ${rel.join('/')}`)
+    assert.equal(JSON.parse(readFileSync(p, 'utf8')).version, version, `${rel.join('/')} 的 version 未与 package.json 同步`)
+  }
+})
+
 test('pack: 运行必需文件齐全（hook fallback 依赖 scripts/install-cli.sh）', () => {
   for (const f of ['marketplace.json', 'package.json', 'README.md', 'menu.md']) {
     assert.equal(existsSync(join(packedRoot, f)), true, `missing file: ${f}`)
@@ -38,7 +46,11 @@ test('pack: 运行必需文件齐全（hook fallback 依赖 scripts/install-cli.
   }
   assert.equal(existsSync(join(packedRoot, 'hooks', 'hooks.json')), true, 'hooks.json')
   assert.equal(existsSync(join(packedRoot, 'scripts', 'install-cli.sh')), true, 'install-cli.sh')
+  assert.equal(existsSync(join(packedRoot, 'hooks', 'hooks.codex.json')), true, 'hooks/hooks.codex.json（Codex 宿主 hook 清单）')
   assert.equal(existsSync(join(packedRoot, 'adapters', 'claude-code.json')), true, 'adapters/claude-code.json（bind 域消费）')
+  assert.equal(existsSync(join(packedRoot, 'adapters', 'codex.json')), true, 'adapters/codex.json（bind 域消费）')
+  assert.equal(existsSync(join(packedRoot, '.codex-plugin', 'plugin.json')), true, '.codex-plugin/plugin.json（Codex 插件清单）')
+  assert.equal(existsSync(join(packedRoot, '.agents', 'plugins', 'marketplace.json')), true, '.agents/plugins/marketplace.json（Codex marketplace）')
   assert.equal(existsSync(join(packedRoot, 'adapters', 'zcode.json')), true, 'adapters/zcode.json（bind 域消费）')
   for (const s of ['shadow-dev-apply', 'shadow-dev-archive', 'shadow-dev-knowledge', 'shadow-dev-propose', 'shadow-dev-release', 'shadow-dev-review']) {
     assert.equal(existsSync(join(packedRoot, 'skills', s, 'SKILL.md')), true, `missing skill: ${s}`)

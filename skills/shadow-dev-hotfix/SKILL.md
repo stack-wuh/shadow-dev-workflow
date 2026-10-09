@@ -83,7 +83,7 @@ shadow-dev review execute --name <name> --conclusion passed --knowledge 无需�
 shadow-dev release plan --name <name> --files <逗号分隔路径> --message "fix: <一句话>" --title "<PR 标题>"
 ```
 
-用户确认执行方案时若已一并授权发布（如「全程自动到 PR」），`release execute` 不再二次询问；否则按惯例 AskUserQuestion 确认：
+用户确认执行方案时若已一并授权发布（如「全程自动到 PR」），`release execute` 不再二次询问；否则按惯例向用户提问确认（宿主有结构化提问能力就用，没有就直接文字询问）：
 
 ```bash
 shadow-dev release execute --name <name> --confirm

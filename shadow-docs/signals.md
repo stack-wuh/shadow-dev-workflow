@@ -2,6 +2,24 @@
 
 > 格式、生命周期与护栏见 workflow 仓 `norms/signals.md`。条目按命中时间排序，最新命中的在前。
 
+## SGN-009 · 宿主插件兼容性判断先跑 `codex plugin marketplace add <目录>` + `plugin list`，清单违规会以 WARN 直出字段名，比读文档推演收敛更快
+- 方向: positive
+- 权重: 2
+- 深度: runtime
+- 域/scope: 插件分发 · .codex-plugin/, adapters/, hooks/
+- 证据: 20261009-feature-codex-host-support（WARN `ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters` 直接点名他插件违规字段）
+- 命中: 1（最近 2026-10-09）
+- 退役条件: Codex 提供 plugin lint/校验命令，或清单校验不再输出字段级 WARN
+
+## SGN-010 · Windows 上 `node --test test/pack.test.mjs` 的解包步骤必失败（tar 收到 `D:\` 形态路径按 host:path 解析，回 `Cannot connect to D: resolve failed`），非代码回归，勿据此排查
+- 方向: negative
+- 权重: 2
+- 深度: runtime
+- 域/scope: 测试 · test/pack.test.mjs, scripts/pack.mjs
+- 证据: 20261009-feature-codex-host-support（未改动的「产物存在」用例同挂该步；手工 `bash -c 'tar -xzf'` 复现同一失败）
+- 命中: 1（最近 2026-10-09）
+- 退役条件: 测试解包改用 posix 路径或原生 `tar.exe`
+
 ## SGN-004 · node 子进程 exit 139 是机器段错误风暴，重试至收敛，勿误判为代码失败
 - 方向: positive
 - 权重: 5
