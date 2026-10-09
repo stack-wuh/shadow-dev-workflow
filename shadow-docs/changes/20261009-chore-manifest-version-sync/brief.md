@@ -4,7 +4,7 @@
   "name": "20261009-chore-manifest-version-sync",
   "type": "chore",
   "scope": "packaging",
-  "status": "reviewed",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "chore/20261009-chore-manifest-version-sync",
   "files": [
@@ -26,7 +26,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "5a228759891a611139cb4d9748f91d09d044cfee",
     "planHash": "b1a86aefd4c19cd80049c0fcdfaacbd4a62e4c487b5a07a809d03e538ee00310",
     "updatedAt": null,
     "lastError": null,
