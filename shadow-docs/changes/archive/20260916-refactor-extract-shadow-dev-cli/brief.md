@@ -4,7 +4,7 @@
   "name": "20260916-refactor-extract-shadow-dev-cli",
   "type": "refactor",
   "scope": "shadow-dev-workflow/scripts",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "refactor/20260916-refactor-extract-shadow-dev-cli",
   "files": [
@@ -25,20 +25,20 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "bac559b9249d35b008c0193615753b9c3705aa55",
-    "verifiedAt": "2026-09-16T16:54:01.980Z"
+    "verifiedCommit": "44372fd5354a9646cc582b462215802baf462c79",
+    "verifiedAt": "2026-10-09T15:50:28.622Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:12",
-    "planHash": "e6aa75e4385f0e9ebb1011ab395b50bc35c4209b74f43328d742bc536bc6de5b",
+    "checkpoint": "merged-pr:12",
+    "planHash": "4259e8afef94505a731247a918c9806e0e996380a6f04cfc35cd985a3c2ea918",
     "updatedAt": null,
     "lastError": null
   },
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "CLI 独立分发、安装方式、版本锁定等新事实均由产品文档承载（README、docs/cli-guide.md 本次已更新），不构成跨项目执行约束；menu 无匹配路由域，无需新增卡片"
+    "reason": "历史滞留清理：工作已随 PR #12 合入 main（经 head 分支反查核实），本次仅重钉 verifiedCommit 以完成归档；无新增稳定事实"
   }
 }
 ---
