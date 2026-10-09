@@ -6,6 +6,8 @@ description: 开始执行 — 按 brief 的 Phase 执行任务，加载 active K
 
 **执行纪律：** AI 只负责推导、决策与审查 CLI 返回的结果。一切仓库与 GitHub 写操作一律经 `shadow-dev` CLI 完成；禁止原始 `git`/`gh` 写命令，禁止脚本旁路。运行项目测试、lint 与诊断脚本属于收集验证证据，允许直接执行，但结论必须引用真实输出。
 
+**CLI 前置（非协商）：** `shadow-dev` 不在 PATH，或返回 `UNKNOWN_COMMAND` / `ARTIFACT_INCOMPATIBLE`，即**响亮阻塞**——报告「已装 CLI 低于产物 `requiresCommands` 所需」，给出升级动作（`bash scripts/install-cli.sh install --version <pin>` 或 `shadow-dev workflow plan` + `execute`）后停止。禁止静默降级到次优命令路径（如「worktree 不可用就改走 branch」），更禁止回退原始 `git`/`gh`。
+
 **进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-apply · 按 brief 执行`
 
 ## 流程
@@ -33,12 +35,12 @@ shadow-dev conflict inspect --name <name>
 
 ```bash
 shadow-dev repo inspect
-shadow-dev worktree inspect --name <name>   # 需 CLI ≥ v1.5.0；命令不可用时直接走 branch
+shadow-dev worktree inspect --name <name>   # 能力以产物 requiresCommands 声明为准
 shadow-dev branch plan --name <name>
 shadow-dev branch execute --name <name> --confirm
 ```
 
-`worktree inspect` 的 `recommendation` 决定路径：**create**（L 级且无自己的 workspace）→ `worktree plan --name <name> --path <dir>` + `worktree execute --name <name> --path <dir> --confirm` 建独立 workspace（替代 branch 流程，回写 `branch` 与 `workflow.worktree`），此后本变更全部命令在 `cd <dir>` 内执行；**reuse** → 直接 `cd` 到 `workflow.worktree` 记录的目录继续；**inline**（S/M 级）→ 照常 branch 切分支。分支类型使用 feat、fix、refactor、docs 或 chore。
+`worktree inspect` 的 `recommendation` 决定路径（该域不可用即按「CLI 前置」阻塞，不得改走 branch 蒙混）：**create**（L 级且无自己的 workspace）→ `worktree plan --name <name> --path <dir>` + `worktree execute --name <name> --path <dir> --confirm` 建独立 workspace（替代 branch 流程，回写 `branch` 与 `workflow.worktree`），此后本变更全部命令在 `cd <dir>` 内执行；**reuse** → 直接 `cd` 到 `workflow.worktree` 记录的目录继续；**inline**（S/M 级）→ 照常 branch 切分支。分支类型使用 feat、fix、refactor、docs 或 chore。
 
 ### 4. 分析依赖
 

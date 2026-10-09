@@ -1,6 +1,6 @@
 # shadow-dev CLI 使用指南
 
-`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（CLI v1.1.0，对应插件 `package.json` 的 `cliVersion` pin），本文档是完整命令参考。
+`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（命令面以**已安装 CLI** 为准：产物用 `requiresCommands` 声明所需命令键，CLI 落盘前断言；`cliVersion` pin 只决定装哪个版本，两者由 `npm run check:requires` 互校），本文档是完整命令参考。
 
 ## 安装（SessionStart 自动自举）
 
@@ -14,10 +14,10 @@
 
 ```bash
 bash scripts/install-cli.sh install                       # 装锁版本（同 hook 行为）
-bash scripts/install-cli.sh install --version v1.1.0      # 显式锁版本
+bash scripts/install-cli.sh install --version v1.5.0      # 显式锁版本
 bash scripts/install-cli.sh rollback                      # 切回上一版（离线，不动 shim）
 bash scripts/install-cli.sh status                        # 查看 CURRENT/PREVIOUS
-bash scripts/install-cli.sh install --from dist/shadow-dev-cli-v1.1.0.tar.gz  # 离线安装
+bash scripts/install-cli.sh install --from dist/shadow-dev-cli-v1.5.0.tar.gz  # 离线安装
 ```
 
 排障：
@@ -70,9 +70,9 @@ bash scripts/install-cli.sh install --from dist/shadow-dev-cli-v1.1.0.tar.gz  # 
 | `pr inspect --name <n>` | 读取 brief 记录的 PR（GET /pulls/{n}） |
 | `conflict inspect --name <n>` | 报告与该 change 文件列表重叠的其他活动 change |
 | `task list --name <n>` | 列出 brief 正文的 checkbox 任务（task-1、task-2…） |
-| `worktree inspect --name <n>` | 列出 git worktree（分支/脏净/归属），按 brief 复杂度评级给 `recommendation`（create/reuse/inline）（CLI ≥ v1.5.0） |
+| `worktree inspect --name <n>` | 列出 git worktree（分支/脏净/归属），按 brief 复杂度评级给 `recommendation`（create/reuse/inline）；能力由产物 `requiresCommands` 声明保证 |
 
-### 并行工作区（worktree，CLI ≥ v1.5.0）
+### 并行工作区（worktree）
 
 | 命令 | 说明 |
 |------|------|
@@ -194,4 +194,4 @@ npm test                       # wrapper 契约 + 安装器 --from fixture 测�
 bash scripts/install-cli.sh install   # 从 release 真实安装（同 hook）
 ```
 
-`.shadow-dev/` 项目配置目录约定为另案提案，当前未实现；项目级事实仍以 `shadow-docs/` 为准。
+`.shadow-dev/config.json` **已实现**（双层：项目级自 cwd 向上第一个命中 + 用户级 `~/.shadow-dev/config.json`；优先级 flag > env > 项目 config > 用户 config > 默认；键 `lang`/`quiet`/`json`/`github.*`/`blog.*` 逐键校验，损坏报 `CONFIG_INVALID`）。token 只走环境变量；项目级稳定事实仍以 `shadow-docs/` 为准。
