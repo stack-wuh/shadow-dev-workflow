@@ -44,7 +44,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": null,
-    "planHash": "f304bd8b1d001c9f24bc25fca19f049b0cedceea785a0b0be4da74aa811a6e4d",
+    "planHash": "3be0642cb61bd433c4ad4acacaeb15a71f3c38ce8fab48cc91aa18dcaaaa7f1d",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -82,6 +82,12 @@
       "message": "refactor(workflow): 工作流转为领域驱动——不变量作验收对象，TDD 残留清零",
       "title": "20261010-refactor-domain-driven-workflow",
       "body": ""
+    },
+    "commit": {
+      "files": [
+        "shadow-docs/changes/20261010-refactor-domain-driven-workflow/brief.md"
+      ],
+      "message": "docs(shadow): 回填 11/11 测试证据并更正「本仓无 CI 测试门」"
     }
   },
   "knowledge": {
@@ -205,12 +211,14 @@
 | I3 | `规范引用一致性`：零残留旧文件名与旧 token | `grep -rn "tdd-verification\|▶ \[TDD\]\|⏸ \[TDD" --exclude-dir=.git --exclude-dir=shadow-docs --exclude-dir=dist . | wc -l` → **0**；残留 `TDD` 字样 8 处逐条人工判定均为历史叙述或负面条款（`verification.md` 沿革与裁决引文、`iron-laws` §7「取消 TDD 仪式后规格悬空」、卡片 keywords「TDD 替代」），无一是祈使式要求 |
 | I4 | `分发产物`：声明与消费同源；8 skills；三处 manifest 版本一致；能力缺失响亮拒绝且指针不动 | `npm run check:requires` → `declared=29 skills-referenced=21 undeclared=[] cli-catalog=46 missing-in-cli=[] ✓`（propose 新增 `bind execute` 引用仍 ⊆ 声明集）；`node --test test/pack.test.mjs` → **4/4 pass**（含三 manifest 版本对齐机检）；`node scripts/pack.mjs` + `tar -tzf dist/shadow-dev-workflow-v6.6.0.tar.gz` → 包内 `norms/verification.md`、`norms/domain-model.md`、`knowledge/domain-driven-shadow-dev.md` 在列，`tdd-verification.md` **不在**，`SKILL.md` 计数=8，`package.json version=6.6.0`；拒绝路径 fixture（`requiresCommands` 追加 `nonexistent-domain.inspection`，隔离 `SHADOW_WORKFLOW_PREFIX=/private/tmp/sdd-prefix`）→ `workflow plan` `ok:true` 且 `missingCommands=['nonexistent-domain.inspection']`，`workflow execute` → `ARTIFACT_INCOMPATIBLE: artifact 6.6.0 requires commands this CLI 1.5.0 does not provide`，隔离前缀 `ls -A` 为空（**无半成品目录**），探针后 `workflow status` 仍 `current=6.5.1 / previous=6.5.0 / missingCommands=[]`（**指针不动**） |
 
-- **既有测试保持绿**: `test/pack.test.mjs` 4/4 通过（本机）。**证据缺口**：`test/install-cli.test.mjs` 7 例本机不可取证——沙箱禁网 + 本机 node 139 段错误风暴（命中信号 SGN-004，重试至收敛只解决了 `workflow plan`，网络类用例无法在本机跑）。替代观察点＝PR 的 GitHub Actions run 全绿链接，release 阶段回填本行。
+- **既有测试保持绿：11/11 全绿，缺口已关闭。** `node --test test/pack.test.mjs` → `# tests 4 # pass 4 # fail 0`（沙箱内）；`node --test test/install-cli.test.mjs` → `ok 1..ok 7`、`# tests 7 # pass 7 # fail 0`（越权到有网络的环境运行，95 秒有界窗口内全部收敛；首轮 `npm test` 与 `workflow plan` 各遇一次 node 139，按 SGN-004 重试至收敛）。
+  - 更正一处计划错误：原计划把 install-cli 证据缺口指向「CI run 链接」，但**本仓 `.github/workflows/` 只有 `archive-on-issue-close.yml`，没有测试工作流**——本机是唯一取证场所，不存在 CI 替代观察点。该事实已记入下方遗留项。
 - **交付**: 待 `issue execute`（需 `GITHUB_TOKEN`，本机 `GITHUB_TOKEN_REQUIRED`）
 - 遗留与后续（明确标注未做与原因）:
   - **本仓上下文地图缺失**：`norms/domain-model.md` 的验证方式要求「知识卡 `domain:` 值能在项目上下文地图中找到」，而本仓尚无 `shadow-docs/domain.md`——该不变量在 workflow 仓自身处于**未满足**状态。原因：`shadow-docs/domain.md` 不在本 change 声明文件集内，且 CLI 无 `change amend --files` 能力（命令目录只有 `change create/approve/list`），中途扩面无法合规提交。后续 change 建本仓地图（`workflow-governance` / `plugin-distribution` / `shadow-dev-cli` 三上下文起步）并在项目仓各建一份。
   - **`norms/knowledge-cards.md` 未改**：propose 的知识评估曾把它列为候选（`domain` 升一等路由键），但任务清单未含该文件。约束已由 `norms/domain-model.md`「验证方式」与 `skills/shadow-dev-knowledge`「约束处理」落地，卡片规范本身的字段说明补写另立 change——记为**知识评估与任务清单的一次不一致**，review 已捕获。
   - **信号提案 2 条**（`shadow-docs/signals.md` 同样不在声明文件集内，先记在这里，由后续写回）：① SGN-004 命中 +1（2026-10-10，`workflow plan`、`review plan`、`npm test` 三次 139/挂起，重试至收敛）；② 新候选 negative/weight 2/depth runtime：「编辑 brief **正文**前必须先按 `\n---\n` 切出正文再定位锚点——frontmatter 的 `issuePlan.body` 是正文快照，含同名文本，全局 `replace(...,1)` 会把真换行插进 JSON 字符串造成 `Bad control character`」。
+  - **本仓无 CI 测试门**：`.github/workflows/` 只有 `archive-on-issue-close.yml`，`npm test` 与 `npm run check:requires` 全靠本机手动执行——「验证强度与评级匹配」在缺 CI 时依赖执行者自证，是本仓的结构性弱点（属 `plugin-distribution`/`workflow-governance` 交界，另立 change 补 quality-gate 工作流）。
   - **CLI 工具缺口两处**（属 `shadow-dev-cli` 上下文，各自立项）：worktree 流程不覆盖「未提交 brief 的新立项 change」；`change` 域无 amend 文件集能力，导致 review 阶段的信号写回与卡片规范补写都无法合规落地。
 - 过程记录（诚实）:
   - 一次自我破坏并已修：用 `str.replace(anchor, …, 1)` 给 brief 正文插「执行期修订」时，锚点命中的是 frontmatter 里 `issuePlan.body` 的同名快照，真换行进入 JSON 字符串 → `Bad control character`。修正方式＝删除本会话新建的未跟踪 brief 目录后 `change create --body-file` 重建，并在脚本里改为「先按 `\n---\n` 切出正文再定位锚点」；后续所有 brief 正文编辑均走该切分。
