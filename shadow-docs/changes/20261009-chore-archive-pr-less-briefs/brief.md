@@ -4,7 +4,7 @@
   "name": "20261009-chore-archive-pr-less-briefs",
   "type": "chore",
   "scope": "shadow-docs",
-  "status": "committed",
+  "status": "reviewed",
   "baseBranch": "main",
   "branch": "chore/20261009-chore-archive-pr-less-briefs",
   "files": [
@@ -15,20 +15,20 @@
   ],
   "github": {
     "repository": "stack-wuh/shadow-dev-workflow",
-    "issue": null,
-    "issueUrl": null,
+    "issue": 39,
+    "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/39",
     "pullRequest": null,
     "pullRequestUrl": null
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "2eb830d2ebd88a09b13960db8c44d17fa19f9f17",
+    "verifiedAt": "2026-10-09T15:51:55.002Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "99ac254aa437f94e5593f123a502f6504a7bb4b9",
-    "planHash": "e73bd65c1e06490da400279f01d84fcb72dbbf00224cdab733be6020a5bb3ec2",
+    "checkpoint": "issue:39",
+    "planHash": "c4b70c34787bd7e4529a32ea40307538775de8b6922cfbfcc2c6217df574e1b6",
     "updatedAt": null,
     "lastError": null,
     "commit": {
@@ -41,7 +41,29 @@
         "shadow-docs/changes/archive/20260823-feature-review-task-gate"
       ],
       "message": "chore(shadow-docs): 归档两个无 PR 轨迹的早期滞留 brief（历史整理，不改状态字段）"
+    },
+    "issuePlan": {
+      "title": "[chore] 归档两个无 PR 轨迹的早期滞留 brief（不伪造 merged 证据）",
+      "titleRaw": null,
+      "supplement": "",
+      "body": "## 动机\n`shadow-docs/changes/` 里滞留 8 个活动 change，其中 6 个能按真实 PR 归档（见 issue 关联说明）。剩两个——`20260811-refactor-monorepo-code-style`（status implemented）与 `20260823-feature-review-task-gate`（status committed，任务 0/2 未勾）——**在 GitHub 上查不到任何对应 PR**（早期直推 main 时代的产物），因此 `archive plan` 的「PR 必须 merged」门禁按设计无法通过。INDEX 长期挂着活动条目会让人误判工作未完成，也不符合「归档只认 merged 证据」的纪律。处理方式：为本 change 自己建 PR 轨迹，把这两个 brief 作为**历史整理**移入 `archive/`，在移动后的正文里如实写明「无 PR 轨迹、经本 change 的 PR 整理归档」，不改它们的状态机字段、不补勾历史任务。\n\n## 引用规范\n- `norms/knowledge-cards.md`：brief 记录「这次发生了什么」，不覆盖 active Knowledge；移动不改结论。\n- `skills/shadow-dev-archive/SKILL.md`：禁止手改 INDEX、归档只认 merged 证据——本 change 用自身 PR 承载整理动作，正是为了不把「无证据」伪装成「有证据」。\n\n## 决策\n- **选型:** 新建 chore change，用 `git mv` 等价的显式文件清单提交把两个 brief 目录移入 `archive/`，`index rebuild` 重建 INDEX，本 change 自己走完 PR 后归档。\n- **对比方案:** (a) 给 CLI 的 archive 加 force 后门——未选，绕过证据门禁的口子一旦被发明就会被滥用；(b) 随便挂一个邻近 PR 号（如 #9/#10）让它过门禁——未选，那是伪造记录；(c) 留在活动列表里——未选，等于让 INDEX 长期说谎。\n- **理由:** 归档门禁没错，错的是历史缺轨迹；用一条有轨迹的整理 change 补历史，比拆门更诚实。\n\n## 任务\n### Phase 1\n- [ ] 移动两个无轨迹 brief — `shadow-docs/changes/archive/20260811-refactor-monorepo-code-style/brief.md`, `shadow-docs/changes/archive/20260823-feature-review-task-gate/brief.md` — 目录移入 archive/，正文各加一段「无 PR 轨迹」的归档补记（不改 frontmatter 状态字段、不补勾任务）\n- [ ] 重建索引 — `shadow-docs/INDEX.md` — 经 `shadow-dev index rebuild plan/execute` 完成，人工核对两个条目转为已完成且路径指向 archive\n- [ ] 对账 — `shadow-docs/INDEX.md` — `change list` 活动项应为空；INDEX 活动区不再出现这两个名字\n\n完整 brief：shadow-docs/changes/20261009-chore-archive-pr-less-briefs/brief.md\n\n<!-- shadow-dev:issue-metadata {\"name\":\"20261009-chore-archive-pr-less-briefs\",\"type\":\"chore\",\"scope\":\"shadow-docs\",\"status\":\"committed\",\"branch\":\"chore/20261009-chore-archive-pr-less-briefs\",\"baseBranch\":\"main\",\"briefPath\":\"shadow-docs/changes/20261009-chore-archive-pr-less-briefs/brief.md\",\"cliVersion\":\"1.5.0\",\"prUrl\":null,\"issueNumber\":null} -->\n",
+      "labels": [
+        "chore"
+      ]
+    },
+    "release": {
+      "files": [
+        "shadow-docs/changes/20261009-chore-archive-pr-less-briefs/brief.md"
+      ],
+      "message": "docs(shadow): 归档 change 结果与补记",
+      "title": "[chore] 归档两个无 PR 轨迹的早期滞留 brief",
+      "body": "Closes #39\n\n完整 brief：shadow-docs/changes/20261009-chore-archive-pr-less-briefs/brief.md"
     }
+  },
+  "knowledge": {
+    "action": "无需变更",
+    "target": null,
+    "reason": "历史整理动作，无新增稳定事实；两个 brief 的补记已写明无 PR 轨迹与整理来源"
   }
 }
 ---
@@ -67,9 +89,9 @@
 
 ## 任务
 ### Phase 1
-- [ ] 移动两个无轨迹 brief — `shadow-docs/changes/archive/20260811-refactor-monorepo-code-style/brief.md`, `shadow-docs/changes/archive/20260823-feature-review-task-gate/brief.md` — 目录移入 archive/，正文各加一段「无 PR 轨迹」的归档补记（不改 frontmatter 状态字段、不补勾任务）
-- [ ] 重建索引 — `shadow-docs/INDEX.md` — 经 `shadow-dev index rebuild plan/execute` 完成，人工核对两个条目转为已完成且路径指向 archive
-- [ ] 对账 — `shadow-docs/INDEX.md` — `change list` 活动项应为空；INDEX 活动区不再出现这两个名字
+- [x] 移动两个无轨迹 brief — `shadow-docs/changes/archive/20260811-refactor-monorepo-code-style/brief.md`, `shadow-docs/changes/archive/20260823-feature-review-task-gate/brief.md` — 目录移入 archive/，正文各加一段「无 PR 轨迹」的归档补记（不改 frontmatter 状态字段、不补勾任务）
+- [x] 重建索引 — `shadow-docs/INDEX.md` — 经 `shadow-dev index rebuild plan/execute` 完成，人工核对两个条目转为已完成且路径指向 archive
+- [x] 对账 — `shadow-docs/INDEX.md` — `change list` 活动项应为空；INDEX 活动区不再出现这两个名字
 
 ## 非目标
 - 不给 CLI 的 archive 加例外参数（若要做，另立 change 并写清证据替代方案）
