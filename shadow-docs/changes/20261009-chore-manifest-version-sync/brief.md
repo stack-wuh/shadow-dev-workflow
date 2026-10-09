@@ -4,7 +4,7 @@
   "name": "20261009-chore-manifest-version-sync",
   "type": "chore",
   "scope": "packaging",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "chore/20261009-chore-manifest-version-sync",
   "files": [
@@ -16,8 +16,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 38,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/38"
   },
   "review": {
     "conclusion": "passed",
@@ -26,16 +26,15 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "5a228759891a611139cb4d9748f91d09d044cfee",
-    "planHash": "b1a86aefd4c19cd80049c0fcdfaacbd4a62e4c487b5a07a809d03e538ee00310",
+    "checkpoint": "pr:38",
+    "planHash": "a7fe9c8867a8f77085d7e8864636a885f78a76e3cd0116fee3333de1ab9907f6",
     "updatedAt": null,
     "lastError": null,
     "release": {
       "files": [
-        ".claude-plugin/plugin.json",
-        ".codex-plugin/plugin.json"
+        "shadow-docs/changes/20261009-chore-manifest-version-sync/brief.md"
       ],
-      "message": "chore(plugin): plugin/codex 清单版本对齐 6.5.1——既有 pack 机检判红的封口",
+      "message": "docs(shadow): manifest change 结果记录（publish 需重传参数，改走 release 轨）",
       "title": "[chore] 清单版本对齐 v6.5.1（pack 机检判红封口）",
       "body": ""
     },
