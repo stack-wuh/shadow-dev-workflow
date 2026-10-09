@@ -4,7 +4,7 @@
   "name": "20261010-refactor-domain-driven-workflow",
   "type": "refactor",
   "scope": "workflow-governance",
-  "status": "reviewed",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "refactor/20261010-refactor-domain-driven-workflow",
   "files": [
@@ -43,7 +43,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "0187f0a75ff5fdf9a62c7bd8c3a4b4d8003141d4",
     "planHash": "3be0642cb61bd433c4ad4acacaeb15a71f3c38ce8fab48cc91aa18dcaaaa7f1d",
     "updatedAt": null,
     "lastError": null,
