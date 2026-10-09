@@ -49,4 +49,6 @@
 
 brief JSON frontmatter 是变更状态唯一真相。brief、INDEX、Git 与 GitHub 写操作统一通过 `shadow-dev`，写操作必须确认并校验 planHash。禁止原始 Git/GitHub 写命令、全量暂存、`--no-verify` 和自动冲突解决。
 
+分发依赖**单向**：CLI 驱动本仓产物（bootstrap → `workflow plan/execute` → `bind plan/execute`），本仓不装 CLI、不 pin CLI 版本。兼容判定用能力名不用版本号——产物 `package.json.requiresCommands` 声明所需命令键，CLI 落盘前断言，缺失即 `ARTIFACT_INCOMPATIBLE`；skills 遇命令缺失一律响亮阻塞，禁止静默降级。
+
 change 命名统一为 `YYYYMMDD-{type}-{slug}`，其中 type 对应 GitHub issue label：`feature`、`fix`、`build`、`chore`、`docs`、`refactor`、`style`、`test`。

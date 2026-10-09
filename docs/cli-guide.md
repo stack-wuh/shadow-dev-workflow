@@ -1,33 +1,16 @@
 # shadow-dev CLI 使用指南
 
-`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（CLI v1.1.0，对应插件 `package.json` 的 `cliVersion` pin），本文档是完整命令参考。
+`shadow-dev` 是 shadow-dev-workflow 的确定性执行层：brief、INDEX、Git 和 GitHub 的全部写操作都由它完成，技能（skills）只负责编排与判断，不直接执行写命令。CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)，本文档是完整命令参考。**命令面以已安装 CLI 为准**：内容产物用 `package.json.requiresCommands` 声明所需命令键，CLI 在物化/直通落盘前断言，缺失即 `ARTIFACT_INCOMPATIBLE`（不再有 `cliVersion` 静态 pin）。
 
-## 安装（SessionStart 自动自举）
+## 安装（CLI 驱动，唯一轨）
 
-插件通过 SessionStart hook 自动确保锁版本 CLI 就位，无需手动初始化：
+分发权威在 CLI：bootstrap 一条命令依次装好 CLI、workflow 产物与宿主技能绑定；已装 CLI 的机器用 `workflow` + `bind` 两组 plan/execute 做同样的事。
 
-- **布局**：`~/.local/share/shadow-dev-cli/shadow-dev-cli-<ver>/`（版本化目录，`CURRENT`/`PREVIOUS` 指针文件）+ 托管 shim `~/.local/bin/shadow-dev`（运行时读 `CURRENT`，更新与回滚不动 shim 文件）。
-- **幂等**：已就位时 hook 秒退，不触安装器、不触网；pin 变更或指针漂移时才精确安装 pin 版本。
-- **失败语义**：hook 恒不阻塞会话——离线等失败仅 stderr 警告，此时 skills 中 `shadow-dev` 命令不可用。
-
-手动管理（vendored 安装器 `scripts/install-cli.sh` 随插件分发，供 hook 与人工共用）：
-
-```bash
-bash scripts/install-cli.sh install                       # 装锁版本（同 hook 行为）
-bash scripts/install-cli.sh install --version v1.1.0      # 显式锁版本
-bash scripts/install-cli.sh rollback                      # 切回上一版（离线，不动 shim）
-bash scripts/install-cli.sh status                        # 查看 CURRENT/PREVIOUS
-bash scripts/install-cli.sh install --from dist/shadow-dev-cli-v1.1.0.tar.gz  # 离线安装
-```
-
-排障：
-
-| 症状 | 处置 |
-|------|------|
-| `shadow-dev: command not found` | 把 `~/.local/bin` 加入 PATH：`export PATH="$HOME/.local/bin:$PATH"` |
-| hook 日志出现「未能就位」 | 网络受限；在线后重开会话，或手动跑上面 install 命令 |
-| 双仓开发（跑未发布 CLI） | `export SHADOW_CLI_HOOK_DISABLE=1`，再用 `install --channel main` 或 `--from` 手动安装；hook 不会把开发安装拉回 pin |
-| 怀疑版本异常 | `bash scripts/install-cli.sh status` 后用 `rollback` 回退 |
+- **CLI 本体**：`curl -fsSL https://raw.githubusercontent.com/stack-wuh/shadow-dev-cli/v1.5.0/scripts/bootstrap.sh | bash -s <host>`，或 CLI 仓 `scripts/install-cli.sh install|rollback|status|link|unlink`。布局：`~/.local/share/shadow-dev-cli/shadow-dev-cli-<ver>/` + `CURRENT`/`PREVIOUS` 指针 + `~/.local/bin/shadow-dev` 托管 shim（解析序 LINK → CURRENT）。
+- **workflow 产物**：`shadow-dev workflow plan`（`--release` 固定 tag / `--from` 本地目录或 tarball / 缺省 latest）→ `workflow execute --plan-hash <哈希> --confirm`。落盘前顺序为：契约文件校验（`marketplace.json`/`package.json`/`skills/`/`adapters/`）→ **`requiresCommands` 能力断言** → 冒烟 → 切 `CURRENT`，`PREVIOUS` 留作 `workflow rollback`。任何一步失败指针不动、不留半成品目录。
+- **宿主绑定**：`shadow-dev bind plan --host auto|claude-code|zcode|codex` → `bind execute --host <名> --plan-hash <哈希> --confirm`，按 `adapters/<host>.json` 复制 skills 并在 `.shadow-dev-workflow.json` sidecar 记托管清单；非托管同名目录一律拒绝覆盖（`UNMANAGED_TARGET`），`bind unbind` 按 sidecar 精确移除。
+- **开发直通**：`shadow-dev workflow link --dir <checkout> --confirm` 让产物解析指向工作树，改动即时生效；`unlink` 回落安装版本。CLI 自身开发同款：`install-cli.sh link <cli 仓>`——**在本仓自测请直接用工作树 `node <cli>/cli.mjs` 或已 link 的 shim**，否则跑到的是已装旧版本（会给出与代码不一致的行为）。
+- **失败语义**：`shadow-dev` 缺失或 `UNKNOWN_COMMAND`/`ARTIFACT_INCOMPATIBLE` 时 skills 必须**响亮阻塞并提示升级**，禁止静默降级到次优命令路径，更禁止回退原始 `git`/`gh`。
 
 ## 输出协议
 
@@ -70,9 +53,9 @@ bash scripts/install-cli.sh install --from dist/shadow-dev-cli-v1.1.0.tar.gz  # 
 | `pr inspect --name <n>` | 读取 brief 记录的 PR（GET /pulls/{n}） |
 | `conflict inspect --name <n>` | 报告与该 change 文件列表重叠的其他活动 change |
 | `task list --name <n>` | 列出 brief 正文的 checkbox 任务（task-1、task-2…） |
-| `worktree inspect --name <n>` | 列出 git worktree（分支/脏净/归属），按 brief 复杂度评级给 `recommendation`（create/reuse/inline）（CLI ≥ v1.5.0） |
+| `worktree inspect --name <n>` | 列出 git worktree（分支/脏净/归属），按 brief 复杂度评级给 `recommendation`（create/reuse/inline）；能力由产物 `requiresCommands` 声明保证 |
 
-### 并行工作区（worktree，CLI ≥ v1.5.0）
+### 并行工作区（worktree）
 
 | 命令 | 说明 |
 |------|------|
@@ -194,4 +177,4 @@ npm test                       # wrapper 契约 + 安装器 --from fixture 测�
 bash scripts/install-cli.sh install   # 从 release 真实安装（同 hook）
 ```
 
-`.shadow-dev/` 项目配置目录约定为另案提案，当前未实现；项目级事实仍以 `shadow-docs/` 为准。
+`.shadow-dev/config.json` **已实现**（双层：项目级自 cwd 向上第一个命中、用户级 `~/.shadow-dev/config.json`；优先级 flag > env > 项目 config > 用户 config > 内置默认；`lang`/`quiet`/`json`/`github.*`/`blog.*` 逐键校验，损坏报 `CONFIG_INVALID`）。token 只走环境变量，配置文件不承载 secrets。项目级稳定事实仍以 `shadow-docs/` 为准，config 只放偏好与端点。

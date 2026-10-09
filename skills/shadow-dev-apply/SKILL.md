@@ -6,6 +6,8 @@ description: 开始执行 — 按 brief 的 Phase 执行任务，加载 active K
 
 **执行纪律：** AI 只负责推导、决策与审查 CLI 返回的结果。一切仓库与 GitHub 写操作一律经 `shadow-dev` CLI 完成；禁止原始 `git`/`gh` 写命令，禁止脚本旁路。运行项目测试、lint 与诊断脚本属于收集验证证据，允许直接执行，但结论必须引用真实输出。
 
+**CLI 前置（非协商）：** `shadow-dev` 不在 PATH，或返回 `UNKNOWN_COMMAND` / `ARTIFACT_INCOMPATIBLE`，即**响亮阻塞**并报告「已装 CLI 低于产物 requiresCommands 所需」，给出升级动作（`shadow-dev workflow plan/execute` 或 bootstrap 一键装机）后停止。禁止静默降级到次优命令路径，更禁止回退原始 `git`/`gh`。
+
 **进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-apply · 按 brief 执行`
 
 ## 流程
@@ -33,12 +35,12 @@ shadow-dev conflict inspect --name <name>
 
 ```bash
 shadow-dev repo inspect
-shadow-dev worktree inspect --name <name>   # 需 CLI ≥ v1.5.0；命令不可用时直接走 branch
+shadow-dev worktree inspect --name <name>   # 能力以产物 requiresCommands 为准
 shadow-dev branch plan --name <name>
 shadow-dev branch execute --name <name> --confirm
 ```
 
-`worktree inspect` 的 `recommendation` 决定路径：**create**（L 级且无自己的 workspace）→ `worktree plan --name <name> --path <dir>` + `worktree execute --name <name> --path <dir> --confirm` 建独立 workspace（替代 branch 流程，回写 `branch` 与 `workflow.worktree`），此后本变更全部命令在 `cd <dir>` 内执行；**reuse** → 直接 `cd` 到 `workflow.worktree` 记录的目录继续；**inline**（S/M 级）→ 照常 branch 切分支。分支类型使用 feat、fix、refactor、docs 或 chore。
+`worktree inspect` 的 `recommendation` 决定路径（该域不可用即按「CLI 前置」阻塞，不得改走 branch 蒙混）：**create**（L 级且无自己的 workspace）→ `worktree plan --name <name> --path <dir>` + `worktree execute --name <name> --path <dir> --confirm` 建独立 workspace（替代 branch 流程，回写 `branch` 与 `workflow.worktree`），此后本变更全部命令在 `cd <dir>` 内执行；**reuse** → 直接 `cd` 到 `workflow.worktree` 记录的目录继续；**inline**（S/M 级）→ 照常 branch 切分支。分支类型使用 feat、fix、refactor、docs 或 chore。
 
 ### 4. 分析依赖
 
@@ -48,11 +50,13 @@ shadow-dev branch execute --name <name> --confirm
 
 ### 5. 验证门禁
 
-按 brief 复杂度评级执行验证（`norms/tdd-verification.md` 分级制）：
+按 brief 复杂度评级执行验证（`norms/tdd-verification.md` 分级制；2026-10-09 用户裁决后**默认不新建测试文件、不强行先红**，但强度与评级匹配不可议）：
 
-1. **L**：完整 TDD——写失败测试并确认失败 → 最小实现并确认通过 → 重构保持绿色。
-2. **M**：绿灯测试——写测试并通过，不强制先红。
+1. **L**：可追溯 runtime 观察点——真实命令 + 真实输出，必须覆盖拒绝路径与状态不变量（指针不动、无半成品残留），或 CI 全绿链接。触及既有契约测试时保持其绿色。
+2. **M**：冒烟 + 既有测试保持绿 + 走查；不新建测试文件。
 3. **S**：不创建测试文件，执行结构、引用、路由和残留扫描。
+
+既有测试文件（如 `test/pack.test.mjs`）必须照常运行并通过——「不写 TDD」不等于「不跑测试」。
 
 **进度报告（非协商，`norms/tdd-verification.md`「进度可见性」）：** 开工前报出两个数——测试总数 N 与任务总数 M（测试逐项列名）；此后每完成一个单元立即输出一行进度线：测试 `▶ [TDD] n/N <测试名> red|green`、任务 `▶ [task] m/M <task-id> done`。单步挂起（进程空转、外部命令超时、同一失败重复）先输出 `⏸ [TDD|task] <名称> 卡住：<现象与排查方向>` 再处理——用户靠进度线判断是否卡死，静默长跑视为违规。
 

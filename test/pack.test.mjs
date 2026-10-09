@@ -27,20 +27,22 @@ test('pack: 产物存在且与 package.json 版本一致', () => {
   assert.equal(existsSync(artifact), true, `missing artifact: ${artifact}`)
   const packed = JSON.parse(readFileSync(join(packedRoot, 'package.json'), 'utf8'))
   assert.equal(packed.version, version)
+  assert.ok(Array.isArray(packed.requiresCommands) && packed.requiresCommands.length, 'requiresCommands 必须随产物声明')
+  assert.equal('cliVersion' in packed, false, 'cliVersion 静态 pin 已作废')
 })
 
-test('pack: 运行必需文件齐全（hook fallback 依赖 scripts/install-cli.sh）', () => {
+test('pack: 运行必需文件齐全（分发权威在 CLI，产物不含 hooks/installer）', () => {
   for (const f of ['marketplace.json', 'package.json', 'README.md', 'menu.md']) {
     assert.equal(existsSync(join(packedRoot, f)), true, `missing file: ${f}`)
   }
-  for (const d of ['skills', 'hooks', 'rules', 'knowledge', 'norms', 'docs', 'scripts']) {
+  for (const d of ['skills', 'adapters', 'rules', 'knowledge', 'norms', 'docs', 'scripts']) {
     assert.equal(existsSync(join(packedRoot, d)), true, `missing dir: ${d}`)
   }
-  assert.equal(existsSync(join(packedRoot, 'hooks', 'hooks.json')), true, 'hooks.json')
-  assert.equal(existsSync(join(packedRoot, 'scripts', 'install-cli.sh')), true, 'install-cli.sh')
+  assert.equal(existsSync(join(packedRoot, 'hooks')), false, 'hooks/ 必须已注销（SessionStart 自举轨作废）')
+  assert.equal(existsSync(join(packedRoot, 'scripts', 'install-cli.sh')), false, 'vendored install-cli.sh 必须已注销（双份漂移源头）')
   assert.equal(existsSync(join(packedRoot, 'adapters', 'claude-code.json')), true, 'adapters/claude-code.json（bind 域消费）')
   assert.equal(existsSync(join(packedRoot, 'adapters', 'zcode.json')), true, 'adapters/zcode.json（bind 域消费）')
-  for (const s of ['shadow-dev-apply', 'shadow-dev-archive', 'shadow-dev-knowledge', 'shadow-dev-propose', 'shadow-dev-release', 'shadow-dev-review']) {
+  for (const s of ['shadow-dev-apply', 'shadow-dev-archive', 'shadow-dev-design', 'shadow-dev-hotfix', 'shadow-dev-knowledge', 'shadow-dev-propose', 'shadow-dev-release', 'shadow-dev-review']) {
     assert.equal(existsSync(join(packedRoot, 'skills', s, 'SKILL.md')), true, `missing skill: ${s}`)
   }
 })

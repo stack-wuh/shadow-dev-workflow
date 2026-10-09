@@ -1,0 +1,22 @@
+{
+  "schema": "shadow-dev-adapter/v1",
+  "host": "codex",
+  "displayName": "Codex",
+  "tier": "compatible",
+  "skillsDir": "~/.codex/skills",
+  "skillLayout": "{skillsDir}/{skill}/SKILL.md",
+  "bind": {
+    "strategy": "copy",
+    "marker": "managed-by: shadow-dev-workflow"
+  },
+  "hooks": {
+    "supported": false,
+    "mode": "none",
+    "note": "分发权威单向在 CLI（bootstrap → workflow plan/execute → bind plan/execute），宿主 hook 不再是安装轨"
+  },
+  "plugin": {
+    "optional": false,
+    "manifest": null,
+    "note": "Codex 经 ~/.codex/skills 目录发现技能；bind 复制即生效，更新走 bind 重跑"
+  }
+}

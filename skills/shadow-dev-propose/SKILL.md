@@ -81,7 +81,7 @@ propose 只做知识影响预评估，不创建或改写 Knowledge。发现代�
 
 ### 5. 展示结果
 
-展示动机、复杂度评级（含理由与期望验证深度）、决策、任务阶段和知识影响预评估，提示下一步使用 `shadow-dev-apply`。评级随 propose 确认一并由用户批准；知识评估引用卡片更新时须写明 `verified-depth`。评级为 **L** 时同步提示并行选项：与其他变更并行或需要独立工作区时，apply 阶段将用 `shadow-dev worktree plan/execute` 创建专属 workspace（CLI ≥ v1.5.0），避免共享 checkout 的分支腾挪。
+展示动机、复杂度评级（含理由与期望验证深度）、决策、任务阶段和知识影响预评估，提示下一步使用 `shadow-dev-apply`。评级随 propose 确认一并由用户批准；知识评估引用卡片更新时须写明 `verified-depth`。评级为 **L** 时同步提示并行选项：与其他变更并行或需要独立工作区时，apply 阶段将用 `shadow-dev worktree plan/execute` 创建专属 workspace，避免共享 checkout 的分支腾挪。所需能力由产物 `package.json.requiresCommands` 声明，CLI 侧在物化前断言；能力缺失时 apply 响亮阻塞（不静默降级），提示升级 CLI。
 
 GitHub Issue 必须先 plan、确认后 execute，禁止原始 `gh` 写命令。plan 把标题、正文、labels 和 planHash 持久化到 brief，execute 只需 `--name --confirm`。仓库自动从 `origin` remote 推导（`github.com[:/]owner/repo`），非 GitHub remote 或多仓库场景用 `change create --repository <owner/repo>` 显式指定。issue labels 从 change type 映射：feature→`feature`、fix→`fix`、build→`build`、chore→`chore`、docs→`docs`、refactor→`refactor`、style→`style`、test→`test`。
 

@@ -26,8 +26,6 @@ norms/                      # 跨项目硬规则与工程规范
 knowledge/                  # 跨项目经验与协作知识
 menu.md                     # 任务到规范和 Knowledge 的路由
 rules/                      # 行为准则与铁律
-hooks/                      # SessionStart 自举：确保锁版本 shadow-dev-cli 就位
-scripts/install-cli.sh      # vendored CLI 仓库安装器（hook 与手工共用）
 ```
 
 项目使用：
@@ -76,50 +74,53 @@ propose → apply → review → release → archive
 
 ## Deterministic CLI
 
-CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)（纯脚手架实现：brief、INDEX、Git 与 GitHub 写操作的确定性执行层）。插件不再内置或 vendored CLI，而是通过 **SessionStart hook 自动安装锁版本 CLI**：
+CLI 独立分发于 [stack-wuh/shadow-dev-cli](https://github.com/stack-wuh/shadow-dev-cli)，是 brief、INDEX、Git 与 GitHub 写操作的确定性执行层，同时也是**分发的唯一驱动方**。本仓只提供内容与规范（skills / norms / knowledge / menu / rules / adapters / docs），不再内置任何安装轨：
 
-- `package.json` 的 `cliVersion` 字段锁定 CLI 版本（当前 `v1.1.0`），与插件版本配对发布，兼容配对由 manifest 机检。
-- 首次会话自动安装到 `~/.local/share/shadow-dev-cli/shadow-dev-cli-<ver>/`（版本化目录 + `CURRENT`/`PREVIOUS` 指针），并在 `~/.local/bin/shadow-dev` 生成托管 shim；此后每次会话幂等秒退（不触网）。
-- hook 永不阻塞会话：安装失败仅 stderr 警告；CLI 未就位时 skills 中 `shadow-dev` 命令不可用。
-- `SHADOW_CLI_HOOK_DISABLE=1` 跳过自举（双仓开发时保护手动 `--channel main` / `--from` 安装）。
+- 安装顺序恒为：bootstrap 装 CLI → `shadow-dev workflow plan` + `workflow execute` 物化本产物 → `shadow-dev bind plan --host auto` + `bind execute` 把 skills 绑进宿主发现目录。
+- 兼容判定不再用静态版本号：产物 `package.json.requiresCommands` 声明内容层需要的命令键，CLI 在物化/直通**落盘前**拿自身命令目录断言，缺失即 `ARTIFACT_INCOMPATIBLE` 且指针不动。`shadow-dev workflow status` 的 `artifactVersion / cliVersion / missingCommands` 三元组就是健康信号（引导页只读这一个字段即可判断「内容是否比 CLI 新」）。
+- 本仓已注销三件历史双轨源头：`cliVersion` pin、SessionStart 自举 hook、vendored `scripts/install-cli.sh`（20261009，v6.4.0）。
+- 宿主清单由 `adapters/<host>.json` 决定：**新增宿主 = 新增描述符，CLI 零改动**。现有 `claude-code`、`zcode`、`codex`。
+- 开发直通轨：`shadow-dev workflow link --dir <本仓 checkout>` 让产物解析指向工作树（改动即时生效），`unlink` 回落安装版本。
 
-手动管理（vendored 安装器随插件分发）：
+自检与排障：
 
 ```bash
-bash scripts/install-cli.sh install                       # 装锁版本（同 hook 行为）
-bash scripts/install-cli.sh install --version v1.1.0      # 显式锁版本
-bash scripts/install-cli.sh rollback                      # 切回上一版（离线）
-bash scripts/install-cli.sh status                        # 查看当前/上一版本指针
+npm run check:requires      # skills 引用 ⊆ requiresCommands ⊆ 已装 CLI 命令目录，差集非空即失败
+shadow-dev workflow status  # current / previous / linked / artifactVersion / cliVersion / missingCommands
+shadow-dev bind status      # 各宿主在场与托管技能清单
 ```
 
-排障：
-
-- `shadow-dev: command not found`：确认 `~/.local/bin` 在 PATH（`export PATH="$HOME/.local/bin:$PATH"`）。
-- 升级 CLI 与更新 pin：CLI 仓库发新版 → 验证 → 本仓库改 `cliVersion` 并同步 `scripts/install-cli.sh`，随插件发版。
+- `shadow-dev: command not found`：把 `~/.local/bin` 加入 PATH，或重跑 bootstrap。
+- `ARTIFACT_INCOMPATIBLE`：内容比 CLI 新。先升级 CLI（bootstrap，或 CLI 仓 `scripts/install-cli.sh install`），再重跑 `workflow plan` + `execute`。
+- skills 里出现 `UNKNOWN_COMMAND`：同属 CLI 过旧，apply 阶段按「CLI 前置」响亮阻塞，不得静默降级到别的命令路径。
 
 示例：
 
 ```bash
 shadow-dev --help
-shadow-dev repo inspect --json
-shadow-dev branch plan --name <name> --json
-shadow-dev branch execute --name <name> --confirm --json
+shadow-dev repo inspect
+shadow-dev branch plan --name <name>
+shadow-dev branch execute --name <name> --confirm
 ```
 
-brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `--confirm`；plan/execute 重新验证 planHash；commit 只接受明确文件列表；archive 仅在 GitHub API 证明 PR merged 后执行。完整命令参考与典型工作流见 [docs/cli-guide.md](docs/cli-guide.md)。
+brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `--confirm`；plan/execute 重新验证 planHash；commit 只接受明确文件列表；archive 仅在 GitHub API 证明 PR merged 后执行。完整命令参考见 CLI 仓 README 与本仓 [docs/cli-guide.md](docs/cli-guide.md)。
 
 ## 安装
 
-原生宿主是 **Claude Code**（本插件为其开发），zcode 等兼容宿主可直接消费同一产物。安装入口正从「插件引导 CLI」反转为「CLI 驱动分发」：
-
-当前形态（v6.3.0）：作为 Claude Code 插件安装，SessionStart hook 自动就位锁版本 CLI，无需手动初始化。
-
-目标形态（随 shadow-dev-cli 的 workflow/bind 域发布启用）：
+唯一入口是 CLI 的 bootstrap（任意目录可用，一条命令装好 CLI + 产物 + 宿主绑定）：
 
 ```bash
-shadow-dev workflow install   # 拉取本仓 release tarball，物化到 ~/.local/share/shadow-dev-workflow/
-shadow-dev workflow bind      # 按 adapters/<host>.json 把 skills 绑入宿主发现目录
+curl -fsSL https://raw.githubusercontent.com/stack-wuh/shadow-dev-cli/v1.5.0/scripts/bootstrap.sh | bash -s codex
 ```
+
+末尾参数是宿主名：`claude-code` / `zcode` / `codex`（清单来自产物 `adapters/<host>.json`）。已装过 CLI 的机器直接用两条命令做同样的事：
+
+```bash
+shadow-dev workflow plan && shadow-dev workflow execute --plan-hash <plan 输出的哈希> --confirm
+shadow-dev bind plan --host auto && shadow-dev bind execute --host <名> --plan-hash <哈希> --confirm
+```
+
+产物契约：release 资产 `shadow-dev-workflow-v<ver>.tar.gz` 由 `scripts/pack.mjs` 打包，解包为 `shadow-dev-workflow/`，含 `marketplace.json / package.json / README / menu / skills / adapters / rules / knowledge / norms / docs / scripts`——**不含 hooks 与安装器**。`marketplace.json` 与 `plugin.json` 仅供仍以插件形态消费的宿主可选使用，不再是安装轨。
 
 产物与 adapters 契约：
 
