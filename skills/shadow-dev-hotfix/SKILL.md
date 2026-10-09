@@ -1,10 +1,10 @@
 ---
 name: shadow-dev-hotfix
-description: 紧急修复快车道 — 线上/阻塞问题的最小修复直达 PR。省掉知识路由、方案比较、issue 与人工多维审查，只保留复现测试、两段式确认与 PR 合入。触发词：hotfix、线上急修、紧急修复、快修、快速上线。
+description: 紧急修复快车道 — 线上/阻塞问题的最小修复直达 PR。省掉知识路由、方案比较、issue 与人工多维审查，只保留复现确认、两段式确认与 PR 合入。触发词：hotfix、线上急修、紧急修复、快修、快速上线。
 ---
 # Shadow Dev Hotfix — 紧急修复快车道
 
-只用于线上故障或阻塞级问题。省时间不省安全：复现测试、planHash 两段式确认、PR 合入三个铁门禁一个不减。
+只用于线上故障或阻塞级问题。省时间不省安全：复现确认、planHash 两段式确认、PR 合入三个铁门禁一个不减。复现确认的手段按复杂度分级（`norms/tdd-verification.md`），不是一律写测试。
 
 **执行纪律：** AI 只负责推导、决策与审查 CLI 返回的结果。一切仓库与 GitHub 写操作一律经 `shadow-dev` CLI 完成；禁止原始 `git`/`gh` 写命令，禁止脚本旁路。运行测试与检查属于收集验证证据，允许直接执行，但结论必须引用真实输出。
 
@@ -33,13 +33,18 @@ shadow-dev branch plan --name <name>
 shadow-dev branch execute --name <name> --confirm
 ```
 
-mini 正文结构（复杂度评级恒 S、期望验证深度 unit；无 issue，PR 即追踪载体）：
+mini 正文结构（复杂度评级按 norm 三要素判定——文案/配置/展示层默认 S（期望验证深度 code-read/field）、触及行为局部 M、命中契约/共享路径/宿主核心 L；无 issue，PR 即追踪载体）：
 
 ```markdown
 # <一句话标题>
 
 ## 现象与影响
 <现象、影响面、发现渠道>
+
+## 复杂度评级
+- **评级:** <S/M/L，按 norm 三要素>
+- **理由:** <一句话>
+- **期望验证深度:** <code-read|field|unit|runtime>
 
 ## 根因与修复
 <根因一句话假设，现场验证可修正；最小修复方案>
@@ -51,8 +56,8 @@ mini 正文结构（复杂度评级恒 S、期望验证深度 unit；无 issue�
 
 ## 任务
 ### Phase 1
-- [ ] 复现测试先红 — `test/<文件>` — 锁定 Bug 的最小复现
-- [ ] 修复并回归绿 — `<目标文件>` — 最小修复；相关测试全绿
+- [ ] 复现锁定 Bug — `test/<文件>` 或复现步骤记录 — L 写复现测试先红；S/M 以可重复手段复现（观察/查询/手动步骤）
+- [ ] 修复并回归 — `<目标文件>` — 最小修复；按评级强度回归验证（L 测试先红后绿，S/M 复现手段复验）
 
 ## 结果
 - 实际耗时: —
@@ -64,9 +69,9 @@ mini 正文结构（复杂度评级恒 S、期望验证深度 unit；无 issue�
 - **理由:** 一次性修复过程不入 Knowledge
 ```
 
-### 3. 修复（唯一保留的 TDD 铁律）
+### 3. 修复（复现确认铁律，强度按分级）
 
-复现测试先红后绿（`norms/tdd-verification.md`，非协商）；同一个 Bug 的复现、根因确认、修复、回归在同一上下文完成（`knowledge/bug-investigation.md`）。快车道不豁免进度可见性：开工报数（测试 N 项 / 任务 M 项）、逐完成一行 `▶ [TDD] n/N … red|green`、卡点先报 `⏸`（`norms/tdd-verification.md`「进度可见性」）。只修改 brief 声明的文件；发现波及面超出准入判定时停下，退回 propose 重新立项。
+**复现确认非协商**：修复前必须以可重复手段复现问题、确认根因不失准——**L** 级写自动化复现测试先红后绿；**M** 级绿灯测试回归；**S** 级（文案/配置/展示层）以人工复现步骤或观察记录复现并复验，**不强制创建测试文件**（`norms/tdd-verification.md` 分级制）。同一个 Bug 的复现、根因确认、修复、回归在同一上下文完成（`knowledge/bug-investigation.md`）。快车道不豁免进度可见性：开工报数（任务 M 项，有测试则另报测试 N 项）、逐完成一行 `▶ [TDD|task] …`、卡点先报 `⏸`（`norms/tdd-verification.md`「进度可见性」）。只修改 brief 声明的文件；发现波及面超出准入判定时停下，退回 propose 重新立项。
 
 ### 4. 收尾门禁（压缩串行）
 
@@ -93,7 +98,7 @@ shadow-dev release execute --name <name> --confirm
 
 ## 不可省清单
 
-- 复现测试先红后绿（`norms/tdd-verification.md`，非协商）
+- 复现确认先于修复（`norms/tdd-verification.md` 分级制：L 复现测试先红后绿，S/M 人工复现复验；验证强度与评级匹配非协商）
 - 全部写操作 plan/execute 两段式 + `--confirm`
 - 显式文件清单，禁止 `git add .`
 - main 只接受 PR 合入
