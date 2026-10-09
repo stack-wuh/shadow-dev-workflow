@@ -4,7 +4,7 @@
   "name": "20261009-build-artifact-capability-gate",
   "type": "build",
   "scope": "plugin-distribution,scripts",
-  "status": "branched",
+  "status": "published",
   "baseBranch": "main",
   "branch": "build/20261009-build-artifact-capability-gate",
   "files": [
@@ -24,8 +24,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 35,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/35",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 36,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/36"
   },
   "review": {
     "conclusion": "pending",
@@ -34,7 +34,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:35",
+    "checkpoint": "pr:36",
     "planHash": "d961999b8c2ab9035a13d061fffdff668ac8914fbe0db6cd9f7f2e4ce3e8510a",
     "updatedAt": null,
     "lastError": null,
