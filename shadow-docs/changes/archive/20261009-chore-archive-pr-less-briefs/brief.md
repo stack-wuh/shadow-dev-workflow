@@ -4,7 +4,7 @@
   "name": "20261009-chore-archive-pr-less-briefs",
   "type": "chore",
   "scope": "shadow-docs",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261009-chore-archive-pr-less-briefs",
   "files": [
@@ -22,13 +22,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "2eb830d2ebd88a09b13960db8c44d17fa19f9f17",
-    "verifiedAt": "2026-10-09T15:51:55.002Z"
+    "verifiedCommit": "fed3a7e28cfad933a64b65120d2caf7273752283",
+    "verifiedAt": "2026-10-09T15:52:56.481Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:40",
-    "planHash": "c4b70c34787bd7e4529a32ea40307538775de8b6922cfbfcc2c6217df574e1b6",
+    "checkpoint": "merged-pr:40",
+    "planHash": "5bea559e7135c64a2b6996dc578ee50a94cbb7a65552e5437e07e91e2a836ff2",
     "updatedAt": null,
     "lastError": null,
     "commit": {
@@ -63,7 +63,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "历史整理动作，无新增稳定事实；两个 brief 的补记已写明无 PR 轨迹与整理来源"
+    "reason": "历史整理动作无新增稳定事实；本 change 自带 PR #40 轨迹，两个无轨迹 brief 的补记已写明来源"
   }
 }
 ---

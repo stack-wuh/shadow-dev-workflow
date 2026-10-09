@@ -17,7 +17,7 @@
 | 20261005-fix-hotfix-tiered-validation | ✅ 完成 | shadow-docs/changes/archive/20261005-fix-hotfix-tiered-validation/brief.md |
 | 20261005-fix-iron-laws-tiered-validation | ✅ 完成 | shadow-docs/changes/archive/20261005-fix-iron-laws-tiered-validation/brief.md |
 | 20261009-build-artifact-capability-gate | ✅ 完成 | shadow-docs/changes/archive/20261009-build-artifact-capability-gate/brief.md |
-| 20261009-chore-archive-pr-less-briefs | branched | shadow-docs/changes/20261009-chore-archive-pr-less-briefs/brief.md |
+| 20261009-chore-archive-pr-less-briefs | ✅ 完成 | shadow-docs/changes/archive/20261009-chore-archive-pr-less-briefs/brief.md |
 | 20261009-chore-manifest-version-sync | ✅ 完成 | shadow-docs/changes/archive/20261009-chore-manifest-version-sync/brief.md |
 | 20261009-feature-codex-host-support | ✅ 完成 | shadow-docs/changes/archive/20261009-feature-codex-host-support/brief.md |
 | 20261009-fix-distribution-gate-regex | ✅ 完成 | shadow-docs/changes/archive/20261009-fix-distribution-gate-regex/brief.md |
