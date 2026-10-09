@@ -4,7 +4,7 @@
   "name": "20261009-feature-codex-host-support",
   "type": "feature",
   "scope": "shadow-dev-workflow/adapters,hooks,skills,rules,scripts,test",
-  "status": "committed",
+  "status": "reviewed",
   "baseBranch": "main",
   "branch": "feature/20261009-feature-codex-host-support",
   "files": [
@@ -34,14 +34,14 @@
     "pullRequestUrl": null
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "00efab66e107635c5c44a75e929b9bd185e54d39",
+    "verifiedAt": "2026-10-09T07:49:49.669Z"
   },
   "workflow": {
     "operation": null,
     "checkpoint": "6a68c80dfec4f2faa781d4ed1e2f5ae4b5a5f3a9",
-    "planHash": "4149ff92f57e761900c06cec080e9abf3af7817dd938d8cd247d87cea2869eb5",
+    "planHash": "1d2ff3dbe6c9c9f4c15b34b490a88e6c79b6ca0487ba2aad0c07d8a9d7618013",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -53,27 +53,15 @@
     },
     "commit": {
       "files": [
-        ".agents/plugins/marketplace.json",
-        ".claude-plugin/plugin.json",
-        ".codex-plugin/plugin.json",
-        "README.md",
-        "adapters/codex.json",
-        "hooks/hooks.codex.json",
-        "knowledge/multi-host-plugin-distribution.md",
-        "menu.md",
-        "package.json",
-        "rules/behavior.md",
-        "rules/iron-laws.md",
-        "scripts/pack.mjs",
-        "shadow-docs/INDEX.md",
-        "shadow-docs/changes/20261009-feature-codex-host-support/brief.md",
-        "shadow-docs/signals.md",
-        "skills/shadow-dev-hotfix/SKILL.md",
-        "skills/shadow-dev-release/SKILL.md",
-        "test/pack.test.mjs"
+        "shadow-docs/changes/20261009-feature-codex-host-support/brief.md"
       ],
-      "message": "feat(plugin): Codex 宿主支持——.codex-plugin 清单 + hooks.codex.json + .agents marketplace，adapters/codex 备档、产物与三清单版本机检、措辞去宿主绑定，版本 6.4.0"
+      "message": "docs(shadow): review passed 与知识评估（新增多宿主分发卡 + SGN-009/010）——20261009-feature-codex-host-support"
     }
+  },
+  "knowledge": {
+    "action": "新增",
+    "target": "knowledge/multi-host-plugin-distribution.md",
+    "reason": "Claude Code 与 Codex 的清单目录、marketplace 形态、hook handler schema 差异，以及 bind 与插件两路线的引用完整性差异，属可跨项目复用的稳定事实，本轮已达 runtime 深度（4 条可追溯观察点）；另按 norms/signals.md 写入本仓 SGN-009/010 两条信号"
   }
 }
 ---
@@ -134,6 +122,8 @@
 ## 结果
 
 - 实际耗时: 约 50 分钟（含官方文档核对与 Codex 实机验证）
+- 偏差修正: Phase 3 任务 11 文案的「高分正向」为提案期表述，实际入库 SGN-009 为 positive weight 2（单次语境不拔高），SGN-010 为 negative weight 2 + runtime 深度 + 退役条件，符合 `norms/signals.md` 护栏 2；任务文案不回改（勾选记录即执行记录），以本行为准
+- 提交走查: 18 文件 +364/-10（`git show --stat 6a68c80`），与 brief `files` 与 `--files` 列表逐项一致；`git diff --name-only main HEAD -- hooks/hooks.json .claude-plugin/marketplace.json skills/shadow-dev-propose` 为空，证实「不动 Claude 侧语义」的决策成立
 - 验证（unit + runtime，命令与真实输出见下）:
   - `npm test` → `# tests 7 / # pass 7 / # fail 0`（`install-cli.test.mjs` 全绿）
   - `node --test test/pack.test.mjs` → `# tests 4 / # pass 2 / # fail 2`；新增的「三处 manifest 版本对齐」通过；2 条失败均在**解包步骤**（`bash -c 'tar -xzf "D:\\..."'` 被 MSYS 当 `host:path`，回 `Cannot connect to D: resolve failed`），与本 change 无关的既有环境限制——未改动的「产物存在」用例同样挂在该步，已手工复现同一条失败
