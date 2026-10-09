@@ -4,7 +4,7 @@
   "name": "20261009-build-artifact-capability-gate",
   "type": "build",
   "scope": "plugin-distribution,scripts",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "build/20261009-build-artifact-capability-gate",
   "files": [
@@ -28,14 +28,14 @@
     "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/36"
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "a06849feb414845b77d77db117eb0257e30d7be4",
+    "verifiedAt": "2026-10-09T15:29:50.716Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:36",
-    "planHash": "64d9b64bd09ae623df1b94cb68f825f201fdb9fe3b780b42fe33f15069766133",
+    "checkpoint": "merged-pr:36",
+    "planHash": "5341c9788a2df348a304bf2816062df9351f178b7dab4ebbeeac592f1240f6cd",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -53,6 +53,11 @@
       "title": "[build] 产物能力声明与分发一致性门（requiresCommands + check:requires）",
       "body": "Closes #35\n\n完整 brief：shadow-docs/changes/20261009-build-artifact-capability-gate/brief.md"
     }
+  },
+  "knowledge": {
+    "action": "无需变更",
+    "target": null,
+    "reason": "卡片与门随 PR #36 合入 main，6/6 任务完成（task-6 纠偏核实：README/cli-guide 旧口径残留均为 0）；本次为归档前置重钉 verifiedCommit（main=a06849f），证据＝npm test 11/11 全绿、check:requires 两级差集为空、解包三清单同源 6.5.1"
   }
 }
 ---
@@ -89,7 +94,7 @@
 - [x] 纪律同步 — `norms/tdd-verification.md`, `rules/iron-laws.md`, `skills/shadow-dev-hotfix/SKILL.md` — 写入 2026-10-09 裁决（L 不强制先写失败测试，M 默认不新建测试文件；强度与评级匹配仍不可议；既有测试必须绿），三处口径一致
 ### Phase 3
 - [x] 知识闭环 — `knowledge/distribution-capability-contract.md`, `menu.md` — 新增卡（pin 与能力声明的分工 + 门 + 不降级）并加 menu 路由
-- [ ] 事实纠偏 — `README.md`, `docs/cli-guide.md` — 修掉 v1.1.0 口径与不存在的 `workflow install`/`workflow bind` 命令名、`CLI ≥ v1.5.0` 版本口径、`.shadow-dev` 「未实现」的过期断言
+- [x] 事实纠偏 — `README.md`, `docs/cli-guide.md` — 修掉 v1.1.0 口径与不存在的 `workflow install`/`workflow bind` 命令名、`CLI ≥ v1.5.0` 版本口径、`.shadow-dev` 「未实现」的过期断言
 
 ## 非目标
 - 不删 hooks/pin/vendored installer（上游 #32 已验证插件轨）
