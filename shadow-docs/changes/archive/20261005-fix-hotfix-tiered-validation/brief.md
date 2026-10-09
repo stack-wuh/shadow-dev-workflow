@@ -4,7 +4,7 @@
   "name": "20261005-fix-hotfix-tiered-validation",
   "type": "fix",
   "scope": "shadow-dev-workflow/skills",
-  "status": "reviewed",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "fix/20261005-fix-hotfix-tiered-validation",
   "files": [
@@ -15,18 +15,18 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 27,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/27",
-    "pullRequest": null,
+    "pullRequest": 28,
     "pullRequestUrl": null
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "b1bbe74c91d3afed5664167a5c2a7548225a2d95",
-    "verifiedAt": "2026-10-06T16:13:19.208Z"
+    "verifiedCommit": "11dd4a4446722bfe36fa24f05d04011df0a68ecb",
+    "verifiedAt": "2026-10-09T15:50:59.539Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:27",
-    "planHash": "09a0d15309d8aef5122cc4e153e469ca7c06b99dfaf8d79d8f034653f95657de",
+    "checkpoint": "merged-pr:28",
+    "planHash": "3e4982672798f1bbca010b23f4e51f9d31f88722cb1216eabd9b83bd60aeaa15",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -51,7 +51,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "治理载体对齐既有批准分级制，无新长期事实"
+    "reason": "历史滞留清理：工作已随 PR #28 合入 main（经 head 分支反查核实），本次仅重钉 verifiedCommit 以完成归档；无新增稳定事实"
   }
 }
 ---
@@ -90,6 +90,9 @@ PR #26 扫描发现 `skills/shadow-dev-hotfix/SKILL.md` 存在 6 处同款一刀
 - 实际耗时: 约 8 分钟
 - 验证: code-read——残留 grep 归零（旧一刀切措辞 0 处）；新措辞「复现确认」6 处闭合；diff 走查单文件仅命中声明的 5 个改动点
 - 验证: —
+
+
+> 归档补记（2026-10-09 历史滞留清理）：原 brief 未记录 PR，经 GitHub 反查确认对应 by-body:fix(skills): hotfix 对齐分级验证制— 且已 merged；仅回填记录字段 `github.pullRequest=28`，未改任何状态机字段。
 
 ## 知识评估
 
