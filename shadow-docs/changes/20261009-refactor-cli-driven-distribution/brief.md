@@ -4,7 +4,7 @@
   "name": "20261009-refactor-cli-driven-distribution",
   "type": "refactor",
   "scope": "plugin-distribution",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "refactor/20261009-refactor-cli-driven-distribution",
   "files": [
@@ -31,8 +31,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 33,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/33",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 34,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/34"
   },
   "review": {
     "conclusion": "passed",
@@ -41,7 +41,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:33",
+    "checkpoint": "pr:34",
     "planHash": "0081c73e1ecc7f29f3d3a408ec348eef754f20e190da0e600789eeabc6df345e",
     "updatedAt": null,
     "lastError": null,
