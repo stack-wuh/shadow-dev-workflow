@@ -35,7 +35,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": "pr:36",
-    "planHash": "8dbcfa338002f94e1b05eab829a3697b544aca968b9bc0e31c821cf0e947bbee",
+    "planHash": "ad730296a2cf1ffc98202cb2de73f245cfc738980639921f9a9b3cd3fd3f5d02",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -98,7 +98,7 @@
 
 ## 结果
 
-- 实际耗时: 见交付段（单条流水线一次跑完）
+- 交付: issue #35 · PR #36（squash 合并）· Release v6.5.0
 - 验证（M 级＝冒烟 + 既有测试保持绿 + 门的两条路径；按裁决不写 TDD）:
   - **门正例**：`npm run check:requires` → `undeclared=[] missing-in-cli=[]`，`✓ skills ⊆ requiresCommands ⊆ CLI 命令目录`（CLI＝v1.5.0，catalog=46 键，声明=29 键）。
   - **门负例**（关键——证明门不是摆设）：把声明里的 `worktree.inspect` 删掉后重跑 → 退出码 **1**，并点名 `undeclared=[worktree.inspect (未声明)]`。

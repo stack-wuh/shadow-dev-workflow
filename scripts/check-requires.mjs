@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 // 分发一致性门：skills 引用的命令 ⊆ 产物 requiresCommands ⊆ 已安装 CLI 的命令目录。
+// 引用扫描严禁跨行：早先用裸 \s+ 会把下一条 `shadow-dev` 的前缀吃进来（实测 `repo inspect\nshadow-dev`），
+// 导致部分命令根本没被统计——门会假绿，而假绿的门比没有门更危险。
 // 分工：cliVersion pin 只决定「装哪个 CLI」，requiresCommands 决定「这份内容能不能装进这个 CLI」，
 // 本门负责让两者不互相冒充。用法：npm run check:requires（CI 或本机皆可，SHADOW_DEV_CLI 可指定 cli.mjs）。
 import { execFileSync } from 'node:child_process'
@@ -14,7 +16,7 @@ const refs = new Map()
 for (const d of readdirSync(join(root, 'skills'))) {
   const f = join(root, 'skills', d, 'SKILL.md')
   if (!existsSync(f)) continue
-  for (const m of readFileSync(f, 'utf8').matchAll(/shadow-dev\s+([a-z][\w-]*(?:\s+[a-z][\w-]*){0,2})/g)) {
+  for (const m of readFileSync(f, 'utf8').matchAll(/shadow-dev[^\S\n]+([a-z][\w-]*(?:[^\S\n]+[a-z][\w-]*){0,2})/g)) {
     const words = m[1].replace(/\//g, ' ').split(/\s+/).filter(Boolean)
     const cand = [words.slice(0, 3).join('.'), words.slice(0, 2).join('.'), words[0]]
     const key = cand.find(k => set.has(k)) || words.slice(0, 2).join('.') + ' (未声明)'
