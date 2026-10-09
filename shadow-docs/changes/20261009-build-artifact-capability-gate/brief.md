@@ -35,7 +35,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": "pr:36",
-    "planHash": "d961999b8c2ab9035a13d061fffdff668ac8914fbe0db6cd9f7f2e4ce3e8510a",
+    "planHash": "8dbcfa338002f94e1b05eab829a3697b544aca968b9bc0e31c821cf0e947bbee",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -48,21 +48,8 @@
       ]
     },
     "release": {
-      "files": [
-        "README.md",
-        "docs/cli-guide.md",
-        "knowledge/distribution-capability-contract.md",
-        "menu.md",
-        "norms/tdd-verification.md",
-        "package.json",
-        "rules/iron-laws.md",
-        "scripts/check-requires.mjs",
-        "shadow-docs/changes/20261009-build-artifact-capability-gate/",
-        "skills/shadow-dev-apply/SKILL.md",
-        "skills/shadow-dev-hotfix/SKILL.md",
-        "skills/shadow-dev-propose/SKILL.md"
-      ],
-      "message": "build(distribution): 产物能力声明与一致性门——requiresCommands + check:requires，pin 升 v1.5.0 并由门互校",
+      "files": [],
+      "message": "build(distribution): 产物能力声明与一致性门——requiresCommands + check:requires，pin 升 v1.5.0 由门互校",
       "title": "[build] 产物能力声明与分发一致性门（requiresCommands + check:requires）",
       "body": "Closes #35\n\n完整 brief：shadow-docs/changes/20261009-build-artifact-capability-gate/brief.md"
     }
