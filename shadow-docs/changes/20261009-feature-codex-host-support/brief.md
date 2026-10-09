@@ -4,7 +4,7 @@
   "name": "20261009-feature-codex-host-support",
   "type": "feature",
   "scope": "shadow-dev-workflow/adapters,hooks,skills,rules,scripts,test",
-  "status": "branched",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "feature/20261009-feature-codex-host-support",
   "files": [
@@ -40,7 +40,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:31",
+    "checkpoint": "6a68c80dfec4f2faa781d4ed1e2f5ae4b5a5f3a9",
     "planHash": "4149ff92f57e761900c06cec080e9abf3af7817dd938d8cd247d87cea2869eb5",
     "updatedAt": null,
     "lastError": null,
