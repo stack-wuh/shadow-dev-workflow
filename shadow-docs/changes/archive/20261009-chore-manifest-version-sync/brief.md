@@ -4,7 +4,7 @@
   "name": "20261009-chore-manifest-version-sync",
   "type": "chore",
   "scope": "packaging",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261009-chore-manifest-version-sync",
   "files": [
@@ -21,13 +21,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "a2ec8723c3f3639e60b095ed17cb942ec47b51d8",
-    "verifiedAt": "2026-10-09T15:05:39.668Z"
+    "verifiedCommit": "51a8eef844da7c7752627bfa45c2aaa147ec9a03",
+    "verifiedAt": "2026-10-09T15:25:17.661Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:38",
-    "planHash": "a7fe9c8867a8f77085d7e8864636a885f78a76e3cd0116fee3333de1ab9907f6",
+    "checkpoint": "merged-pr:38",
+    "planHash": "3b1b01573571f0a89cefe8a0546a2e7195213e0ae57d48be87a1f814a67872d2",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -48,7 +48,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "版本号一致性修复，由既有 pack 机检保证，无新增长期事实"
+    "reason": "已合入 main（PR #36 / #38）；归档前置重钉 verifiedCommit，main=51a8eef，证据＝npm test 11/11 全绿 + check:requires 两级差集为空 + 解包三清单同源 6.5.1"
   }
 }
 ---
