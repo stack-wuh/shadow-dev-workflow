@@ -27,18 +27,23 @@
   "workflow": {
     "operation": null,
     "checkpoint": null,
-    "planHash": "29fc3c98943eceab3daad21902f12d0d4b614f0b43eee71463db84f5bde159e3",
+    "planHash": "b1a86aefd4c19cd80049c0fcdfaacbd4a62e4c487b5a07a809d03e538ee00310",
     "updatedAt": null,
     "lastError": null,
     "release": {
       "files": [
-        "package.json",
-        "shadow-docs/changes/20261009-build-artifact-capability-gate/brief.md",
-        "shadow-docs/changes/20261009-chore-manifest-version-sync/"
+        ".claude-plugin/plugin.json",
+        ".codex-plugin/plugin.json"
       ],
-      "message": "chore(plugin): plugin/codex 清单版本对齐 package.json 6.5.1——既有 pack 机检判红的封口",
-      "title": "[chore] 清单版本对齐 v6.5.1（机检判红封口）",
+      "message": "chore(plugin): plugin/codex 清单版本对齐 6.5.1——既有 pack 机检判红的封口",
+      "title": "[chore] 清单版本对齐 v6.5.1（pack 机检判红封口）",
       "body": ""
+    },
+    "commit": {
+      "files": [
+        "shadow-docs/changes/20261009-chore-manifest-version-sync/brief.md"
+      ],
+      "message": "docs(shadow): manifest 同步 change 的 review 与结果记录"
     }
   },
   "knowledge": {
