@@ -4,7 +4,7 @@
   "name": "20261009-chore-archive-pr-less-briefs",
   "type": "chore",
   "scope": "shadow-docs",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "chore/20261009-chore-archive-pr-less-briefs",
   "files": [
@@ -17,8 +17,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 39,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/39",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 40,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/40"
   },
   "review": {
     "conclusion": "passed",
@@ -27,7 +27,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:39",
+    "checkpoint": "pr:40",
     "planHash": "c4b70c34787bd7e4529a32ea40307538775de8b6922cfbfcc2c6217df574e1b6",
     "updatedAt": null,
     "lastError": null,
