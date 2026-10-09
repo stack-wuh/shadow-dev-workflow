@@ -4,7 +4,7 @@
   "name": "20261010-refactor-domain-driven-workflow",
   "type": "refactor",
   "scope": "workflow-governance",
-  "status": "committed",
+  "status": "reviewed",
   "baseBranch": "main",
   "branch": "refactor/20261010-refactor-domain-driven-workflow",
   "files": [
@@ -38,13 +38,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "28e6f257c3caea95785c5cfb3d4a7642d5fe2157",
-    "verifiedAt": "2026-10-09T16:39:47.441Z"
+    "verifiedCommit": "601fb9dc398b446e5146a1eb0727ca5313e001ec",
+    "verifiedAt": "2026-10-09T16:52:11.691Z"
   },
   "workflow": {
     "operation": null,
     "checkpoint": "0187f0a75ff5fdf9a62c7bd8c3a4b4d8003141d4",
-    "planHash": "3be0642cb61bd433c4ad4acacaeb15a71f3c38ce8fab48cc91aa18dcaaaa7f1d",
+    "planHash": "ee874ef6b71d584a85c1fd655f338c1652f7526a8e5010bde45a6d1c55f73b4c",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -87,13 +87,13 @@
       "files": [
         "shadow-docs/changes/20261010-refactor-domain-driven-workflow/brief.md"
       ],
-      "message": "docs(shadow): 回填 11/11 测试证据并更正「本仓无 CI 测试门」"
+      "message": "docs(shadow): review 结论重钉至最终提交（既有测试 11/11 全绿）"
     }
   },
   "knowledge": {
     "action": "新增",
     "target": "knowledge/domain-driven-shadow-dev.md",
-    "reason": "新增跨项目卡「领域模型是工作流的规格载体」：取消 TDD 仪式后规格来源与验收对象的长期结论，需 menu 双路由与 domain 键支撑；同时原位改名更新 norms/verification.md（去 TDD 名分、进度 token 改 verify/inv）、norms/domain-model.md 新规范、knowledge/bug-investigation.md 与 norms/signals.md 关联链接、rules/iron-laws.md 新增 §7 与 §1 口径、rules/behavior.md §4 口径。norms/knowledge-cards.md 与本仓 shadow-docs/domain.md 因 CLI 无 change amend 能力未纳入声明文件集，已记为后续 change。verified-depth 记 unit（本机 pack 4/4 绿 + 一致性门绿），runtime 证据待 CI run 回填。"
+    "reason": "新增跨项目卡「领域模型是工作流的规格载体」；同时原位改名更新 norms/verification.md、新增 norms/domain-model.md、更新 rules/iron-laws.md §1+§7、rules/behavior.md §4、menu.md 双键路由、knowledge/bug-investigation.md 与 norms/signals.md 关联链接、宿主清单口径。既有测试 11/11 全绿（pack 4/4 + install-cli 7/7），4 条不变量各有真实观察点，死链与 ▶ [TDD] 残留归零，拒绝路径 fixture 仍 ARTIFACT_INCOMPATIBLE 且指针不动。norms/knowledge-cards.md 与本仓 shadow-docs/domain.md 因 CLI 无 change amend 能力留待后续 change。"
   }
 }
 ---
