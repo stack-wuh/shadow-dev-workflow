@@ -4,7 +4,7 @@
   "name": "20261009-feature-codex-host-support",
   "type": "feature",
   "scope": "shadow-dev-workflow/adapters,hooks,skills,rules,scripts,test",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "feature/20261009-feature-codex-host-support",
   "files": [
@@ -30,8 +30,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 31,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/31",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 32,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/32"
   },
   "review": {
     "conclusion": "passed",
@@ -40,8 +40,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "cabd8b77f5f81be7e03f419bf9f90d9684831de9",
-    "planHash": "1d2ff3dbe6c9c9f4c15b34b490a88e6c79b6ca0487ba2aad0c07d8a9d7618013",
+    "checkpoint": "pr:32",
+    "planHash": "e17e75dfa7a1f7a630e95eef67bd000b12748b007090a0f9cf39bd1766b10615",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
