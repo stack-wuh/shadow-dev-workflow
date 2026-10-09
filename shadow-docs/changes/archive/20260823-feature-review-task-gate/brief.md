@@ -38,3 +38,5 @@
 
 ## 任务
 
+
+> 归档补记（2026-10-09）：本 change 在 GitHub 上查不到对应 PR（早期直推 main 时代产物），`archive plan` 的 merged 证据门禁按设计无法通过；故经 20261009-chore-archive-pr-less-briefs 的 PR 以「历史整理」方式移入 archive。frontmatter 状态字段与任务勾选保持原样，未做任何追溯性修改。

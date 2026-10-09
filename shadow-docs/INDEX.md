@@ -2,9 +2,9 @@
 
 | 变更 | 状态 | 路径 |
 |------|------|------|
-| 20260811-refactor-monorepo-code-style | implemented | shadow-docs/changes/20260811-refactor-monorepo-code-style/brief.md |
+| 20260811-refactor-monorepo-code-style | ✅ 完成 | shadow-docs/changes/archive/20260811-refactor-monorepo-code-style/brief.md |
 | 20260822-feat-workflow-entry-exit-logs | ✅ 完成 | shadow-docs/changes/archive/20260822-feat-workflow-entry-exit-logs/brief.md |
-| 20260823-feature-review-task-gate | committed | shadow-docs/changes/20260823-feature-review-task-gate/brief.md |
+| 20260823-feature-review-task-gate | ✅ 完成 | shadow-docs/changes/archive/20260823-feature-review-task-gate/brief.md |
 | 20260916-refactor-extract-shadow-dev-cli | ✅ 完成 | shadow-docs/changes/archive/20260916-refactor-extract-shadow-dev-cli/brief.md |
 | 20260917-feature-integrate-shadow-dev-cli | ✅ 完成 | shadow-docs/changes/archive/20260917-feature-integrate-shadow-dev-cli/brief.md |
 | 20260918-chore-cli-pin-130 | ✅ 完成 | shadow-docs/changes/archive/20260918-chore-cli-pin-130/brief.md |
@@ -17,6 +17,7 @@
 | 20261005-fix-hotfix-tiered-validation | ✅ 完成 | shadow-docs/changes/archive/20261005-fix-hotfix-tiered-validation/brief.md |
 | 20261005-fix-iron-laws-tiered-validation | ✅ 完成 | shadow-docs/changes/archive/20261005-fix-iron-laws-tiered-validation/brief.md |
 | 20261009-build-artifact-capability-gate | ✅ 完成 | shadow-docs/changes/archive/20261009-build-artifact-capability-gate/brief.md |
+| 20261009-chore-archive-pr-less-briefs | branched | shadow-docs/changes/20261009-chore-archive-pr-less-briefs/brief.md |
 | 20261009-chore-manifest-version-sync | ✅ 完成 | shadow-docs/changes/archive/20261009-chore-manifest-version-sync/brief.md |
 | 20261009-feature-codex-host-support | ✅ 完成 | shadow-docs/changes/archive/20261009-feature-codex-host-support/brief.md |
 | 20261009-fix-distribution-gate-regex | ✅ 完成 | shadow-docs/changes/archive/20261009-fix-distribution-gate-regex/brief.md |
