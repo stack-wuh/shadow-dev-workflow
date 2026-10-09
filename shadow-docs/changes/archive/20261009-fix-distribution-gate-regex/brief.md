@@ -4,7 +4,7 @@
   "name": "20261009-fix-distribution-gate-regex",
   "type": "fix",
   "scope": "scripts",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "fix/20261009-fix-distribution-gate-regex",
   "files": [
@@ -21,13 +21,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "c5319bb789131cf33377f93e593c080a2e7266d9",
-    "verifiedAt": "2026-10-09T15:02:51.214Z"
+    "verifiedCommit": "85c5a4bacf241a6d387d9823d063528943006b72",
+    "verifiedAt": "2026-10-09T15:03:19.470Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:37",
-    "planHash": "8a160fc3ce8c2fe18c2368cb4d61fedf1f6fb3971a4c46aed99c9e15b94c9fdf",
+    "checkpoint": "merged-pr:37",
+    "planHash": "9cd208d7054099cfe52fae429b5052d74361b69f5fbb4daf41f0cce41ae5c0a7",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -43,9 +43,9 @@
     }
   },
   "knowledge": {
-    "action": "更新",
-    "target": "knowledge/distribution-capability-contract.md",
-    "reason": "卡片验证方式补入「门负例必跑 + 引用扫描禁止跨行」这条踩出来的稳定教训"
+    "action": "无需变更",
+    "target": null,
+    "reason": "已合入 main（归档前置的 verifiedCommit 重钉，main=85c5a4b）"
   }
 }
 ---
