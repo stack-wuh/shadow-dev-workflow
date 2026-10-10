@@ -37,7 +37,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": null,
-    "planHash": "28d7f52bd05741fb0c533a471f35e2a40f9a78aa795e38ee1b5e08009346cf51",
+    "planHash": "4102fecbeaf23f2c539f6a93792b0db298f08b73aedaa84f13c64f7b30c2ac86",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -51,21 +51,11 @@
     },
     "commit": {
       "files": [
-        ".github/workflows/publish-release.yml",
-        ".github/workflows/quality-gate.yml",
-        "CLAUDE.md",
-        "README.md",
-        "knowledge/distribution-capability-contract.md",
-        "knowledge/release-artifact-pipeline.md",
-        "menu.md",
-        "norms/verification.md",
-        "package.json",
-        "scripts/bump-version.mjs",
-        "scripts/check-knowledge.mjs",
-        "scripts/check-requires.mjs",
+        ".claude-plugin/plugin.json",
+        ".codex-plugin/plugin.json",
         "shadow-docs/changes/20261010-build-quality-gate/brief.md"
       ],
-      "message": "build(ci): 质量门上移 GitHub Actions + 版本与产物由 Release 控制"
+      "message": "build(ci): 补齐宿主清单版本 bump 与范围修订记录（check:version 判红闭环）"
     },
     "release": {
       "files": [
@@ -207,6 +197,8 @@
   2. `check-knowledge.mjs` 首版把 `walk()` 的 rel 拼成绝对式路径，`!rel.startsWith('shadow-docs')` 守卫失效 → 30 份归档 brief 被当 live 文件读，脚本 60+ 秒无输出挂死。修正 rel 语义后 **0.33s** 跑完。
   3. 新门立刻抓到两条**长期存在的数据缺陷**：两张跨项目卡的 `source` 指向 `changes/<name>/brief.md`，而对应 brief 已随 #36/#32 归档搬进 `changes/archive/`——按字面路径判红。门改成「向 archive 兜底解析 + 兜底成功打 warn」，并把「归档会搬迁 source」写进卡片与 `release-artifact-pipeline.md` 执行约束，避免下一张卡重踩。
   4. 两处编辑脚本因锚点与分支原文不符而 `assert` 中止（写入统一放末尾，未产生半成品）；一次 `echo ${PIPESTATUS[0]}` 在 zsh 下空值中断了 `&&` 证据批，改为落盘日志再取。
+- **范围修订（实现期发现，非静默扩面）:** 取证时执行 `node scripts/bump-version.mjs 6.7.0` 把版本推到 6.7.0，但脚本改的是三处 manifest，而 brief 声明的文件集里只有 `package.json`（我在任务清单里漏排了「版本 bump」这一项）。后果被新加的 `check:version` **当场判红**（`✗ 版本不同源`，rc=1），于是以补齐提交把 `.claude-plugin/plugin.json` 与 `.codex-plugin/plugin.json` 一并纳入并落版 6.7.0。两点结论写进知识：① 版本 bump 必须与它触及的文件集同源声明（本 change 已声明补齐，frontmatter 无法 amend 属 CLI 缺口，见下）；② 这道门在它启用的第一次运行里就抓到了执行者自己的漏登记——包括我漏跑的两次 `task set` 和这次漏声明的两个文件，不是摆设。
+- **遗留与后续:** ① `scripts/bump-version.mjs` 改多文件却由单个 `--files` 提交承载，建议在 propose 阶段把「版本 bump」列为显式任务并预声明三处 manifest；② CLI 无 `change amend --files`，范围修订只能记在正文（与上一 change 同一缺口）；③ GitHub 矩阵真跑与发布冒烟待首个 run 链接回填；④ 首个 release 由本 change 的 `publish-release.yml` 接手验证 `--release latest` 资产解析闭环。
 - 交付: 待 push / PR（本 change 为 stacked：base＝`refactor/20261010-refactor-domain-driven-workflow`）
 
 ## 知识评估

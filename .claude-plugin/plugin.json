@@ -1,7 +1,7 @@
 {
   "name": "shadow-dev-workflow",
   "description": "Self-contained development workflow with 3-tier knowledge base — 5-phase pipeline (propose → apply → review → release → archive) with packaged planning, domain-model-driven specs, invariant-based verification, and knowledge-driven design constraints. Zero external workflow dependencies.",
-  "version": "6.6.0",
+  "version": "6.7.0",
   "author": {
     "name": "Shadow (stack-wuh)"
   },
