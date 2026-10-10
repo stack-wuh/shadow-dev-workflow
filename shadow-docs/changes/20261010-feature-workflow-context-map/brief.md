@@ -4,7 +4,7 @@
   "name": "20261010-feature-workflow-context-map",
   "type": "feature",
   "scope": "workflow-governance",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "feature/20261010-feature-workflow-context-map",
   "files": [
@@ -27,18 +27,18 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": 45,
-    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/45"
+    "pullRequest": 44,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/44"
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "edd342ca1569cce4c25c915fd7478bc2f4fba4d2",
+    "verifiedAt": "2026-10-10T08:16:15.553Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "b08f642c33261793cb92a411073f74b4105b5c6f",
-    "planHash": "5f353293b1255bb48530f35f49241c392ad0c9aae955c5c0492a3e00775e3e1d",
+    "checkpoint": "pr:44",
+    "planHash": "dcd7a55a9b9c7fe5f9295687fb1889540a2dcb7c13ea3323c49dc1e13a4526b3",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -67,9 +67,9 @@
     }
   },
   "knowledge": {
-    "action": "更新",
-    "target": "knowledge/release-artifact-pipeline.md",
-    "reason": "Phase 4 把「同步内不得依赖 $GITHUB_PATH」升格为发布链卡的执行约束（keywords/source/verified-scope 同步），属既有结论的边界细化，不新建卡；跨上下文改动已在 brief「领域模型」段登记并经用户裁决"
+    "action": "无需变更",
+    "target": null,
+    "reason": "Phase 4 追加仅为既有门与既有卡的行为纠偏（win32 shim 解析、PATH 时序），未产生新的跨项目长期事实；$GITHUB_PATH 一条已在本 change 早前更新进 release-artifact-pipeline 卡"
   }
 }
 ---
