@@ -11,14 +11,14 @@
 - 命中: 1（最近 2026-10-09）
 - 退役条件: Codex 提供 plugin lint/校验命令，或清单校验不再输出字段级 WARN
 
-## SGN-010 · Windows 上 `node --test test/pack.test.mjs` 的解包步骤必失败（tar 收到 `D:\` 形态路径按 host:path 解析，回 `Cannot connect to D: resolve failed`），非代码回归，勿据此排查
+## SGN-010 · 【已退役 2026-10-10】Windows 上 `node --test test/pack.test.mjs` 的解包步骤必失败（tar 收到 `D:\` 形态路径按 host:path 解析，回 `Cannot connect to D: resolve failed`），非代码回归，勿据此排查
 - 方向: negative
 - 权重: 2
 - 深度: runtime
 - 域/scope: 测试 · test/pack.test.mjs, scripts/pack.mjs
 - 证据: 20261009-feature-codex-host-support（未改动的「产物存在」用例同挂该步；手工 `bash -c 'tar -xzf'` 复现同一失败）
-- 命中: 1（最近 2026-10-09）
-- 退役条件: 测试解包改用 posix 路径或原生 `tar.exe`
+- 命中: 2（最近 2026-10-10，PR #44 的 `quality-gate` windows 两项复现 `# tests 11 # pass 9 # fail 2`，症状仍是下游 ENOENT 而非解包本身）
+- 退役条件: 测试解包改用 posix 路径或原生 `tar.exe` —— **已满足**：`test/pack.test.mjs` 增 `toUnix()`（`cygpath -u`，非 win32 原样返回）归一两个路径后再交给 `bash -c tar`，并把解包 `rc != 0` 改为当场抛错（旧写法吞掉失败，症状漂到下游用例，排查方向被带偏）。本条按 `norms/signals.md` 保留条目并注明退役，不再作为负信号参与排序。
 
 ## SGN-004 · node 子进程 exit 139 是机器段错误风暴，重试至收敛，勿误判为代码失败
 - 方向: positive

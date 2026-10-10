@@ -19,9 +19,12 @@
     "norms/knowledge-cards.md",
     "package.json",
     "scripts/check-knowledge.mjs",
+    "scripts/check-knowledge.mjs",
     "scripts/check-requires.mjs",
     "shadow-docs/changes/20261010-feature-workflow-context-map/brief.md",
-    "shadow-docs/domain.md"
+    "shadow-docs/domain.md",
+    "shadow-docs/signals.md",
+    "test/pack.test.mjs"
   ],
   "github": {
     "repository": null,
@@ -31,14 +34,14 @@
     "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/44"
   },
   "review": {
-    "conclusion": "passed",
-    "verifiedCommit": "dbd75fa9ee48e47a635f9ea43a14e8a10a5704da",
-    "verifiedAt": "2026-10-10T08:24:13.507Z"
+    "conclusion": "pending",
+    "verifiedCommit": null,
+    "verifiedAt": null
   },
   "workflow": {
     "operation": null,
     "checkpoint": "pr:44",
-    "planHash": "3151a57846343f02d9074c61d8d8fe378fd6dd58af5b9c4e3a76cda2236a030a",
+    "planHash": "d065369be53a922be0d99c1efaead6d67df9b13e942888863e44a380f18924f9",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -60,10 +63,11 @@
     },
     "commit": {
       "files": [
-        "scripts/check-knowledge.mjs",
-        "shadow-docs/changes/20261010-feature-workflow-context-map/brief.md"
+        "shadow-docs/changes/20261010-feature-workflow-context-map/brief.md",
+        "shadow-docs/signals.md",
+        "test/pack.test.mjs"
       ],
-      "message": "fix(ci): 知识治理门读入归一行尾，windows autocrlf 检出不再误报技能缺 frontmatter"
+      "message": "fix(test): pack 解包按 posix 路径交给 bash 并响亮报告失败，退役 SGN-010"
     }
   },
   "knowledge": {
@@ -154,6 +158,7 @@
 - [x] strict 门 win32 兼容 + baseBranch 纠偏 — `scripts/check-requires.mjs` — PATH 上的托管 shim 是 `shadow-dev.cmd`，Node ≥18.20.3/20.12.2 拒绝无 shell 启动 `.bat/.cmd`（EINVAL）→ `execFileSync` 增 `shell: process.platform === 'win32' && !cli`，降级仍自曝不半绿。同时 `change amend --base-branch main` 把声明基线纠正为 `main`（`publish` 的 `findPr` 按 base 过滤，声明错则复用不到 PR #44 并重复开 PR），输出含 `warnings` 指名历史 PR #45 需改 base 或关闭。证据：`added:["scripts/check-requires.mjs"] baseBranch:"main" reviewReset:true warnings:[…]`
 - [x] 知识治理门 CRLF 容忍 — `scripts/check-knowledge.mjs` — windows runner 按 `core.autocrlf` 检出 CRLF，而 `read()` 不做行尾归一 → `parseFrontmatter` 的 `---\n` 定界失配，8 个技能集体误报「缺 name/description」（CI 实证：第 7 步 `fail=21`，ubuntu/macos 同 run 绿）。改为读入处单点 `replaceAll('\r\n','\n')`。**取证**：把 8 个 `SKILL.md` 就地转 CRLF 后复跑 → `[ok] 技能 8 个：name/description 与目录一致性检查完成`、`fail=1`（仅剩本机 ignore 目录噪声）；还原后 `git diff --stat -- skills` 为空、逐字节 CR 计数 0。
   - **过程自伤（如实记）**：还原脚本里 `Join-Path $bak $f.Directory.Name + [IO.Path]::DirectorySeparatorChar + ...` 因参数优先级被当成 provider 路径解析，8 次 Copy-Item 全失败，而我随后无条件执行了 `Remove-Item -Recurse -Force $bak`，备份已不存在。补救依据是本次污染纯属行尾变换（CRLF→LF 无损可逆）：逐文件 `Replace(CRLF,LF)` 后 `git status --short -- skills` 全空。教训：**探针回滚必须逐项校验成功后才能删备份**；这次侥幸可逆只因改动仅有行尾，若探针改的是内容就已造成真实损失。
+- [x] SGN-010 退役与解包失败响亮化 — `test/pack.test.mjs`, `shadow-docs/signals.md` — 按该负信号自写的退役条件把解包路径归一为 posix：首选 `cygpath -u`，缺失时退回纯字符串 `C:\x` → `/c/x`（本机实测：`D:\works\…\v6.8.0.tar.gz → /d/works/…`、`C:\Users\RUNNER~1\… → /c/Users/RUNNER~1/…`）；并把 `spawnSync` 的 rc 由忽略改为当场 `throw`——旧写法让失败漂到下游用例变成 `package.json ENOENT`，把排查方向带偏（本机以此立刻报出 `pack 解包失败 rc=1` 与 WSL 无发行版的真实原因）。信号条目按 `norms/signals.md` 标注【已退役 2026-10-10】、命中升至 2 并记录条件已满足。
 
 ## 结果
 
