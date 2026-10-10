@@ -38,7 +38,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": "pr:44",
-    "planHash": "dcd7a55a9b9c7fe5f9295687fb1889540a2dcb7c13ea3323c49dc1e13a4526b3",
+    "planHash": "efef7631455890483cf7a2ef21405a482095a01e4307b86caa08daa792bcf5aa",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -60,10 +60,10 @@
     },
     "commit": {
       "files": [
-        "scripts/check-requires.mjs",
+        "scripts/check-knowledge.mjs",
         "shadow-docs/changes/20261010-feature-workflow-context-map/brief.md"
       ],
-      "message": "fix(ci): strict 门在 win32 经 shell 解析 .cmd shim，命令目录不再恒 unresolved"
+      "message": "fix(ci): 知识治理门读入归一行尾，windows autocrlf 检出不再误报技能缺 frontmatter"
     }
   },
   "knowledge": {
@@ -152,6 +152,8 @@
 - [x] CI 冒烟 PATH 修复 — `.github/workflows/quality-gate.yml`, `.github/workflows/publish-release.yml` — `$GITHUB_PATH` 只对后续步骤生效，同一步内紧接着的 `shadow-dev --version` 在 windows-latest 找不到 shim（ubuntu/macos 靠镜像默认 PATH 蒙过）；补 `export PATH="$HOME/.local/bin:$PATH"`。两文件不在本 change 原声明集内，按 `shadow-dev-cli` #50 新增的 `change amend` 登记扩面（`added` 两项、`reviewReset=true`），不越界改未声明文件
 - [x] 知识闭环 — `knowledge/release-artifact-pipeline.md` — 「$GITHUB_PATH 同步内不可见」升格为发布链卡的执行约束（keywords 补 `GITHUB_PATH/PATH/shim`、source 追加本 brief、verified-scope 记失败侧已由 CI 实证而修复生效待 run 链接回填）；同文件亦经 `change amend` 第二次登记
 - [x] strict 门 win32 兼容 + baseBranch 纠偏 — `scripts/check-requires.mjs` — PATH 上的托管 shim 是 `shadow-dev.cmd`，Node ≥18.20.3/20.12.2 拒绝无 shell 启动 `.bat/.cmd`（EINVAL）→ `execFileSync` 增 `shell: process.platform === 'win32' && !cli`，降级仍自曝不半绿。同时 `change amend --base-branch main` 把声明基线纠正为 `main`（`publish` 的 `findPr` 按 base 过滤，声明错则复用不到 PR #44 并重复开 PR），输出含 `warnings` 指名历史 PR #45 需改 base 或关闭。证据：`added:["scripts/check-requires.mjs"] baseBranch:"main" reviewReset:true warnings:[…]`
+- [x] 知识治理门 CRLF 容忍 — `scripts/check-knowledge.mjs` — windows runner 按 `core.autocrlf` 检出 CRLF，而 `read()` 不做行尾归一 → `parseFrontmatter` 的 `---\n` 定界失配，8 个技能集体误报「缺 name/description」（CI 实证：第 7 步 `fail=21`，ubuntu/macos 同 run 绿）。改为读入处单点 `replaceAll('\r\n','\n')`。**取证**：把 8 个 `SKILL.md` 就地转 CRLF 后复跑 → `[ok] 技能 8 个：name/description 与目录一致性检查完成`、`fail=1`（仅剩本机 ignore 目录噪声）；还原后 `git diff --stat -- skills` 为空、逐字节 CR 计数 0。
+  - **过程自伤（如实记）**：还原脚本里 `Join-Path $bak $f.Directory.Name + [IO.Path]::DirectorySeparatorChar + ...` 因参数优先级被当成 provider 路径解析，8 次 Copy-Item 全失败，而我随后无条件执行了 `Remove-Item -Recurse -Force $bak`，备份已不存在。补救依据是本次污染纯属行尾变换（CRLF→LF 无损可逆）：逐文件 `Replace(CRLF,LF)` 后 `git status --short -- skills` 全空。教训：**探针回滚必须逐项校验成功后才能删备份**；这次侥幸可逆只因改动仅有行尾，若探针改的是内容就已造成真实损失。
 
 ## 结果
 

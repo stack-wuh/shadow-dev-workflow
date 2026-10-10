@@ -13,7 +13,10 @@ const fails = [], warns = [], oks = []
 const ok = m => oks.push(`[ok] ${m}`)
 const warn = m => warns.push(`[warn] ${m}`)
 const fail = m => fails.push(`[fail] ${m}`)
-const read = p => readFileSync(join(root, p), 'utf8')
+// 读容忍 CRLF、判读恒 LF：windows runner 的 actions/checkout 按 core.autocrlf 检出 CRLF，而本门的
+// frontmatter 定界（`---\n`）、表格与引用扫描全部按 \n 解析——不归一会让 8 个技能集体误报「缺 name/description」
+// （实证：PR #44 的 windows gate 第 7 步 fail=21，ubuntu/macos 同 run 全绿）。与 shadow-dev-cli 的 brief 行尾契约同源。
+const read = p => readFileSync(join(root, p), 'utf8').replaceAll('\r\n', '\n')
 const SKIP_DIRS = new Set(['.git', 'dist', 'node_modules', '.agents'])
 
 // 1) 知识卡与规范：frontmatter 字段、status 枚举、source 存在性、active 卡路由覆盖
