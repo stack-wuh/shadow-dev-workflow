@@ -50,6 +50,8 @@ jobs:
           PIN=$(node -pe 'require("./package.json").cliVersion')
           bash scripts/install-cli.sh install --version "$PIN"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          # 同 quality-gate.yml：$GITHUB_PATH 对后续步骤生效，本步内紧接着的冒烟需自带 PATH（当前 job 跑 ubuntu，防御性对齐，避免两条流水语义漂移）。
+          export PATH="$HOME/.local/bin:$PATH"
           shadow-dev --version
 
       - name: 发布前全门（version + requires:strict + knowledge + test）

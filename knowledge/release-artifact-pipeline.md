@@ -1,14 +1,15 @@
 ---
 title: 发布链版本权威与产物资产契约
 domain: distribution
-keywords: [发布, release, tag, 版本权威, 资产名, tarball, pack, 上传, 发布冒烟, quality-gate, publish-release, CI, strict, 半绿]
+keywords: [发布, release, tag, 版本权威, 资产名, tarball, pack, 上传, 发布冒烟, quality-gate, publish-release, CI, strict, 半绿, GITHUB_PATH, PATH, shim]
 scope: [scripts/pack.mjs, scripts/bump-version.mjs, scripts/check-requires.mjs, scripts/check-knowledge.mjs, .github/workflows/]
 status: active
 source:
   - changes/20261010-build-quality-gate/brief.md
+  - changes/20261010-feature-workflow-context-map/brief.md
 verified: 2026-10-10
 verified-depth: unit
-verified-scope: 本机 `npm run ci` 全绿（版本同源 + requires:strict + 知识治理门 + 既有 11 例测试）；strict 反例用 `SHADOW_DEV_CLI` 指向坏文件复现 rc=1，非 strict 同条件复现半绿（rc=0 且输出「CLI 目录未参与断言」）；版本反例单改一份 manifest 复现 rc=1 后回滚；三个 workflow 经 YAML 解析。GitHub 矩阵真跑与发布冒烟待首个 PR / 首个 release 的 run 链接。
+verified-scope: 本机 `npm run ci` 全绿（版本同源 + requires:strict + 知识治理门 + 既有 11 例测试）；strict 反例用 `SHADOW_DEV_CLI` 指向坏文件复现 rc=1，非 strict 同条件复现半绿（rc=0 且输出「CLI 目录未参与断言」）；版本反例单改一份 manifest 复现 rc=1 后回滚；三个 workflow 经 YAML 解析。GitHub 矩阵真跑与发布冒烟待首个 PR / 首个 release 的 run 链接。新增的 `$GITHUB_PATH` 同步内不可见一条：失败侧已由 PR #44 的 `quality-gate` windows 两项 `exit 127` 实证（同 run ubuntu/macos 绿），修复生效待本 PR 转绿后的 run 链接回填。
 ---
 
 # 发布链版本权威与产物资产契约
@@ -27,6 +28,7 @@ GitHub Release 是产物与版本的**唯一权威发布点**，四件事缺一�
 - 发版顺序恒为：`node scripts/bump-version.mjs <ver>` → `npm run check:version` → 提交合并 → `git tag v<ver>` → `gh release create`；此后判定、pack、资产断言、上传、冒烟由 `publish-release.yml` 接手。
 - 新增机器门一律以 strict 形态进 CI；宽松模式只允许作为本机开发路径，且必须自曝降级态（如 `catalog=unresolved`）。
 - `quality-gate.yml` 覆盖 push main 与所有 PR，矩阵含 windows——`tar`/`bash` 的跨平台坑已被实证，只跑 ubuntu 等于把最难发现的回归留在暗处。AI 的本机口头自证不可替代机器门。
+- 同一 `run:` 块里**不得依赖 `$GITHUB_PATH` 取刚装的 shim**：`echo ... >> "$GITHUB_PATH"` 只对**后续步骤**生效，紧跟着的冒烟命令仍用旧 PATH。`ubuntu`/`macos` runner 镜像默认 PATH 含 `~/.local/bin` 会蒙过，`windows` 的 Git Bash 不含即 `command not found` 退 127——同一步必须自己 `export PATH="$HOME/.local/bin:$PATH"`（实证：PR #44 的 `quality-gate` windows 两项挂在此处，ubuntu/macos 同 run 全绿）。
 - 归档会搬迁 brief：卡片 `source` 按规范写 `changes/<name>/brief.md`，治理门必须向 `changes/archive/<name>/` 兜底解析（否则每张卡在来源 change 归档那天集体判红——本仓实测 3 张跨项目卡中 2 张如此）。
 
 ## 适用边界

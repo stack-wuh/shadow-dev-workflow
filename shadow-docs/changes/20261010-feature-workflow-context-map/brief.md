@@ -4,14 +4,17 @@
   "name": "20261010-feature-workflow-context-map",
   "type": "feature",
   "scope": "workflow-governance",
-  "status": "reviewed",
+  "status": "implemented",
   "baseBranch": "build/20261010-build-quality-gate",
   "branch": "feature/20261010-feature-workflow-context-map",
   "files": [
     ".claude-plugin/plugin.json",
     ".codex-plugin/plugin.json",
+    ".github/workflows/publish-release.yml",
+    ".github/workflows/quality-gate.yml",
     "knowledge/domain-driven-shadow-dev.md",
     "knowledge/multi-host-plugin-distribution.md",
+    "knowledge/release-artifact-pipeline.md",
     "norms/domain-model.md",
     "norms/knowledge-cards.md",
     "package.json",
@@ -27,14 +30,14 @@
     "pullRequestUrl": null
   },
   "review": {
-    "conclusion": "passed",
-    "verifiedCommit": "3c23fbff234f2524efd2f65431676ef73780bf58",
-    "verifiedAt": "2026-10-10T00:20:26.234Z"
+    "conclusion": "pending",
+    "verifiedCommit": null,
+    "verifiedAt": null
   },
   "workflow": {
     "operation": null,
     "checkpoint": null,
-    "planHash": "680ca61f4cc6747240284922203b59e9fc4f9a5b79cfb221e72a01d7811ab454",
+    "planHash": "6689579228bb67c56816b81607a1cea8ef389f6300f4a1cb79a786ae9c081b39",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -53,6 +56,15 @@
       "message": "docs(knowledge): 落地本仓上下文地图，卡片 domain 升为一等路由键并进门校验",
       "title": "20261010-feature-workflow-context-map",
       "body": ""
+    },
+    "commit": {
+      "files": [
+        ".github/workflows/publish-release.yml",
+        ".github/workflows/quality-gate.yml",
+        "knowledge/release-artifact-pipeline.md",
+        "shadow-docs/changes/20261010-feature-workflow-context-map/brief.md"
+      ],
+      "message": "fix(ci): windows 同步内自带 ~/.local/bin——$GITHUB_PATH 对后续步骤才生效致 exit 127"
     }
   },
   "knowledge": {
@@ -136,6 +148,9 @@
 - [x] 规格卡补验证记录 — `knowledge/domain-driven-shadow-dev.md` — 追加 source 与本条验证事实（domain 一致性现已可机器判定）
 ### Phase 3 — 收口
 - [x] 版本与取证 — `package.json`, `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, `shadow-docs/changes/20261010-feature-workflow-context-map/brief.md` — `bump-version.mjs 6.8.0`（三处同源，本次已在文件集内声明）；跑 `npm run ci` 全门 + 11 例测试；拒绝路径：临时把某卡 domain 改回 `插件分发` 与删空地图值域各复现判红后回滚
+### Phase 4 — review 后追加：Windows 门修复（经 `change amend` 登记扩面）
+- [x] CI 冒烟 PATH 修复 — `.github/workflows/quality-gate.yml`, `.github/workflows/publish-release.yml` — `$GITHUB_PATH` 只对后续步骤生效，同一步内紧接着的 `shadow-dev --version` 在 windows-latest 找不到 shim（ubuntu/macos 靠镜像默认 PATH 蒙过）；补 `export PATH="$HOME/.local/bin:$PATH"`。两文件不在本 change 原声明集内，按 `shadow-dev-cli` #50 新增的 `change amend` 登记扩面（`added` 两项、`reviewReset=true`），不越界改未声明文件
+- [x] 知识闭环 — `knowledge/release-artifact-pipeline.md` — 「$GITHUB_PATH 同步内不可见」升格为发布链卡的执行约束（keywords 补 `GITHUB_PATH/PATH/shim`、source 追加本 brief、verified-scope 记失败侧已由 CI 实证而修复生效待 run 链接回填）；同文件亦经 `change amend` 第二次登记
 
 ## 结果
 
@@ -159,6 +174,22 @@
   3. 两次锚点与文件实况不符（`- 不把 brief 的实现过程…` 多了 `brief` 二字；`status 只允许` 行被误加 `- ` 前缀）导致 `assert` 中止——所有编辑脚本都写成「先全部校验锚点、最后一次性落盘」，中止即无部分写入。
   4. 本机 node 139 风暴两次打断 `&&` 链（`task set task-6` 与 `bump-version` 静默未执行），按 SGN-004 重试至收敛后逐项复跑；产物一度仍是 v6.7.0 即为该中断的直接证据，已复跑修正。
 - 交付: 待 push / PR（stacked 第三层：base＝`build/20261010-build-quality-gate`）
+
+### Phase 4 取证（2026-10-10，本机真实输出）
+
+| 项 | 观察点 |
+|---|---|
+| 扩面登记 | `change amend --files <12 项>` → `added:[".github/workflows/publish-release.yml",".github/workflows/quality-gate.yml"]`、`removed:[]`、**`reviewReset:true`**（本 change 原 `passed@3c23fbf` 被作废，`review.conclusion` 回落 `pending`）、`nextStep:"review plan --name …"`。机制来自 `shadow-dev-cli` PR #50，本机经 `SHADOW_DEV_CLI` 指向该 checkout 的 `cli.mjs` 驱动 |
+| 根因 | PR #44 windows 两项挂在 step 4「Install pinned shadow-dev CLI」：日志 `shadow-dev 1.5.0 installed to /c/Users/runneradmin/.local/share/...` 后紧跟 `line 4: shadow-dev: command not found`、`exit 127`；同 run 的 ubuntu/macos 通过——因 `$GITHUB_PATH` 追加**对后续步骤**生效，而同一步内紧接着的冒烟取不到该路径，windows runner 的 Git Bash 默认 PATH 不含 `~/.local/bin` |
+| 改动正确性 | `export PATH` 行缩进 10 空格（与块标量内其余命令行一致）；两文件经 js-yaml 实测可解析：`job=gate steps=7 exportPATH=true`、`job=publish steps=9 exportPATH=true` |
+| 版本权威 | `npm run check:version` → `✓ 三处 manifest 版本同源: 6.8.0（3 个文件）`（本次不涉及 bump） |
+| 一致性门 | `npm run check:requires:strict` → 先因本机 `execFileSync('shadow-dev')` 解析不到 `.cmd` shim 而**响亮判红**（`cli-catalog=unresolved strict=on`，未降级半绿，符合「禁止半绿」），置 `SHADOW_DEV_CLI=D:\works\shadow-dev-cli\cli.mjs` 后 → `declared=29 skills-referenced=21 undeclared=[] cli-catalog=47 catalog=resolved missing-in-cli=[] ✓` |
+| 知识治理门 | 本机 `check:knowledge` → `摘要: ok=10 warn=4 fail=1`，唯一 `[fail]` 是**未跟踪且被 ignore 的** `.zcode/plans/plan-sess_….md → scripts/shadow-dev.mjs` 死链（`git ls-files .zcode` = 0）；CI 干净 checkout 无此目录，故 ubuntu/macos 该门为绿。→ 记下两条门自身弱点：门应跳过 ignored 路径；`check:requires` 在 Windows 需要可解析的 CLI 入口（`.cmd` 不经 shell 不可 execFile） |
+
+### 本 change 遗留的两处待确认（非本次引入，不静默处置）
+
+1. **正文存在两个互相冲突的 `## 知识评估`**：第一处结论「无需变更」，第二处「更新」；frontmatter `knowledge.action` 取的是「无需变更」。二者对同一批卡片（`domain-driven-shadow-dev.md` / `multi-host-plugin-distribution.md` / `knowledge-cards.md`）给出不同最终动作，属同一 brief 内的自相矛盾，需作者裁定保留哪个并删除另一个（`check-knowledge` 只校验卡片，不校验 brief 正文结构，故门未拦住）。
+2. **声明 base 与 PR 实际 base 不符**：正文与 frontmatter `baseBranch` 为 `build/20261010-build-quality-gate`，GitHub 上 PR #44 的 base 是 `main`。合并顺序因此改为「合链尖 #44 一把带走 #42/#43」或「把 PR base 改回堆叠」，二者需择一。
 
 ## 知识评估
 

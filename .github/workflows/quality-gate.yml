@@ -39,6 +39,9 @@ jobs:
           PIN=$(node -pe 'require("./package.json").cliVersion')
           bash scripts/install-cli.sh install --version "$PIN"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          # $GITHUB_PATH 只对后续步骤生效；同一步内紧接着的冒烟必须自带 PATH，
+          # 否则 windows-latest（Git Bash 默认不含 ~/.local/bin）判红而 ubuntu/macos 靠镜像默认值蒙过。
+          export PATH="$HOME/.local/bin:$PATH"
           shadow-dev --version
 
       - name: 版本同源门
