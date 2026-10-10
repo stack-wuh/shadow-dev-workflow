@@ -7,6 +7,7 @@
 - `skills/`：定义 propose、apply、review、release、archive 和 Knowledge 查询流程。
 - `norms/`：跨项目硬规则与工程规范。
 - `knowledge/`：跨项目经验与协作知识。
+- 项目 `shadow-docs/domain.md`：限界上下文地图与统一语言（格式见 `norms/domain-model.md`）。
 - 项目 `shadow-docs/knowledge/`：项目独有的执行真相。
 - `menu.md` 与项目 `shadow-docs/menu.md`：任务到规范和 active Knowledge 的路由。
 - `brief.md` 与 INDEX：变更记录和历史索引，不覆盖 active Knowledge。
@@ -16,9 +17,9 @@
 | 位置 | 内容 |
 |------|------|
 | `rules/behavior.md` | 行为准则 |
-| `rules/iron-laws.md` | TDD、验证、调试、分支和 deterministic CLI 铁律 |
+| `rules/iron-laws.md` | 验证、调试、分支、deterministic CLI 和领域模型铁律 |
 | `norms/knowledge-cards.md` | Knowledge 卡片格式、生命周期和冲突处理 |
-| `norms/*.md` | UI、API、交互、代码风格和验证规范 |
+| `norms/*.md` | UI、API、交互、代码风格、领域模型和验证规范 |
 | `knowledge/*.md` | 跨项目经验与协作知识 |
 
 项目外 memory 不是工作流执行真相源。
@@ -44,6 +45,19 @@
 | 归档 | `shadow-dev-archive` |
 | Knowledge 查询 | `shadow-dev-knowledge`（propose 自动调用） |
 | 线上急修、紧急修复、hotfix | `shadow-dev-hotfix`（快车道，准入判定见其 SKILL.md） |
+
+## 机器门（scripts/ 是执法层）
+
+规范文本里的「不可议」必须由非零退出的脚本兜住，AI 的本机口头自证不可替代 CI。四门一体入口 `npm run ci`：
+
+| 门 | 命令 | 要点 |
+|----|------|------|
+| 版本同源 | `npm run check:version` | `package.json` == `.claude-plugin` == `.codex-plugin` == release tag 去 `v` |
+| 能力一致性 | `npm run check:requires:strict` | CI 必须 strict：解析不到 CLI 命令目录即判红，禁止「未参与断言」半绿 |
+| 知识治理 | `npm run check:knowledge` | 卡片字段/status/source（含归档兜底）/menu 路由/死链/废弃残留/孤儿规范/技能 frontmatter |
+| 产物与安装器 | `npm test` | pack 内容契约与离线安装器断言，矩阵覆盖 windows |
+
+CI 两条流水：`quality-gate.yml`（push main + 全部 PR）、`publish-release.yml`（`release.published` → 版本权威判定 → 四门 → pack → 资产名契约断言 → 上传 → 隔离 prefix 发布冒烟）。**版本权威＝release tag**，不做 CI 事后回写修正。
 
 ## Deterministic CLI
 

@@ -1,6 +1,6 @@
 ---
 name: shadow-dev-apply
-description: 开始执行 — 按 brief 的 Phase 执行任务，加载 active Knowledge，执行分级验证与依赖调度。触发词：开始执行、apply、实现、写代码。
+description: 开始执行 — 按 brief 的 Phase 执行任务，加载 active Knowledge 与领域不变量，执行分级验证与依赖调度。触发词：开始执行、apply、实现、写代码。
 ---
 # Shadow Dev Apply — 执行
 
@@ -15,6 +15,8 @@ description: 开始执行 — 按 brief 的 Phase 执行任务，加载 active K
 ### 1. 确认变更和约束
 
 确定 change 名称，读取 brief 引用的 active Knowledge，将其执行约束加入任务上下文。
+
+**L 级另须载入 brief 的「## 领域模型」段**：限界上下文、统一语言增量与不变量清单进入任务上下文，不变量就是本阶段要逐条取证的验收对象（`norms/domain-model.md`、`rules/iron-laws.md` §7）。缺该段或清单为空 → 退回 propose 补齐后再开工，不得边写边补。
 
 若卡片已 deprecated、source 不存在或 scope 与任务不匹配，停止并返回 propose/review 修正引用。
 
@@ -50,13 +52,15 @@ shadow-dev branch execute --name <name> --confirm
 
 ### 5. 验证门禁
 
-按 brief 复杂度评级执行验证（`norms/tdd-verification.md` 分级制）：
+按 brief 复杂度评级执行验证（`norms/verification.md` 分级制）。验收对象是不变量，不是测试条数：
 
-1. **L**：完整 TDD——写失败测试并确认失败 → 最小实现并确认通过 → 重构保持绿色。
-2. **M**：绿灯测试——写测试并通过，不强制先红。
+1. **L**：brief「## 领域模型」段的**每条不变量一个可追溯观察点**——真实命令 + 真实输出，必须覆盖拒绝路径与状态不变量（指针不动、无半成品残留、旧路径不可回退）；本机取不到证据时写明证据缺口与替代观察点（CI run 链接）。
+2. **M**：冒烟命令 + 本次触及的既有不变量保持成立 + 既有测试保持绿 + 走查；默认不新建测试文件，触及既有契约时更新既有断言。
 3. **S**：不创建测试文件，执行结构、引用、路由和残留扫描。
 
-**进度报告（非协商，`norms/tdd-verification.md`「进度可见性」）：** 开工前报出两个数——测试总数 N 与任务总数 M（测试逐项列名）；此后每完成一个单元立即输出一行进度线：测试 `▶ [TDD] n/N <测试名> red|green`、任务 `▶ [task] m/M <task-id> done`。单步挂起（进程空转、外部命令超时、同一失败重复）先输出 `⏸ [TDD|task] <名称> 卡住：<现象与排查方向>` 再处理——用户靠进度线判断是否卡死，静默长跑视为违规。
+不为「凑证据」新建测试：确需长期钉住某条不变量才写，并在 brief 写明这条测试钉的是哪条（`rules/behavior.md` §2 反过度设计；S 级写测试同样 review 阻塞）。既有测试文件必须照常运行并通过——取消 TDD 不等于取消跑测试。
+
+**进度报告（非协商，`norms/verification.md`「进度可见性」）：** 开工前报数——测试总数 N（逐项列名）与任务总数 M；L 级另报不变量总数 I。此后每完成一个单元立即输出一行进度线：检查项 `▶ [verify] n/N <检查项> pass|fail`、不变量 `▶ [inv] i/I <不变量> observed|pending`、任务 `▶ [task] m/M <task-id> done`。单步挂起（进程空转、外部命令超时、同一失败重复）先输出 `⏸ [verify|inv|task] <名称> 卡住：<现象与排查方向>` 再处理——用户靠进度线判断是否卡死，静默长跑视为违规。收口汇总行 `✅ N/N 全绿 · I/I 不变量有观察点`，数目与开工报数一致。
 
 ### 6. 按 Phase 执行
 

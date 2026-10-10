@@ -1,12 +1,13 @@
 ---
 title: 插件多宿主分发（Claude Code / Codex / zcode）
-domain: 插件分发
+domain: distribution
 keywords: [Codex, Claude Code, 插件清单, marketplace, hooks, 宿主适配, 打包分发, 技能加载]
 scope: [.codex-plugin/, .claude-plugin/, .agents/, hooks/, adapters/, scripts/pack.mjs, skills/]
 status: active
 source:
   - changes/20261009-feature-codex-host-support/brief.md
-verified: 2026-10-09
+  - changes/20261010-feature-workflow-context-map/brief.md
+verified: 2026-10-10
 verified-depth: runtime
 verified-scope: 本机 Codex CLI 0.160.1 实测——`codex plugin marketplace add D:/works/shadow-dev-workflow` 回 `Added marketplace shadow-dev-workflow-local`；`codex plugin add shadow-dev-workflow@shadow-dev-workflow-local` 落地 `~/.codex/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/6.4.0`（8 技能 + menu/norms/knowledge/rules 齐备，逐文件哈希与源一致）；重启后技能表出现 `shadow-dev-workflow:shadow-dev-*` 命名空间条目；探针版 `commandWindows` 在 `codex exec --dangerously-bypass-hook-trust` 下输出 `hook: SessionStart` → `SessionStart Completed` 并落标记文件
 ---

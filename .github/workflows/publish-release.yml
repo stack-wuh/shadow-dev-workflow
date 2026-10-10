@@ -1,0 +1,107 @@
+name: publish-release
+
+# 版本与产物的唯一权威发布点：GitHub Release tag 说了算。
+# tag ≠ package.json.version 直接判红（历史上「发版漏同步」出血两次），产物资产名必须匹配 CLI 侧解析正则，
+# 上传后立刻用真实 CLI 在隔离 prefix 里走完 plan → execute → bind，证明「传上去的东西真能被装上」。
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: publish ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout the tagged tree
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 版本权威判定（release tag == package.json.version）
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG=$(node -pe 'require("./package.json").version')
+          if [ "$TAG" != "$PKG" ]; then
+            echo "✗ release tag v$TAG 与 package.json.version $PKG 不一致——版本权威即失效"
+            echo "  修正：node scripts/bump-version.mjs $TAG && npm run check:version，重新提交后再打 tag 发布"
+            exit 1
+          fi
+          echo "✓ 版本权威成立：v$TAG"
+          npm run check:version
+
+      - name: Install pinned shadow-dev CLI
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          PIN=$(node -pe 'require("./package.json").cliVersion')
+          bash scripts/install-cli.sh install --version "$PIN"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          # 同 quality-gate.yml：$GITHUB_PATH 对后续步骤生效，本步内紧接着的冒烟需自带 PATH（当前 job 跑 ubuntu，防御性对齐，避免两条流水语义漂移）。
+          export PATH="$HOME/.local/bin:$PATH"
+          shadow-dev --version
+
+      - name: 发布前全门（version + requires:strict + knowledge + test）
+        shell: bash
+        run: |
+          npm run check:requires:strict
+          npm run check:knowledge -- --forbid 'tdd-verification,▶ [TDD]'
+          npm test
+
+      - name: Pack artifact
+        shell: bash
+        run: |
+          ART=$(node scripts/pack.mjs | tail -1)
+          echo "artifact=$ART"
+          echo "artifact=$ART" >> "$GITHUB_OUTPUT"
+          echo "basename=$(basename "$ART")" >> "$GITHUB_OUTPUT"
+        id: pack
+
+      - name: 资产契约断言（CLI 只认 shadow-dev-workflow-v<semver>.tar.gz）
+        shell: bash
+        env:
+          BASENAME: ${{ steps.pack.outputs.basename }}
+        run: |
+          node -e 'const n=process.env.BASENAME||"";const C=/^shadow-dev-workflow-v[0-9][0-9.]*\.tar\.gz$/;if(!C.test(n)){console.error("x asset name ["+n+"] violates CLI contract "+C);process.exit(1)}console.log("OK asset contract: "+n)'
+
+      - name: Upload asset to release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT: ${{ steps.pack.outputs.artifact }}
+        run: gh release upload "$GITHUB_REF_NAME" "$ARTIFACT" --clobber
+
+      - name: 发布冒烟（隔离 prefix：plan --release → execute → bind plan）
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          SMOKE="$RUNNER_TEMP/publish-smoke"
+          rm -rf "$SMOKE"; mkdir -p "$SMOKE/prefix" "$SMOKE/home"
+          export SHADOW_WORKFLOW_PREFIX="$SMOKE/prefix" SHADOW_WORKFLOW_HOME="$SMOKE/home"
+          shadow-dev workflow plan --release "$GITHUB_REF_NAME" --json | grep '^{"ok"' | tail -1 > "$SMOKE/plan.json"
+          node -e 'const d=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!d.ok){console.error("plan failed: "+JSON.stringify(d.error));process.exit(1)}console.log("OK plan version="+d.data.version+" missing="+JSON.stringify(d.data.missingCommands))' "$SMOKE/plan.json"
+          HASH=$(node -pe 'JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).planHash' "$SMOKE/plan.json")
+          shadow-dev workflow execute --release "$GITHUB_REF_NAME" --plan-hash "$HASH" --confirm --json | grep '^{"ok"' | tail -1 > "$SMOKE/exec.json"
+          node -e 'const d=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!d.ok){console.error("execute failed: "+JSON.stringify(d.error));process.exit(1)}console.log("OK execute current="+d.data.current)' "$SMOKE/exec.json"
+          CUR=$(node -pe 'JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).data.current' "$SMOKE/exec.json")
+          ROOT="$SMOKE/prefix/$CUR/shadow-dev-workflow"
+          test -f "$ROOT/norms/verification.md" || { echo "x materialized artifact missing norms/verification.md"; exit 1; }
+          N=$(find "$ROOT/skills" -name SKILL.md | wc -l | tr -d ' ')
+          [ "$N" = "8" ] || { echo "x materialized skills count=$N expected 8"; exit 1; }
+          echo "OK materialized root=$ROOT skills=$N"
+          shadow-dev bind plan --host codex --prefix "$SHADOW_WORKFLOW_PREFIX" --json | grep '^{"ok"' | tail -1 > "$SMOKE/bind.json"
+          node -e 'const d=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!d.ok){console.error("bind plan failed: "+JSON.stringify(d.error));process.exit(1)}const x=d.data;console.log("OK bind plan host-version="+x.version)' "$SMOKE/bind.json"

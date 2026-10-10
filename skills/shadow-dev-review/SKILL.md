@@ -1,6 +1,6 @@
 ---
 name: shadow-dev-review
-description: 质量门禁 — 验证实现、方案与 active Knowledge，并给出最终知识影响。触发词：代码审查、review、验收、verify。
+description: 质量门禁 — 验证实现、领域模型一致性、方案与 active Knowledge，并给出最终知识影响。触发词：代码审查、review、验收、verify。
 ---
 # Shadow Dev Review — 质量门禁
 
@@ -27,7 +27,7 @@ shadow-dev review execute --name <name> --conclusion <passed|blocked> --knowledg
 
 **机械门禁：** `review execute` 会检查 brief 中的任务清单——存在未完成任务时返回 `TASKS_NOT_COMPLETE` 并拒绝写入 `passed`。先通过 `task set` 确认所有任务真实完成，再执行 review。
 
-### 3. 七维检查
+### 3. 多维检查
 
 1. **任务完成度：** checkbox 与实际任务一致。
 2. **方案一致性：** 实现符合 brief 决策。
@@ -41,8 +41,9 @@ shadow-dev review execute --name <name> --conclusion <passed|blocked> --knowledg
    - 最终结论是新增、更新、废弃或无需变更。
    - 动作必须给出确定目标路径和理由。
    - 知识卡更新须按 `norms/knowledge-cards.md` 补 `verified-depth` 与 `verified-scope`。
-8. **验证强度匹配：** 实际验证深度须达到 brief 复杂度评级的期望深度（S: diff 走查 / M: unit+走查 / L: runtime 可追溯观察点）；不匹配退回，S 级过度测试同样指出。
+8. **验证强度与观察点对账：** 实际验证深度达到 brief 评级的期望深度（S: diff 走查 / M: 冒烟+既有测试绿+走查 / L: 每条不变量一个可追溯观察点）；逐条核对 brief「领域模型」段的不变量是否都有观察点或已标注证据缺口。强度不足退回，**过度验证同样指出**（S 级写测试、为凑证据补断言）。
 9. **信号写回：** 本次探索中命中或证伪的路径按 `norms/signals.md` 提案信号（创建 / 加分 / 退役），随 review 结论一并输出。
+10. **模型一致性：** 按 `norms/domain-model.md` 检查——实现是否引入未登记的公开名词（命令键、字段、卡片标题、术语）；是否破坏了声明过的不变量；改动是否越出本 change 所属限界上下文去改其他上下文的语义（越界即阻塞，要求拆 change）；`shadow-docs/domain.md` 与知识卡 `domain:` 值是否仍然一致。
 
 以下情况阻塞：
 
@@ -50,6 +51,9 @@ shadow-dev review execute --name <name> --conclusion <passed|blocked> --knowledg
 - 候选卡片缺少 source、scope、verified。
 - active 卡片没有 menu 路由。
 - 实现违反 active Knowledge 且 brief 未说明有意变更。
+- L 级 brief 缺「## 领域模型」段或不变量清单为空（`rules/iron-laws.md` §7）。
+- 不变量既无观察点也未标注证据缺口，却声称完成。
+- 引入新的公开名词而未登记（brief 术语增量或上下文地图）。
 
 ## 审查报告
 
@@ -62,6 +66,8 @@ shadow-dev review execute --name <name> --conclusion <passed|blocked> --knowledg
 ### 正确性: <结果>
 ### 代码质量: <结果>
 ### 验证: <命令与结果>
+### 观察点对账: i/I（缺观察点且未标注缺口的条目列出）
+### 模型一致性: 通过 / 阻塞
 ### Knowledge 评估
 - 结果: 新增 / 更新 / 废弃 / 无需变更
 - 目标: <卡片路径或无>

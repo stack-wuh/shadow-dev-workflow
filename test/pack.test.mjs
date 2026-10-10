@@ -14,14 +14,31 @@ const artifact = join(PLUGIN_ROOT, 'dist', `shadow-dev-workflow-v${version}.tar.
 const extract = mkdtempSync(join(tmpdir(), 'pack-'))
 execFileSync('node', [join(PLUGIN_ROOT, 'scripts', 'pack.mjs')], { cwd: PLUGIN_ROOT })
 // tar 必须经 bash -c 执行：Windows runner 上 node 直 spawn 绑到 System32 bsdtar，
-// 读不了 MSYS /tmp 路径（install-distribution 卡约束，安装器用例同款坑）
-spawnSync('bash', ['-c', 'tar -xzf "$1" -C "$2"', 'pack-extract', artifact, extract], { encoding: 'utf8' })
-const packedRoot = join(extract, 'shadow-dev-workflow')
-
-test.after(() => {
+// 读不了 MSYS /tmp 路径（install-distribution 卡约束，安装器用例同款坑）。
+// 但 Git Bash 的 tar 会把「D:\…」这类形态当成 host:path（SGN-010：Cannot connect to D: resolve failed），
+// 所以传给 bash 的路径必须先归一为 posix 形态——与 shadow-dev-cli 的 test 同款 toUnix 手法，即 SGN-010 的退役条件。
+const toUnix = process.platform === 'win32' ? (p) => {
+  const r = spawnSync('cygpath', ['-u', p], { encoding: 'utf8' })
+  // cygpath 可能不在 PATH（Git Bash 未加入 PATH 的机器与 runner 都会这样），退回纯字符串 MSYS 形态：
+  // `C:\a\b` → `/c/a/b`。两条路都不依赖具体 bash 实现（Git Bash 用 /c/…，WSL 挂载点不同、本就跑不了本用例）。
+  if (r.status === 0 && r.stdout.trim()) return r.stdout.trim()
+  return p.replace(/^([A-Za-z]):[\\/]/, (_, d) => `/${d.toLowerCase()}/`).replace(/[\\/]+/g, '/')
+} : (p) => p
+const unpack = spawnSync('bash', ['-c', 'tar -xzf "$1" -C "$2"', 'pack-extract', toUnix(artifact), toUnix(extract)], { encoding: 'utf8' })
+// 清理必须在失败路径上也可达：模块顶层抛错时 test.after 根本来不及注册，
+// 而 dist/ 未被 gitignore——留下未跟踪产物就违反本文件「不给仓库留未跟踪文件」的自订契约。
+const cleanup = () => {
   rmSync(join(PLUGIN_ROOT, 'dist'), { recursive: true, force: true })
   rmSync(extract, { recursive: true, force: true })
-})
+}
+// 解包失败必须当场响亮：旧写法忽略 rc，症状漂到下游用例变成「package.json ENOENT」，排查方向全错。
+if (unpack.status !== 0) {
+  cleanup()
+  throw new Error(`pack 解包失败 rc=${unpack.status}: ${(unpack.stderr || unpack.stdout || '').trim() || unpack.error?.message || 'unknown'}`)
+}
+const packedRoot = join(extract, 'shadow-dev-workflow')
+
+test.after(cleanup)
 
 test('pack: 产物存在且与 package.json 版本一致', () => {
   assert.equal(existsSync(artifact), true, `missing artifact: ${artifact}`)

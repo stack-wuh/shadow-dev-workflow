@@ -1,13 +1,17 @@
 {
   "name": "shadow-dev-workflow",
-  "version": "6.5.1",
+  "version": "6.8.0",
   "type": "module",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "test": "node --test test/install-cli.test.mjs test/pack.test.mjs",
-    "check:requires": "node scripts/check-requires.mjs"
+    "check:requires": "node scripts/check-requires.mjs",
+    "check:requires:strict": "node scripts/check-requires.mjs --strict",
+    "check:knowledge": "node scripts/check-knowledge.mjs",
+    "check:version": "node scripts/bump-version.mjs --check",
+    "ci": "npm run check:version && npm run check:requires:strict && npm run check:knowledge && npm test"
   },
   "cliVersion": "v1.5.0",
   "requiresCommands": [

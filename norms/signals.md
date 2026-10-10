@@ -46,5 +46,5 @@ apply 进入「分析依赖 / 探索」阶段时读取 `shadow-docs/signals.md`�
 ## 与其他规范的关系
 
 - 深度分级沿用 `norms/knowledge-cards.md` 的 verified-depth。
-- 扇宽由 brief 的复杂度评级决定（`norms/tdd-verification.md`）。
+- 扇宽由 brief 的复杂度评级决定（`norms/verification.md`）。
 - 信号不进 `menu.md` 路由表（路由表只管规范与知识卡；signals.md 由 apply/review 直接读取）。
