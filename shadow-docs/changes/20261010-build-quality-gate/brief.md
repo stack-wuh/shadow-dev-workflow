@@ -4,7 +4,7 @@
   "name": "20261010-build-quality-gate",
   "type": "build",
   "scope": "plugin-distribution",
-  "status": "reviewed",
+  "status": "committed",
   "baseBranch": "refactor/20261010-refactor-domain-driven-workflow",
   "branch": "build/20261010-build-quality-gate",
   "files": [
@@ -36,7 +36,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "9ec9f15e1ef049c06d9c2736b4df42e4b65b26d2",
     "planHash": "4102fecbeaf23f2c539f6a93792b0db298f08b73aedaa84f13c64f7b30c2ac86",
     "updatedAt": null,
     "lastError": null,
