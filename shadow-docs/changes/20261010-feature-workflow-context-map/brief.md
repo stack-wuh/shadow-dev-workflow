@@ -4,7 +4,7 @@
   "name": "20261010-feature-workflow-context-map",
   "type": "feature",
   "scope": "workflow-governance",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "build/20261010-build-quality-gate",
   "branch": "feature/20261010-feature-workflow-context-map",
   "files": [
@@ -26,18 +26,18 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 45,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/45"
   },
   "review": {
-    "conclusion": "blocked",
-    "verifiedCommit": "0b622b6e188b6f965e01d1c45c5e311606cfb4af",
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "0c6c3a4da12e8dafb632c0edbcb2ed3f054f1d8a",
+    "verifiedAt": "2026-10-10T08:00:37.124Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "47f5b54fd8872217b4752091f6a35527709a6811",
-    "planHash": "94c0f1a03399e4f9ba40f0c09d340c336fdcd6e511cc8714ac65cbeb32ee87dd",
+    "checkpoint": "pr:45",
+    "planHash": "87a9a061b6292bbaa3da8ca5bb3940aee289542dd627e1bc6dff59f05e4a3fad",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -64,7 +64,11 @@
       "message": "docs(shadow): 登记 Phase 4 跨上下文声明（distribution 两处，经用户裁决接受）"
     }
   },
-  "knowledge": null
+  "knowledge": {
+    "action": "更新",
+    "target": "knowledge/release-artifact-pipeline.md",
+    "reason": "Phase 4 把「同步内不得依赖 $GITHUB_PATH」升格为发布链卡的执行约束（keywords/source/verified-scope 同步），属既有结论的边界细化，不新建卡；跨上下文改动已在 brief「领域模型」段登记并经用户裁决"
+  }
 }
 ---
 
