@@ -34,8 +34,16 @@ const argv = cli ? [process.execPath, [cli, 'help', '--full', '--json']] : ['sha
 // 整段 JSON.parse 必然抛错——本门曾在 CI 型环境下恒判 unresolved（假红），本机偶然纯 JSON 时才假绿。
 // 同时加超时：无界的 execFileSync 会让整道门挂死（实测挂 3 分钟以上）。
 const timeout = Number(process.env.SHADOW_CLI_TIMEOUT_MS || 20000)
+// win32 上 PATH 里的托管 shim 是 shadow-dev.cmd，而 Node ≥18.20.3/20.12.2 起拒绝在无 shell 下启动 .bat/.cmd（EINVAL）。
+// 不显式给 SHADOW_DEV_CLI 时，Windows 必须经 shell 解析命令目录——否则本门在 windows runner 恒 unresolved，
+// strict 按设计判红而 ubuntu/macos 全绿（实证：PR #44/#45 的 gate 第 6 步）。降级态依旧自曝，不半绿。
+const viaShell = process.platform === 'win32' && !cli
+// shell 模式下把命令与参数合成单串、args 留空：既避开 DEP0190（args 与 shell:true 同用只拼接不转义），
+// 也保证本门的命令行永远是静态字面量，没有任何外部输入进入 shell。
+const bin = viaShell ? `${argv[0]} ${argv[1].join(' ')}` : argv[0]
+const binArgs = viaShell ? [] : argv[1]
 try {
-  const out = execFileSync(argv[0], argv[1], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout })
+  const out = execFileSync(bin, binArgs, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout, shell: viaShell })
   const jsonLine = out.split(/\r?\n/).filter(l => l.startsWith('{')).pop()
   if (!jsonLine) throw new Error('命令目录无 JSON 契约行')
   catalog = Object.keys(JSON.parse(jsonLine).data.commands || {})

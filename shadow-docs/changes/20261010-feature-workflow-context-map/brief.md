@@ -5,7 +5,7 @@
   "type": "feature",
   "scope": "workflow-governance",
   "status": "published",
-  "baseBranch": "build/20261010-build-quality-gate",
+  "baseBranch": "main",
   "branch": "feature/20261010-feature-workflow-context-map",
   "files": [
     ".claude-plugin/plugin.json",
@@ -19,6 +19,7 @@
     "norms/knowledge-cards.md",
     "package.json",
     "scripts/check-knowledge.mjs",
+    "scripts/check-requires.mjs",
     "shadow-docs/changes/20261010-feature-workflow-context-map/brief.md",
     "shadow-docs/domain.md"
   ],
@@ -30,14 +31,14 @@
     "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/45"
   },
   "review": {
-    "conclusion": "passed",
-    "verifiedCommit": "0c6c3a4da12e8dafb632c0edbcb2ed3f054f1d8a",
-    "verifiedAt": "2026-10-10T08:00:37.124Z"
+    "conclusion": "pending",
+    "verifiedCommit": null,
+    "verifiedAt": null
   },
   "workflow": {
     "operation": null,
     "checkpoint": "pr:45",
-    "planHash": "87a9a061b6292bbaa3da8ca5bb3940aee289542dd627e1bc6dff59f05e4a3fad",
+    "planHash": "5f353293b1255bb48530f35f49241c392ad0c9aae955c5c0492a3e00775e3e1d",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -59,9 +60,10 @@
     },
     "commit": {
       "files": [
+        "scripts/check-requires.mjs",
         "shadow-docs/changes/20261010-feature-workflow-context-map/brief.md"
       ],
-      "message": "docs(shadow): 登记 Phase 4 跨上下文声明（distribution 两处，经用户裁决接受）"
+      "message": "fix(ci): strict 门在 win32 经 shell 解析 .cmd shim，命令目录不再恒 unresolved"
     }
   },
   "knowledge": {
@@ -149,6 +151,7 @@
 ### Phase 4 — review 后追加：Windows 门修复（经 `change amend` 登记扩面）
 - [x] CI 冒烟 PATH 修复 — `.github/workflows/quality-gate.yml`, `.github/workflows/publish-release.yml` — `$GITHUB_PATH` 只对后续步骤生效，同一步内紧接着的 `shadow-dev --version` 在 windows-latest 找不到 shim（ubuntu/macos 靠镜像默认 PATH 蒙过）；补 `export PATH="$HOME/.local/bin:$PATH"`。两文件不在本 change 原声明集内，按 `shadow-dev-cli` #50 新增的 `change amend` 登记扩面（`added` 两项、`reviewReset=true`），不越界改未声明文件
 - [x] 知识闭环 — `knowledge/release-artifact-pipeline.md` — 「$GITHUB_PATH 同步内不可见」升格为发布链卡的执行约束（keywords 补 `GITHUB_PATH/PATH/shim`、source 追加本 brief、verified-scope 记失败侧已由 CI 实证而修复生效待 run 链接回填）；同文件亦经 `change amend` 第二次登记
+- [x] strict 门 win32 兼容 + baseBranch 纠偏 — `scripts/check-requires.mjs` — PATH 上的托管 shim 是 `shadow-dev.cmd`，Node ≥18.20.3/20.12.2 拒绝无 shell 启动 `.bat/.cmd`（EINVAL）→ `execFileSync` 增 `shell: process.platform === 'win32' && !cli`，降级仍自曝不半绿。同时 `change amend --base-branch main` 把声明基线纠正为 `main`（`publish` 的 `findPr` 按 base 过滤，声明错则复用不到 PR #44 并重复开 PR），输出含 `warnings` 指名历史 PR #45 需改 base 或关闭。证据：`added:["scripts/check-requires.mjs"] baseBranch:"main" reviewReset:true warnings:[…]`
 
 ## 结果
 
