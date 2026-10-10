@@ -30,14 +30,14 @@
     "pullRequestUrl": null
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
+    "conclusion": "blocked",
+    "verifiedCommit": "0b622b6e188b6f965e01d1c45c5e311606cfb4af",
     "verifiedAt": null
   },
   "workflow": {
     "operation": null,
     "checkpoint": "c566cd170c9eae45504cb2006b4d9012adfb3995",
-    "planHash": "6689579228bb67c56816b81607a1cea8ef389f6300f4a1cb79a786ae9c081b39",
+    "planHash": "94c0f1a03399e4f9ba40f0c09d340c336fdcd6e511cc8714ac65cbeb32ee87dd",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -59,19 +59,12 @@
     },
     "commit": {
       "files": [
-        ".github/workflows/publish-release.yml",
-        ".github/workflows/quality-gate.yml",
-        "knowledge/release-artifact-pipeline.md",
         "shadow-docs/changes/20261010-feature-workflow-context-map/brief.md"
       ],
-      "message": "fix(ci): windows 同步内自带 ~/.local/bin——$GITHUB_PATH 对后续步骤才生效致 exit 127"
+      "message": "docs(shadow): 登记 Phase 4 跨上下文声明（distribution 两处，经用户裁决接受）"
     }
   },
-  "knowledge": {
-    "action": "无需变更",
-    "target": null,
-    "reason": "本 change 落地规范条款（domain 值域＝上下文地图登记名、source 归档兜底、M 级领域模型最小形态）并把它做成机器校验；未产生新的跨项目长期事实，故不建卡。触碰的两张卡只做字段归一与 source/verified 更新：multi-host（插件分发→distribution）、domain-driven（补执法点记录）。证据：门正例 5/5 命中值域、反例 domain 别名判红退出码 1、requires:strict 绿、11 例测试绿、版本三处同源 6.8.0、产物 v6.8.0 资产契约成立。两次自伤（git checkout 冲掉未提交归一改动、python 字节字面量致脚本未执行）均如实记入 brief 过程记录。"
-  }
+  "knowledge": null
 }
 ---
 
@@ -102,6 +95,7 @@
   - `Knowledge 卡片`：`domain` 值必须 ∈ 地图值域（新）；active 卡必须进 menu 路由；三键齐全；source 可解析（含归档兜底）。
   - `规范引用一致性`：地图登记的上下文必须与实际目录/scope 对应；卡片 domain 与地图不得出现同义别名。
 - **领域事件:** 新上下文出现 → 先登记地图再建卡；地图值域变化 → 门立即判红存量违规卡。
+- **跨上下文声明（Phase 4，经用户显式裁决接受）:** 本 change 主体归属 `workflow-governance`，Phase 4 两处越入 `distribution`——① `.github/workflows/quality-gate.yml` 与 `publish-release.yml`：修「同步内依赖 `$GITHUB_PATH`」的步骤时序缺陷，**不触碰**版本权威、资产名契约、发布冒烟任何语义；② `knowledge/release-artifact-pipeline.md`：向该卡「执行约束」**追加**一条 CI 事实，不改当前结论与 domain 值。反腐边界：只增不改；两处均经 `change amend` 登记扩面，未静默改未声明文件。按 `norms/domain-model.md` 本应拆 change，此处由用户于 2026-10-10 裁决保留在同一 PR，理由是堆叠现实：#44 已包含 #43，给 #43 加提交后 #44 无法 fast-forward，拆分会强制原始 git 重堆（违反分支铁律）。
 
 ## 引用规范
 
