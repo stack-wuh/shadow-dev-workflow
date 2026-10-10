@@ -4,7 +4,7 @@
   "name": "20261010-feature-workflow-context-map",
   "type": "feature",
   "scope": "workflow-governance",
-  "status": "published",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "feature/20261010-feature-workflow-context-map",
   "files": [
@@ -37,7 +37,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:44",
+    "checkpoint": "796faac08e54f27865c38cc65c43d56a5d00c179",
     "planHash": "efef7631455890483cf7a2ef21405a482095a01e4307b86caa08daa792bcf5aa",
     "updatedAt": null,
     "lastError": null,
