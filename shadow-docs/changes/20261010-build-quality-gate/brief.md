@@ -4,7 +4,7 @@
   "name": "20261010-build-quality-gate",
   "type": "build",
   "scope": "plugin-distribution",
-  "status": "committed",
+  "status": "reviewed",
   "baseBranch": "refactor/20261010-refactor-domain-driven-workflow",
   "branch": "build/20261010-build-quality-gate",
   "files": [
@@ -31,13 +31,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "b2e7579a49415a86053e46c1194d552c18a5cc5f",
-    "verifiedAt": "2026-10-10T00:06:13.439Z"
+    "verifiedCommit": "6775f1ff37a5f59bb74dc259ae3f742cdf4fc04e",
+    "verifiedAt": "2026-10-10T00:09:38.929Z"
   },
   "workflow": {
     "operation": null,
     "checkpoint": "9ec9f15e1ef049c06d9c2736b4df42e4b65b26d2",
-    "planHash": "4102fecbeaf23f2c539f6a93792b0db298f08b73aedaa84f13c64f7b30c2ac86",
+    "planHash": "68e64cba111aee5af626c22ebae2f966386fafacde3423b32cf3441dfb9b6c5e",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -51,11 +51,9 @@
     },
     "commit": {
       "files": [
-        ".claude-plugin/plugin.json",
-        ".codex-plugin/plugin.json",
         "shadow-docs/changes/20261010-build-quality-gate/brief.md"
       ],
-      "message": "build(ci): 补齐宿主清单版本 bump 与范围修订记录（check:version 判红闭环）"
+      "message": "docs(shadow): review 结论重钉至最终提交（补齐版本 bump 后全门复绿）"
     },
     "release": {
       "files": [
@@ -81,7 +79,7 @@
   "knowledge": {
     "action": "新增",
     "target": "knowledge/release-artifact-pipeline.md",
-    "reason": "新增「发布链版本权威与产物资产契约」卡（版本权威＝release tag、资产名正则契约、发布冒烟三件套、机器门禁止半绿）；原位更新 knowledge/distribution-capability-contract.md（追加机器门 strict 约束与验证方式第 5/6 项、追加 source、verified 2026-10-10）、norms/verification.md（替代观察点落到两条真实流水、知识治理改脚本执行）、menu.md（新增发布与质量门路由）。npm run ci rc=0 四门全绿、既有测试 11/11、三条负例（strict 判红 / 版本不同源 / forbid 命中）均 rc=1；GitHub 矩阵与发布冒烟为已知缺口，待 run 链接回填。门在本轮即抓到 2 张卡 source 归档死链与 1 次未登记的勾选状态，证明不是摆设。"
+    "reason": "同上轮结论：新增发布链版本权威与资产契约卡，原位更新能力契约卡/verification/menu。补齐提交后 npm run ci rc=0、check:version 三处同源 6.7.0、既有测试 11/11；范围修订（两处宿主清单版本）已在 brief 正文声明。"
   }
 }
 ---
