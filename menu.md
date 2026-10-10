@@ -16,6 +16,7 @@
 | 代码变更 | 代码 风格 重构 命名 类型 import 依赖 包边界 | norms/code-style.md, 按 scope 追加 norms/code-style-frontend.md、norms/code-style-backend.md 或 norms/code-style-packages.md |
 | 数据库变更 | 数据库 MongoDB Mongoose Schema Model 字段 索引 迁移 回填 同步 seed | norms/code-style-database.md, 项目数据模型 active Knowledge |
 | 性能优化 | 首屏 加载 缓存 LCP CLS SSR ISR | norms/code-style.md, 项目性能 active Knowledge |
+| 发布与质量门 | 发布 release tag 版本权威 资产名 tarball pack 上传 发布冒烟 quality-gate publish-release CI strict 半绿 假绿 机器门 死链 孤儿规范 | knowledge/release-artifact-pipeline.md |
 | 插件多宿主分发 | Codex Claude Code zcode 宿主 插件清单 marketplace hooks adapters 打包 分发 技能加载 命令 not found | knowledge/multi-host-plugin-distribution.md |
 | 分发一致性与能力声明 | pin cliVersion requiresCommands 能力声明 一致性门 check:requires ARTIFACT_INCOMPATIBLE missingCommands 静默降级 响亮阻塞 版本错位 命令 not found | knowledge/distribution-capability-contract.md |
 | Bug 修复 | 报错 崩溃 异常 不对 显示不正常 | norms/verification.md, knowledge/bug-investigation.md, 项目相关 active Knowledge |

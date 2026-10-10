@@ -143,7 +143,31 @@ shadow-dev bind plan --host auto && shadow-dev bind execute --host <名> --plan-
 
 产物与 adapters 契约：
 
-- release 产物 `shadow-dev-workflow-v<ver>.tar.gz` 由 `scripts/pack.mjs` 打包，解包为 `shadow-dev-workflow/`，只含运行必需集（marketplace.json / package.json / README / menu.md / skills / hooks / rules / knowledge / norms / docs / scripts）。
+## 发版（Release 控制版本号）
+
+版本权威是 **GitHub Release tag**：tag 名去 `v` 必须与 `package.json.version` 及 `.claude-plugin`、`.codex-plugin` 三处同源，不一致时 `publish-release` 工作流直接判红。
+
+```bash
+node scripts/bump-version.mjs 6.7.0    # 一次同步三处 manifest（也可 --check 只判定）
+npm run ci                             # 版本 + requires:strict + 知识治理 + 测试，四门一体
+git tag v6.7.0 && git push origin v6.7.0
+gh release create v6.7.0 --generate-notes   # 之后由 publish-release.yml 接手
+```
+
+`publish-release.yml`（`on: release.published`）依次执行：版本权威判定 → 装 pin CLI → 四门 → `scripts/pack.mjs` → **资产名契约断言**（CLI 只认 `^shadow-dev-workflow-v[0-9][0-9.]*\.tar\.gz$`，名字写错等于没发布）→ `gh release upload --clobber` → **发布冒烟**：隔离 prefix 里用真实 CLI 跑 `workflow plan --release → workflow execute → bind plan`，核对物化的 8 个 skills 与规范文件。产物永远不被手工搬运，人只负责 bump 与打 tag。
+
+## 机器门（GitHub Actions）
+
+| 门 | 命令 | 判什么 | CI |
+|----|------|--------|-----|
+| 版本同源 | `npm run check:version` | `package.json` 与两份宿主清单版本一致 | quality-gate + publish-release |
+| 能力一致性 | `npm run check:requires` / `:strict` | `skills 引用 ⊆ requiresCommands ⊆ CLI 命令目录` | CI 用 **strict**：解析不到命令目录即判红，禁止「未参与断言」的半绿 |
+| 知识治理 | `npm run check:knowledge` | 卡片字段与 status、source 存在性（含归档兜底）、active 卡 menu 路由、引用死链、废弃 token 残留（`--forbid`）、孤儿规范、技能 `name/description` 一致性 | quality-gate |
+| 产物与安装器 | `npm test` | pack 产物内容契约、三清单版本机检、hook wrapper 装配、离线安装 | quality-gate（ubuntu/macos/windows × node 20/22） |
+
+`quality-gate.yml` 在 push main 与每个 PR 上跑全部四门。它存在的原因很实在：这三类门此前只能靠执行者本机口头自证，而半绿的门比没有门更危险。
+
+- release 产物 `shadow-dev-workflow-v<ver>.tar.gz` 由 `scripts/pack.mjs` 打包（发版链见上文「发版」），解包为 `shadow-dev-workflow/`，只含运行必需集（marketplace.json / package.json / README / menu.md / skills / hooks / rules / knowledge / norms / docs / scripts）。
 - `adapters/<host>.json`（schema `shadow-dev-adapter/v1`）声明宿主的 skills 发现目录、复制策略、托管标记与 hook 支持位；**新增宿主 = 新增描述符，CLI 零改动**。
 
 ## 依赖

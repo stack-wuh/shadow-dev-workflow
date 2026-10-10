@@ -24,13 +24,34 @@ for (const d of readdirSync(join(root, 'skills'))) {
   }
 }
 const undeclared = [...refs.keys()].filter(k => k.endsWith('(未声明)'))
+// 严格模式：命令目录解析不到就判红。非严格模式保留旧行为（本机开发不被迫装 CLI），
+// 但把降级态打进输出——CI 必须用严格模式，否则三级包含断言会退化成两级还判绿（假绿）。
+const strict = process.argv.includes('--strict') || process.env.SHADOW_REQUIRE_CLI_CATALOG === '1'
 let catalog = null, missingInCli = []
 const cli = process.env.SHADOW_DEV_CLI
 const argv = cli ? [process.execPath, [cli, 'help', '--full', '--json']] : ['shadow-dev', ['help', '--full', '--json']]
-try { catalog = Object.keys(JSON.parse(execFileSync(argv[0], argv[1], { encoding: 'utf8', stdio: ['ignore','pipe','ignore'] })).data.commands || {}) } catch { catalog = null }
+// 命令目录必须从「最后一个 {"ok" 行」取：CLI 的 human 帮助层在非 TTY 下会与 JSON 同流写 stdout，
+// 整段 JSON.parse 必然抛错——本门曾在 CI 型环境下恒判 unresolved（假红），本机偶然纯 JSON 时才假绿。
+// 同时加超时：无界的 execFileSync 会让整道门挂死（实测挂 3 分钟以上）。
+const timeout = Number(process.env.SHADOW_CLI_TIMEOUT_MS || 20000)
+try {
+  const out = execFileSync(argv[0], argv[1], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout })
+  const jsonLine = out.split(/\r?\n/).filter(l => l.startsWith('{')).pop()
+  if (!jsonLine) throw new Error('命令目录无 JSON 契约行')
+  catalog = Object.keys(JSON.parse(jsonLine).data.commands || {})
+} catch (e) {
+  catalog = null
+  if (strict) console.error(`✗ 命令目录解析失败：${e.message?.slice(0, 120) || e}`)
+}
 if (catalog) missingInCli = declared.filter(k => !catalog.includes(k))
-console.log(`declared=${declared.length} skills-referenced=${refs.size} undeclared=[${undeclared.join(', ')}] cli-catalog=${catalog ? catalog.length : 'unresolved'} missing-in-cli=[${missingInCli.join(', ')}]`)
+console.log(`declared=${declared.length} skills-referenced=${refs.size} undeclared=[${undeclared.join(', ')}] cli-catalog=${catalog ? catalog.length : 'unresolved'} catalog=${catalog ? 'resolved' : 'unresolved'} strict=${strict ? 'on' : 'off'} missing-in-cli=[${missingInCli.join(', ')}]`)
 if (undeclared.length) console.error('✗ skills 有命令未进 requiresCommands 声明:', undeclared.join(', '))
 if (missingInCli.length) console.error('✗ requiresCommands 声明的命令在已装 CLI 里不存在（pin 或 CLI 版本过旧）:', missingInCli.join(', '))
-if (!undeclared.length && !missingInCli.length) console.log('✓ skills ⊆ requiresCommands' + (catalog ? ' ⊆ CLI 命令目录' : '（CLI 目录未参与断言）'))
-process.exitCode = (undeclared.length || missingInCli.length) ? 1 : 0
+const degraded = !catalog
+const pass = !undeclared.length && !missingInCli.length && !(strict && degraded)
+if (strict && degraded) console.error('✗ --strict：解析不到 CLI 命令目录（PATH 无 shadow-dev 且 SHADOW_DEV_CLI 未指向可用 cli.mjs）——降级断言不可接受')
+// 判红的轮子不许同时打 ✓：半绿消息本身就是假绿的形态
+if (pass) console.log(catalog ? '✓ skills ⊆ requiresCommands ⊆ CLI 命令目录' : '✓ skills ⊆ requiresCommands（CLI 目录未参与断言）')
+else if (!undeclared.length && !missingInCli.length) console.log('✗ 断言不完整，strict 判红（见上一行）')
+else console.log('✗ 一致性门未通过')
+process.exitCode = pass ? 0 : 1
