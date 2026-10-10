@@ -4,7 +4,7 @@
   "name": "20261010-feature-workflow-context-map",
   "type": "feature",
   "scope": "workflow-governance",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "feature/20261010-feature-workflow-context-map",
   "files": [
@@ -32,13 +32,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "edd342ca1569cce4c25c915fd7478bc2f4fba4d2",
-    "verifiedAt": "2026-10-10T08:16:15.553Z"
+    "verifiedCommit": "dbd75fa9ee48e47a635f9ea43a14e8a10a5704da",
+    "verifiedAt": "2026-10-10T08:24:13.507Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "796faac08e54f27865c38cc65c43d56a5d00c179",
-    "planHash": "efef7631455890483cf7a2ef21405a482095a01e4307b86caa08daa792bcf5aa",
+    "checkpoint": "pr:44",
+    "planHash": "3151a57846343f02d9074c61d8d8fe378fd6dd58af5b9c4e3a76cda2236a030a",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -69,7 +69,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "Phase 4 追加仅为既有门与既有卡的行为纠偏（win32 shim 解析、PATH 时序），未产生新的跨项目长期事实；$GITHUB_PATH 一条已在本 change 早前更新进 release-artifact-pipeline 卡"
+    "reason": "Phase 4 全部为既有门的跨平台行为纠偏（PATH 时序、win32 .cmd、CRLF 归一），无新的跨项目长期事实；唯一规范级事实已更新进 release-artifact-pipeline 卡"
   }
 }
 ---
