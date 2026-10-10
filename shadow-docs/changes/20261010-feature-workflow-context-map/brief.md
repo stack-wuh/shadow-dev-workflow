@@ -4,7 +4,7 @@
   "name": "20261010-feature-workflow-context-map",
   "type": "feature",
   "scope": "workflow-governance",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "feature/20261010-feature-workflow-context-map",
   "files": [
@@ -34,14 +34,14 @@
     "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/44"
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "1df7ba11d510be03e2a1f8d0eb30b6a8a0133592",
+    "verifiedAt": "2026-10-10T08:35:13.358Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "9ceb70fb0e20b85e4f298927f5a20ac5c282fd33",
-    "planHash": "d065369be53a922be0d99c1efaead6d67df9b13e942888863e44a380f18924f9",
+    "checkpoint": "pr:44",
+    "planHash": "25d517531a96ff30eb80cd2f9232a242d751e3577df1beb2c501bf24cb3198fc",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -73,7 +73,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "Phase 4 全部为既有门的跨平台行为纠偏（PATH 时序、win32 .cmd、CRLF 归一），无新的跨项目长期事实；唯一规范级事实已更新进 release-artifact-pipeline 卡"
+    "reason": "Phase 4 收尾仍属既有门的跨平台纠偏；SGN-010 已在 shadow-docs/signals.md 依其退役条件就地标注，不产生新卡片"
   }
 }
 ---
