@@ -4,7 +4,7 @@
   "name": "20261010-feature-workflow-context-map",
   "type": "feature",
   "scope": "workflow-governance",
-  "status": "implemented",
+  "status": "committed",
   "baseBranch": "build/20261010-build-quality-gate",
   "branch": "feature/20261010-feature-workflow-context-map",
   "files": [
@@ -36,7 +36,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "c566cd170c9eae45504cb2006b4d9012adfb3995",
     "planHash": "6689579228bb67c56816b81607a1cea8ef389f6300f4a1cb79a786ae9c081b39",
     "updatedAt": null,
     "lastError": null,
