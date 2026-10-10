@@ -6,9 +6,10 @@ scope: [norms/domain-model.md, norms/verification.md, skills/shadow-dev-propose,
 status: active
 source:
   - changes/20261010-refactor-domain-driven-workflow/brief.md
+  - changes/20261010-feature-workflow-context-map/brief.md
 verified: 2026-10-10
 verified-depth: unit
-verified-scope: 本变更以自身结构自证——L 级 brief 含「## 领域模型」段且不变量清单非空，`change create`/`change approve`/`task list`（12 项）与 `worktree inspect` 的 `评级: L` 正则提取全部真实跑通；既有 `node --test test/pack.test.mjs` 4/4 绿。runtime 观察点（一致性门、产物扫描、拒绝路径）待 release 证据补齐后再升深度。
+verified-scope: 本仓已落地 `shadow-docs/domain.md` 上下文地图，卡片 `domain` 值域改由 `scripts/check-knowledge.mjs` 机器判定（本卡验证方式第 4 条由口头要求变为可执行断言，拒绝路径已实跑判红）；原自证记录：本变更以自身结构自证——L 级 brief 含「## 领域模型」段且不变量清单非空，`change create`/`change approve`/`task list`（12 项）与 `worktree inspect` 的 `评级: L` 正则提取全部真实跑通；既有 `node --test test/pack.test.mjs` 4/4 绿。runtime 观察点（一致性门、产物扫描、拒绝路径）待 release 证据补齐后再升深度。
 ---
 
 # 领域模型是工作流的规格载体

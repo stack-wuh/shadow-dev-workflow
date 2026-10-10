@@ -7,6 +7,7 @@
 - `norms/`：跨项目硬规则与工程规范。
 - `knowledge/`：跨项目经验与协作知识。
 - 项目 `shadow-docs/knowledge/`：项目独有的执行真相。
+- 项目 `shadow-docs/domain.md`：上下文地图，卡片 `domain` 字段的**值域来源**（判据见 `norms/domain-model.md`）
 - `brief.md`：记录单次变更发生了什么，不承担当前规范职责。
 
 ## 卡片格式
@@ -14,7 +15,7 @@
 ```markdown
 ---
 title: <稳定领域事实名称>
-domain: <主领域>
+domain: <限界上下文，须能在项目 shadow-docs/domain.md 找到>
 keywords: [<业务词>, <技术词>, <常见现象>]
 scope: [<目录、包、路由或业务域>]
 status: active
@@ -43,6 +44,10 @@ verified-scope: <本次验证观察到的具体现象与证据形态>
 - [<相关卡片>](other-topic.md)
 ```
 
+`domain` 是**路由键不是标签**：取值必须来自项目上下文地图 `shadow-docs/domain.md` 的登记名；新上下文先登记再建卡；禁止同义词、中英别名与临时自造值。
+
+`source` 与归档兜底：卡片按知识库根写 `changes/<name>/brief.md`，而归档流程会把该 brief 搬进 `changes/archive/<name>/`——校验一律**向归档兜底解析**（本仓由 `scripts/check-knowledge.mjs` 执行），禁止为了让门变绿而改写卡片中的来源路径。
+
 `status` 只允许 `active` 或 `deprecated`。`source` 使用相对于知识库根目录的 brief 路径；`verified` 只在通过代码或可重复检查确认结论仍有效时更新。
 
 ## 验证深度分级（verified-depth，20260925-feature-validation-strategy-signals 起）
@@ -69,7 +74,8 @@ verified-scope: <本次验证观察到的具体现象与证据形态>
 - 不复制 brief 的实现过程与一次性验证输出。
 - 新增前按 `domain + keywords + scope` 查重；能原位更新时不新增。
 - active 卡片必须出现在 menu 的至少一条路由中。
-- source 必须存在，scope 必须明确。
+- source 必须存在（含向 `changes/archive/` 的兜底解析），scope 必须明确。
+- `domain` 值必须能在项目上下文地图中找到；地图缺失时本项降级为提示，不阻塞尚未建图的仓。
 - deprecated 卡片必须指向替代卡片或明确写明无替代。
 
 ## 生命周期

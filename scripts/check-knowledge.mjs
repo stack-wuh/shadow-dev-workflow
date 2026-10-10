@@ -75,6 +75,32 @@ for (const dir of cardDirs) {
 }
 ok(`知识卡 ${cards.length} 张：字段/枚举/source/路由检查完成`)
 
+// 1b) domain 值域：卡片 domain 必须是项目上下文地图（shadow-docs/domain.md）的登记名。
+// 值域取「限界上下文 / 横切实践 / 外部上游」三张表首列的反引号名称；横切实践可作 domain 值，但不是业务上下文。
+// 地图缺失只 warn：尚未建图的仓不该被本门的规范升级卡住（与「存量卡片不回溯迁移」同源）。
+const DOMAIN_SECTIONS = ['## 限界上下文', '## 横切实践', '## 外部上游']
+function loadDomainVocab() {
+  if (!existsSync(join(root, 'shadow-docs', 'domain.md'))) return null
+  const vocab = new Set()
+  let inSection = false
+  for (const line of read('shadow-docs/domain.md').split('\n')) {
+    if (line.startsWith('## ')) { inSection = DOMAIN_SECTIONS.some(k => line.trim().startsWith(k)); continue }
+    if (!inSection || !line.startsWith('|')) continue
+    const m = /^`([^`]+)`$/.exec((line.split('|')[1] || '').trim())
+    if (m) vocab.add(m[1])
+  }
+  return vocab
+}
+const domainVocab = loadDomainVocab()
+let domainChecked = 0
+for (const { rel, data } of cards) {
+  if (!data.domain) continue
+  if (!domainVocab) { warn('无法校验卡片 domain：缺 shadow-docs/domain.md 上下文地图（后续卡片须先建图）'); break }
+  if (domainVocab.has(data.domain)) { domainChecked++; ok(`${rel}: domain「${data.domain}」∈ 地图值域`) }
+  else fail(`${rel}: domain「${data.domain}」不在上下文地图值域内（合法值: ${[...domainVocab].join(', ')}）`)
+}
+if (domainVocab) console.log(`[.] 上下文地图值域: ${[...domainVocab].join(', ')}（命中 ${domainChecked}/${cards.length} 卡）`)
+
 // 2) 技能清单：SKILL.md 必有 name + description，且 name 与目录同名（宿主按 name 发现技能）
 const skillDirs = readdirSync(join(root, 'skills')).filter(d => statSync(join(root, 'skills', d)).isDirectory())
 for (const d of skillDirs) {
