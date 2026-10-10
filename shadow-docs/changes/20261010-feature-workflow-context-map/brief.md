@@ -4,7 +4,7 @@
   "name": "20261010-feature-workflow-context-map",
   "type": "feature",
   "scope": "workflow-governance",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "feature/20261010-feature-workflow-context-map",
   "files": [
@@ -35,13 +35,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "1df7ba11d510be03e2a1f8d0eb30b6a8a0133592",
-    "verifiedAt": "2026-10-10T08:35:13.358Z"
+    "verifiedCommit": "202d792ef26ee2fe3f76a1da0d27a331f6315a67",
+    "verifiedAt": "2026-10-10T08:39:14.963Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "1e3f9a698ac6790dad49f04e353067b6ca18c855",
-    "planHash": "06c7a75e4ff007bb1f687bf6d184eb8d5ee3df37d7e646818a75e92ad8ad6061",
+    "checkpoint": "pr:44",
+    "planHash": "fc037a84d9e0f8c52e326dd79a819a642382aa3db15b75853ea3f4c2b1d7f9f0",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -72,7 +72,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "Phase 4 收尾仍属既有门的跨平台纠偏；SGN-010 已在 shadow-docs/signals.md 依其退役条件就地标注，不产生新卡片"
+    "reason": "失败路径清理属本 change 内测试自身缺陷的修正，无新的跨项目长期事实"
   }
 }
 ---
