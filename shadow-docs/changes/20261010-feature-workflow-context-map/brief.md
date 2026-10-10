@@ -41,7 +41,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": "pr:44",
-    "planHash": "25d517531a96ff30eb80cd2f9232a242d751e3577df1beb2c501bf24cb3198fc",
+    "planHash": "06c7a75e4ff007bb1f687bf6d184eb8d5ee3df37d7e646818a75e92ad8ad6061",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -64,10 +64,9 @@
     "commit": {
       "files": [
         "shadow-docs/changes/20261010-feature-workflow-context-map/brief.md",
-        "shadow-docs/signals.md",
         "test/pack.test.mjs"
       ],
-      "message": "fix(test): pack 解包按 posix 路径交给 bash 并响亮报告失败，退役 SGN-010"
+      "message": "fix(test): pack 失败路径同享清理钩子，不再给仓库留未跟踪 dist/"
     }
   },
   "knowledge": {
@@ -158,7 +157,7 @@
 - [x] strict 门 win32 兼容 + baseBranch 纠偏 — `scripts/check-requires.mjs` — PATH 上的托管 shim 是 `shadow-dev.cmd`，Node ≥18.20.3/20.12.2 拒绝无 shell 启动 `.bat/.cmd`（EINVAL）→ `execFileSync` 增 `shell: process.platform === 'win32' && !cli`，降级仍自曝不半绿。同时 `change amend --base-branch main` 把声明基线纠正为 `main`（`publish` 的 `findPr` 按 base 过滤，声明错则复用不到 PR #44 并重复开 PR），输出含 `warnings` 指名历史 PR #45 需改 base 或关闭。证据：`added:["scripts/check-requires.mjs"] baseBranch:"main" reviewReset:true warnings:[…]`
 - [x] 知识治理门 CRLF 容忍 — `scripts/check-knowledge.mjs` — windows runner 按 `core.autocrlf` 检出 CRLF，而 `read()` 不做行尾归一 → `parseFrontmatter` 的 `---\n` 定界失配，8 个技能集体误报「缺 name/description」（CI 实证：第 7 步 `fail=21`，ubuntu/macos 同 run 绿）。改为读入处单点 `replaceAll('\r\n','\n')`。**取证**：把 8 个 `SKILL.md` 就地转 CRLF 后复跑 → `[ok] 技能 8 个：name/description 与目录一致性检查完成`、`fail=1`（仅剩本机 ignore 目录噪声）；还原后 `git diff --stat -- skills` 为空、逐字节 CR 计数 0。
   - **过程自伤（如实记）**：还原脚本里 `Join-Path $bak $f.Directory.Name + [IO.Path]::DirectorySeparatorChar + ...` 因参数优先级被当成 provider 路径解析，8 次 Copy-Item 全失败，而我随后无条件执行了 `Remove-Item -Recurse -Force $bak`，备份已不存在。补救依据是本次污染纯属行尾变换（CRLF→LF 无损可逆）：逐文件 `Replace(CRLF,LF)` 后 `git status --short -- skills` 全空。教训：**探针回滚必须逐项校验成功后才能删备份**；这次侥幸可逆只因改动仅有行尾，若探针改的是内容就已造成真实损失。
-- [x] SGN-010 退役与解包失败响亮化 — `test/pack.test.mjs`, `shadow-docs/signals.md` — 按该负信号自写的退役条件把解包路径归一为 posix：首选 `cygpath -u`，缺失时退回纯字符串 `C:\x` → `/c/x`（本机实测：`D:\works\…\v6.8.0.tar.gz → /d/works/…`、`C:\Users\RUNNER~1\… → /c/Users/RUNNER~1/…`）；并把 `spawnSync` 的 rc 由忽略改为当场 `throw`——旧写法让失败漂到下游用例变成 `package.json ENOENT`，把排查方向带偏（本机以此立刻报出 `pack 解包失败 rc=1` 与 WSL 无发行版的真实原因）。信号条目按 `norms/signals.md` 标注【已退役 2026-10-10】、命中升至 2 并记录条件已满足。
+- [x] SGN-010 退役与解包失败响亮化 — `test/pack.test.mjs`, `shadow-docs/signals.md` — 按该负信号自写的退役条件把解包路径归一为 posix：首选 `cygpath -u`，缺失时退回纯字符串 `C:\x` → `/c/x`（本机实测：`D:\works\…\v6.8.0.tar.gz → /d/works/…`、`C:\Users\RUNNER~1\… → /c/Users/RUNNER~1/…`）；并把 `spawnSync` 的 rc 由忽略改为当场 `throw`——旧写法让失败漂到下游用例变成 `package.json ENOENT`，把排查方向带偏（本机以此立刻报出 `pack 解包失败 rc=1` 与 WSL 无发行版的真实原因）。信号条目按 `norms/signals.md` 标注【已退役 2026-10-10】、命中升至 2 并记录条件已满足。**回归自查**：首次实现把 `throw` 放在 `test.after` 注册之前，导致本机失败路径跳过清理、把未跟踪的 `dist/`（内含 76KB tar，且 `dist` 未被 gitignore）留在工作区——违反本文件自订的「不给仓库留未跟踪文件」。已把清理抽成 `cleanup()` 同时挂到失败路径与 `test.after`；复跑验证：仍当场报 `pack 解包失败 rc=1`，且 `Test-Path dist` 为 `False`。
 
 ## 结果
 

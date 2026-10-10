@@ -25,14 +25,20 @@ const toUnix = process.platform === 'win32' ? (p) => {
   return p.replace(/^([A-Za-z]):[\\/]/, (_, d) => `/${d.toLowerCase()}/`).replace(/[\\/]+/g, '/')
 } : (p) => p
 const unpack = spawnSync('bash', ['-c', 'tar -xzf "$1" -C "$2"', 'pack-extract', toUnix(artifact), toUnix(extract)], { encoding: 'utf8' })
-// 解包失败必须当场响亮：旧写法忽略 rc，症状漂到下游用例变成「package.json ENOENT」，排查方向全错。
-if (unpack.status !== 0) throw new Error(`pack 解包失败 rc=${unpack.status}: ${(unpack.stderr || unpack.stdout || '').trim() || unpack.error?.message || 'unknown'}`)
-const packedRoot = join(extract, 'shadow-dev-workflow')
-
-test.after(() => {
+// 清理必须在失败路径上也可达：模块顶层抛错时 test.after 根本来不及注册，
+// 而 dist/ 未被 gitignore——留下未跟踪产物就违反本文件「不给仓库留未跟踪文件」的自订契约。
+const cleanup = () => {
   rmSync(join(PLUGIN_ROOT, 'dist'), { recursive: true, force: true })
   rmSync(extract, { recursive: true, force: true })
-})
+}
+// 解包失败必须当场响亮：旧写法忽略 rc，症状漂到下游用例变成「package.json ENOENT」，排查方向全错。
+if (unpack.status !== 0) {
+  cleanup()
+  throw new Error(`pack 解包失败 rc=${unpack.status}: ${(unpack.stderr || unpack.stdout || '').trim() || unpack.error?.message || 'unknown'}`)
+}
+const packedRoot = join(extract, 'shadow-dev-workflow')
+
+test.after(cleanup)
 
 test('pack: 产物存在且与 package.json 版本一致', () => {
   assert.equal(existsSync(artifact), true, `missing artifact: ${artifact}`)
