@@ -4,7 +4,7 @@
   "name": "20261011-refactor-kill-tdd-verification",
   "type": "refactor",
   "scope": "workflow-governance",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "refactor/20261011-refactor-kill-tdd-verification",
   "files": [
@@ -30,11 +30,11 @@
     "skills/shadow-dev-review/SKILL.md"
   ],
   "github": {
-    "repository": null,
-    "issue": null,
-    "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "repository": "stack-wuh/shadow-dev-workflow",
+    "issue": 46,
+    "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/46",
+    "pullRequest": 47,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/47"
   },
   "review": {
     "conclusion": "passed",
@@ -43,8 +43,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "45311e0cf20f0edae622d414ab9536f63f36eeb4",
-    "planHash": "8b7f7757c7623a6cf1236e6705b51e419adb6b13cfb7bc59b5a02c1feb73be72",
+    "checkpoint": "pr:47",
+    "planHash": "750f5762fe16a4ca93c631b091bf744837b0ab22568f3efc44c4c6405319dd69",
     "updatedAt": null,
     "lastError": null,
     "commit": {
@@ -78,6 +78,15 @@
       "message": "refactor(norms): 彻底去 TDD——验收对象统一为不变量，既有套件降格为契约探针",
       "title": "20261011-refactor-kill-tdd-verification",
       "body": ""
+    },
+    "issuePlan": {
+      "title": "[refactor] 彻底去 TDD：验收对象统一为不变量，既有套件降格为契约探针",
+      "titleRaw": "[refactor] 彻底去 TDD：验收对象统一为不变量，既有套件降格为契约探针",
+      "supplement": "2026-10-11 用户裁定完全干掉 TDD 转向 DDD：门槛语义清零（M/L 达成方式改为不变量观察点）、新增「契约探针三则」与 knowledge/contract-probe.md、unit 深度重定义为可重复机器探针、旧措辞纳入 CI --forbid 禁项集合。完整 brief：shadow-docs/changes/20261011-refactor-kill-tdd-verification/brief.md",
+      "body": "## 动机\n2026-10-09 的裁决只砍掉了「先红仪式」，20261010 的领域驱动改造把验收对象改成了不变量——但**规范文本里 TDD 的骨架还在**，并且正在按旧惯性指挥执行者。用户 2026-10-11 明确裁定：「给我去掉所有的 TDD，我现在已经完全干掉 TDD 转向 DDD 了。」\n\n本轮实测就是这条旧惯性的代价：为了「108 条用例全绿」这个并不服务于验收的目标，在一个已经改成不变量验收的流程里烧掉约 30 分钟——而真正证明四条不变量的是 7 步端到端真实命令输出（不到 1 分钟）。更糟的是取证本身不可靠：本机 node 139 段错误风暴会把 `spawnSync` 打成 `null` 状态，全量套件在越权（有网）环境下静默挂死、在沙箱内 27 条 23 秒跑完，`tty` 会话又会让 `runTty` 继承父 stdin 永久阻塞——**四种表现完全同形：无输出**。把「套件全绿」当门槛，等于把验收权交给一台机器的抖动。\n\n`origin/main`（v6.8.0）上仍活着的测试义务，逐条：\n\n| 位置 | 现行措辞 | 性质 |\n|---|---|---|\n| `norms/verification.md:29` | M 级＝「冒烟命令 + **既有测试保持绿** + 走查；触及既有契约时更新既有断言（属维护，不算新增测试）」 | 门槛仍挂在测试上 |\n| `norms/verification.md:32` | 「不为新 change 默认新建测试文件。需要长期钉住某条不变量时才写…」 | 仍在用「写测试」描述机检手段 |\n| `norms/verification.md:33` | 「**既有测试必须保持绿色**——取消 TDD 不等于取消跑测试」 | 一刀切绿门槛 |\n| `norms/verification.md:35` | 「过度验证同样阻塞：S 级写测试、为凑覆盖率补断言、M 级新建测试文件」 | 反面表述仍在强化测试中心 |\n| `norms/verification.md:42` | 开工报数「**测试总数 N**」 | 进度纪律以测试为单位 |\n| `norms/verification.md:53` · `rules/iron-laws.md:16` · `rules/behavior.md:51` · `skills/shadow-dev-review/SKILL.md:17` | 「运行 Lint + 类型检查 + **相关测试**」 | 完成声明的证据口径 |\n| `rules/behavior.md:30` | 「重构前后**既有测试必须通过**」 | 门槛 |\n| `skills/shadow-dev-apply/SKILL.md:58` | M 级「…+ **既有测试保持绿** + 走查」 | apply 执行门 |\n| `skills/shadow-dev-apply/SKILL.md:61` | 「不为『凑证据』新建测试：确需长期钉住某条不变量才写…」 | 措辞 |\n| `skills/shadow-dev-hotfix/SKILL.md:59,74` | 「（必要时 `test/<文件>`）」、「既有自动化测试能覆盖就复用它，不为快修临时造测试」 | 快修仍以测试为默认手段 |\n| `norms/knowledge-cards.md:60` | 深度 `unit` 定义＝「**自动化测试**通过」 | 深度阶梯本身以测试为单位 |\n\n**目标形态（一句话）**：验收对象只有不变量；证据只有观察点；`npm test` 之类的既有套件降格为「契约探针」——它是否运行不再是门槛，**它红了必须能解释、绿了不能代替观察点**。\n\n**非目标：** 不删除既有测试文件与 CI 里对它们的执行（它们是本仓产物契约与安装器的最便宜机检，属探针；删除等于自毁证据，违反 `rules/behavior.md` §6「不要删你不懂的东西」）；不改 `quality-gate.yml` 的门构成，只改**失败语义的表述**（从「必须绿」到「必须解释」）；不动 CLI 命令面与 `requiresCommands`。\n\n## 引用规范\n- `norms/domain-model.md`\n  - 当前结论: 不变量是验收对象、观察点是证据；只取四件概念工具，不为建模而建模。\n  - 适用 scope: 全部改动\n- `norms/verification.md`（本 change 的主改对象）\n  - 当前结论: 分级制，强度与评级匹配不可议；L 级＝每条不变量一个可追溯观察点或 CI 链接。\n  - 适用 scope: 门槛措辞与报数单位\n- `norms/knowledge-cards.md`\n  - 当前结论: `verified-depth ∈ code-read|unit|runtime|field`；runtime 须附可追溯观察点；存量卡片不回溯迁移。\n  - 适用 scope: I7 定义调整（不改枚举名，避免全量迁移）\n- `knowledge/domain-driven-shadow-dev.md`\n  - 当前结论: 规格载体是领域模型与不变量，测试是证据手段之一。\n  - 适用 scope: 结论强化为「测试文件不新增；既有套件降格为契约探针」\n- `rules/behavior.md` §6 / §3\n  - 当前结论: 不要删不懂的东西；不要碰没坏的代码。\n  - 适用 scope: 决定保留测试文件与 CI 执行，仅改语义表述\n- `knowledge/release-artifact-pipeline.md` · `knowledge/distribution-capability-contract.md`\n  - 当前结论: 机器门禁止半绿、判红轮子不许同时打 ✓；能力缺失只能响亮阻塞。\n  - 适用 scope: 新 `--forbid` 残留门必须由 `scripts/check-knowledge.mjs` 判红，不得只提示\n- `scripts/check-knowledge.mjs`（本仓门）\n  - 当前结论: 支持 `--forbid 'a,b'` 残留判定，非零退出。\n  - 适用 scope: I5 的执法方式——把旧门槛措辞纳入 CI forbid 集合\n\n## 决策\n- **选型:** A. **保留证据资产，废除门槛语义**，并把旧措辞变成机器禁项。\n  1. `norms/verification.md`：M 行改为「冒烟命令 + 被触及不变量的观察点 + 走查」；「既有测试必须保持绿色」替换为**契约探针三则**（探针是否运行不是门槛；探针绿不构成完成证据；探针红必须归因写入 brief，未归因＝未验证）；删除「不为新 change 新建测试文件」的测试中心表述，改为「机检需求一律写成 `scripts/` 下可重复探针，且必须指明它钉哪条不变量，否则不进 CI」；报数单位「测试总数 N」→「探针与命令总数 N」；完成声明证据口径「相关测试」→「与本次不变量相关的探针/真实命令」。\n  2. `rules/iron-laws.md`：§1/§2 措辞同步；§1 的「一刀切强制测试同样违规」并入 I3 表述。\n  3. `rules/behavior.md`：§4 去掉「重构前后既有测试必须通过」，改为「重构前后被触及不变量的观察点必须一致成立」；§7/§9 的「相关测试」「跳过测试」改探针口径。\n  4. 4 个 skills：apply §5（M 行 + 那段「不为凑证据新建测试」）、review §1/§8、hotfix 59/74 行、propose 模板的「期望验证深度」注释与取证叙述——统一到探针/观察点词汇表。\n  5. `norms/knowledge-cards.md`：`unit` 定义改为「可重复机器探针通过（命令、断言脚本或既有套件，不特指测试框架）」，枚举名保留。\n  6. **执法**：把旧门槛措辞纳入 CI 的 forbid 集合——`quality-gate.yml` 与 `publish-release.yml` 的 `--forbid` 追加「既有测试保持绿」「测试总数」两项，从此这些措辞一出现就判红。\n  7. `menu.md` 验证策略关键词补「契约探针 观察点 归因」，README/CLAUDE 的机器门表把 `npm test` 标注为「产物与安装器契约探针（红必须归因）」。\n- **对比方案:**\n  - **B. 连测试文件与 CI 里的 `npm test` 一起删**：未选。`test/pack.test.mjs` 断言的是**产物契约**（清单齐全、三 manifest 版本对齐、开发产物不入包），`test/install-cli.test.mjs` 断言安装器与 hook 包装行为——它们是分发上下文的不变量探针，不是业务 TDD。删掉等于自毁最便宜的一层证据，且违反「不要删你不懂的东西」。若你明确要求删除，我按破坏性操作单独确认后执行。\n  - **C. 只改文字、不加 forbid 门**：未选。本轮已经证明「写了但不执法的规范会被执行者自己漏掉」（同一夜我漏登记两次 `task set`、漏声明两个 manifest，都被机器门当场抓到）。\n  - **D. 把深度枚举 `unit` 改名（如 `probe`）**：未选。存量卡片与 `norms/signals.md` 共用这套枚举，改名要全量迁移，而「存量卡片不回溯迁移」正是既有规范；改定义不动名字即可。\n- **理由:** 你要的不是「没有测试文件」，而是**别再拿测试当验收**。所以门槛语义清零、证据资产留下、旧措辞变成机器禁项——三件事一起做，缺一条就会退回原状。\n\n## 任务\n### Phase 1 — 门槛语义清零\n- [x] 验证规范改写 — `norms/verification.md` — M 行去「既有测试保持绿」；插入「契约探针三则」替换原测试中心两行；报数单位改「探针与命令总数 N」；完成声明证据口径改探针/真实命令；「过度验证」条改写\n- [x] 铁律与行为准则对齐 — `rules/iron-laws.md`, `rules/behavior.md` — §1/§2 措辞、§4「重构前后不变量观察点一致」替代「既有测试必须通过」、§7/§9 测试口径改探针口径\n- [x] 四个技能同步 — `skills/shadow-dev-apply/SKILL.md`, `skills/shadow-dev-review/SKILL.md`, `skills/shadow-dev-hotfix/SKILL.md`, `skills/shadow-dev-propose/SKILL.md` — apply §5 与「不为凑证据新建测试」段；review §1/§8；hotfix 59/74；propose 模板取证与深度注释\n### Phase 2 — 定义与执法\n- [x] 深度定义调整 — `norms/knowledge-cards.md` — `unit` 重定义为可重复机器探针通过；枚举名不变并写明「存量卡片不回溯迁移」仍适用\n- [x] 措辞禁项进门 — `scripts/check-knowledge.mjs`, `.github/workflows/quality-gate.yml`, `.github/workflows/publish-release.yml` — 确认 `--forbid` 生效路径，CI forbid 集合追加「既有测试保持绿,测试总数」；新增一条拒绝路径证据\n- [x] 知识卡与路由口径 — `knowledge/domain-driven-shadow-dev.md`, `menu.md`, `README.md`, `CLAUDE.md` — 卡内「测试降级为证据手段之一」改写为「机检以契约探针存在，绿不构成完成证据」；菜单关键词补契约探针/归因；机器门表标注探针语义\n### Phase 3 — 收口\n- [x] 版本与取证 — `package.json`, `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, `shadow-docs/changes/20261011-refactor-kill-tdd-verification/brief.md` — `bump-version.mjs 6.9.0`（三处同源）；`npm run check:version` / `check:requires:strict` / `check:knowledge --forbid '<旧门槛措辞>'` 全绿；拒绝路径：临时把一句旧措辞写回 `norms/verification.md` → forbid 判红后回滚；`npm test` 作为产物探针跑一遍并记录（红则归因）\n\n## 补充\n2026-10-11 用户裁定完全干掉 TDD 转向 DDD：门槛语义清零（M/L 达成方式改为不变量观察点）、新增「契约探针三则」与 knowledge/contract-probe.md、unit 深度重定义为可重复机器探针、旧措辞纳入 CI --forbid 禁项集合。完整 brief：shadow-docs/changes/20261011-refactor-kill-tdd-verification/brief.md\n\n完整 brief：shadow-docs/changes/20261011-refactor-kill-tdd-verification/brief.md\n\n<!-- shadow-dev:issue-metadata {\"name\":\"20261011-refactor-kill-tdd-verification\",\"type\":\"refactor\",\"scope\":\"workflow-governance\",\"status\":\"committed\",\"branch\":\"refactor/20261011-refactor-kill-tdd-verification\",\"baseBranch\":\"main\",\"briefPath\":\"shadow-docs/changes/20261011-refactor-kill-tdd-verification/brief.md\",\"cliVersion\":\"1.5.0\",\"prUrl\":null,\"issueNumber\":null} -->\n",
+      "labels": [
+        "refactor"
+      ]
     }
   },
   "knowledge": {
