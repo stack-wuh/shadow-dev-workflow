@@ -62,7 +62,7 @@ shadow-dev change approve --name <name> --confirm
 ## 复杂度评级
 - **评级:** S / M / L（按 norms/verification.md 三要素：契约变更 / 触及面 / 可发现性）
 - **理由:** <对照三要素的具体判断>
-- **期望验证深度:** code-read | unit | runtime | field
+- **期望验证深度:** code-read | unit | runtime | field（`unit`＝可重复机器探针通过，不特指测试框架；完成证据仍是「不变量 × 观察点」，探针绿不能代替）
 
 ## 领域模型
 

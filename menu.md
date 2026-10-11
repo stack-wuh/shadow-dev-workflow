@@ -8,7 +8,7 @@
 |--------|--------|--------|
 | Knowledge 治理 | knowledge 知识库 沉淀 卡片 路由 过期 冲突 verified 深度 | norms/knowledge-cards.md |
 | 领域建模 | 领域驱动 DDD 限界上下文 统一语言 聚合 不变量 观察点 上下文地图 领域模型 规格来源 | norms/domain-model.md, knowledge/domain-driven-shadow-dev.md |
-| 验证策略 | 测试 复杂度评级 S/M/L 验证深度 评级矩阵 不变量观察点 验证强度 | norms/verification.md |
+| 验证策略 | 复杂度评级 S/M/L 验证深度 评级矩阵 不变量观察点 验证强度 契约探针 probe 归因 假绿 完成证据 | norms/verification.md, knowledge/contract-probe.md |
 | 信号机制 | 信号 signals 探索 优先级 权重 衰减 负信号 | norms/signals.md |
 | UI 变更 | 页面 组件 布局 样式 配色 字体 按钮 卡片 弹窗 导航 列表 | norms/ui-patterns.md, norms/interaction.md, 项目相关 active Knowledge |
 | API 变更 | 接口 端点 API 路由 REST 查询 请求体 响应体 | norms/api-design.md, 项目相关 active Knowledge |

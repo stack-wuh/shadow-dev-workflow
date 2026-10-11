@@ -58,7 +58,7 @@ jobs:
         shell: bash
         run: |
           npm run check:requires:strict
-          npm run check:knowledge -- --forbid 'tdd-verification,▶ [TDD]'
+          npm run check:knowledge -- --forbid 'tdd-verification,▶ [TDD],既有测试保持绿,测试总数,相关测试'
           npm test
 
       - name: Pack artifact
