@@ -44,14 +44,16 @@
   "workflow": {
     "operation": null,
     "checkpoint": "pr:47",
-    "planHash": "750f5762fe16a4ca93c631b091bf744837b0ab22568f3efc44c4c6405319dd69",
+    "planHash": "a1889a4f0dcf06c04985c64198396720ae757b7f782b261fc38fbd1f6b55d959",
     "updatedAt": null,
     "lastError": null,
     "commit": {
       "files": [
+        "knowledge/contract-probe.md",
+        "scripts/check-knowledge.mjs",
         "shadow-docs/changes/20261011-refactor-kill-tdd-verification/brief.md"
       ],
-      "message": "docs(shadow): 重算 PR 前 planHash"
+      "message": "fix(gates): 残留禁项豁免历史路径 source 块并定位到行号（CI 首跑归因）"
     },
     "release": {
       "files": [
@@ -213,7 +215,8 @@
 | 其余三门 | `check:version` → `✓ 三处 manifest 版本同源: 6.9.0（3 个文件）`（`bump-version.mjs 6.9.0` 写入三处）；`check:requires:strict` → `declared=29 skills-referenced=21 undeclared=[] cli-catalog=46 catalog=resolved strict=on ✓`；两份 workflow YAML `ruby -ryaml` 可解析 |
 | 产物探针（按新规：跑但不当门槛） | `node --test test/pack.test.mjs` → `# tests 4 # pass 4 # fail 0`；`node --test test/install-cli.test.mjs` → `# tests 7 # pass 7 # fail 0`（沙箱内）；`node scripts/pack.mjs` → `shadow-dev-workflow-v6.9.0.tar.gz`，新卡与 `norms/verification.md` 均在包内、`skills=8` |
 
-- 交付: 待 push / PR（base＝main）
+- **CI 首跑抓到真缺陷（run 38129218771，6/6 job 判红 → 归因：真实缺陷，非环境噪声）**：`check:knowledge --forbid` 报 `[fail] 残留 token「tdd-verification」出现在: knowledge/contract-probe.md, knowledge/domain-driven-shadow-dev.md`。根因是**门禁自身的豁免缺失**——禁项串命中了本 change 自己的目录名（`...-kill-tdd-verification`）在卡片 `source:` 溯源路径里的子串。这不是措辞没清干净，是禁项作用域划错：历史路径必须豁免。修法＝逐行扫描跳过 `source` 块 + 报错精确到行号；顺带抓到第二处真实残留（我新写的注释逐字复现了禁项串，行号 160——正是行号定位让它在 3 秒内现形）。复测：完整 5 项禁项集 `摘要: ok=11 warn=4 fail=0`、退出码 0。同轮 CI 的 `check:version` 与 `check:requires:strict` 两步**在干净机器上已通过**（pin CLI 安装与 strict 命令目录断言成立），本机 strict 那次报错经归因＝沙箱内 spawn 失败，属环境噪声。
+- 交付: issue #46 · PR #47（base＝main）；修复提交后 CI 复跑链接待回填
 
 ## 知识评估
 
