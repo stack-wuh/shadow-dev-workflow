@@ -4,7 +4,7 @@
   "name": "20261011-refactor-kill-tdd-verification",
   "type": "refactor",
   "scope": "workflow-governance",
-  "status": "published",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "refactor/20261011-refactor-kill-tdd-verification",
   "files": [
@@ -43,7 +43,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:47",
+    "checkpoint": "87e39ba1719779e8dd1302e2f8b2e6b9416f0952",
     "planHash": "a1889a4f0dcf06c04985c64198396720ae757b7f782b261fc38fbd1f6b55d959",
     "updatedAt": null,
     "lastError": null,
