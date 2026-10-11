@@ -4,7 +4,7 @@
   "name": "20261011-refactor-kill-tdd-verification",
   "type": "refactor",
   "scope": "workflow-governance",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "refactor/20261011-refactor-kill-tdd-verification",
   "files": [
@@ -33,8 +33,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 46,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/46",
-    "pullRequest": 47,
-    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/47"
+    "pullRequest": 48,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/48"
   },
   "review": {
     "conclusion": "passed",
@@ -43,8 +43,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "87e39ba1719779e8dd1302e2f8b2e6b9416f0952",
-    "planHash": "a1889a4f0dcf06c04985c64198396720ae757b7f782b261fc38fbd1f6b55d959",
+    "checkpoint": "pr:48",
+    "planHash": "71d0940ceac9d1ae2de449197fdae765d3b7d21d7c578ed4d168d200b16281bf",
     "updatedAt": null,
     "lastError": null,
     "commit": {
