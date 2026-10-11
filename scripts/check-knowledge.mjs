@@ -156,8 +156,30 @@ ok('孤儿规范检查完成')
 // 5) 废弃残留：--forbid 'a,b' 传入的 token 不允许出现在 live 文件
 const forbidIdx = process.argv.indexOf('--forbid')
 const forbid = forbidIdx >= 0 ? (process.argv[forbidIdx + 1] || '').split(',').map(x => x.trim()).filter(Boolean) : []
+// 禁项作用于**规范文本**，不作用于历史路径溯源：frontmatter 的 source 块记录的是 brief 真实路径，
+// 而 change 目录名本身可能内嵌被禁字样（实测：本仓一条以「干掉旧验证制度」命名的 change，
+// 让引用它做来源的三张卡集体判红）。逐行扫描并跳过 source 块，既保住执法力度，
+// 又不逼执行者为了绿灯去改历史溯源。同一条纪律反过来也约束注释与散文：禁项串只活在 CI 参数里。
+function forbidHits(rel, token) {
+  const lines = read(rel).split('\n')
+  const hits = []
+  let inSource = false
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    if (/^source:\s*$/.test(line)) { inSource = true; continue }
+    if (inSource) {
+      if (/^\s+-\s/.test(line)) { continue }
+      inSource = false
+    }
+    if (line.includes(token)) hits.push(i + 1)
+  }
+  return hits
+}
 for (const token of forbid) {
-  const hits = live.filter(rel => read(rel).includes(token))
+  const hits = []
+  for (const rel of live) {
+    for (const ln of forbidHits(rel, token)) hits.push(`${rel}:${ln}`)
+  }
   if (hits.length) fail(`残留 token「${token}」出现在: ${hits.join(', ')}`)
 }
 if (forbid.length) ok(`废弃 token 扫描完成（${forbid.length} 项）`)
