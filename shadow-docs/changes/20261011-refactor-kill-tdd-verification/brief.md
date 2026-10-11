@@ -44,10 +44,16 @@
   "workflow": {
     "operation": null,
     "checkpoint": "e6b19eb8a39cd3b49714d55adedaa3f1d64254d1",
-    "planHash": "d709d63402a78c3eef0d028a17f9000d8d1ad876315bbf0640779147588f5004",
+    "planHash": "8b7f7757c7623a6cf1236e6705b51e419adb6b13cfb7bc59b5a02c1feb73be72",
     "updatedAt": null,
     "lastError": null,
     "commit": {
+      "files": [
+        "shadow-docs/changes/20261011-refactor-kill-tdd-verification/brief.md"
+      ],
+      "message": "docs(shadow): 重算 PR 前 planHash"
+    },
+    "release": {
       "files": [
         ".claude-plugin/plugin.json",
         ".codex-plugin/plugin.json",
@@ -69,7 +75,9 @@
         "skills/shadow-dev-propose/SKILL.md",
         "skills/shadow-dev-review/SKILL.md"
       ],
-      "message": "refactor(norms): 彻底去 TDD——验收对象统一为不变量，既有套件降格为契约探针"
+      "message": "refactor(norms): 彻底去 TDD——验收对象统一为不变量，既有套件降格为契约探针",
+      "title": "20261011-refactor-kill-tdd-verification",
+      "body": ""
     }
   },
   "knowledge": {
