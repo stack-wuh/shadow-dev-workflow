@@ -167,6 +167,8 @@ gh release create v6.7.0 --generate-notes   # 之后由 publish-release.yml 接�
 
 `quality-gate.yml` 在 push main 与每个 PR 上跑全部四门。它存在的原因很实在：这三类门此前只能靠执行者本机口头自证，而半绿的门比没有门更危险。
 
+但**门是探针，不是验收**：完成证据永远是 brief 里「不变量 × 观察点」的对账表；探针绿不加分，探针红必须归因（真实回归 / 环境噪声），未归因即未验证。分工见 `knowledge/contract-probe.md`。2026-10-11 用户裁定彻底去 TDD 后，「套件必须全绿」类门槛已从规范清除，旧措辞进入 CI 禁项集合，一出现即判红。
+
 - release 产物 `shadow-dev-workflow-v<ver>.tar.gz` 由 `scripts/pack.mjs` 打包（发版链见上文「发版」），解包为 `shadow-dev-workflow/`，只含运行必需集（marketplace.json / package.json / README / menu.md / skills / hooks / rules / knowledge / norms / docs / scripts）。
 - `adapters/<host>.json`（schema `shadow-dev-adapter/v1`）声明宿主的 skills 发现目录、复制策略、托管标记与 hook 支持位；**新增宿主 = 新增描述符，CLI 零改动**。
 

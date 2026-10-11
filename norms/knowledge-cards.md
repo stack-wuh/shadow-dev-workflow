@@ -22,7 +22,7 @@ status: active
 source:
   - changes/<name>/brief.md
 verified: YYYY-MM-DD
-verified-depth: unit            # code-read | unit | runtime | field
+verified-depth: unit            # code-read | unit | runtime | field（unit＝机器探针通过，见 knowledge/contract-probe.md）
 verified-scope: <本次验证观察到的具体现象与证据形态>
 ---
 
@@ -57,7 +57,7 @@ verified-scope: <本次验证观察到的具体现象与证据形态>
 | 深度 | 含义 | 证据要求 |
 |------|------|----------|
 | `code-read` | 仅代码/文档阅读推演，未运行 | 无（结论须标注推演性质） |
-| `unit` | 自动化测试通过 | 测试命令可重复执行 |
+| `unit` | 可重复机器探针通过（既有套件、`scripts/check-*.mjs`、产物扫描皆算，不特指测试框架） | 同一条命令可重复执行且非零退出即判红 |
 | `runtime` | 应用实际运行并观察到目标行为 | 可追溯观察点（截图 / 日志 / CDP 输出路径） |
 | `field` | 真实业务场景使用验证过 | 使用场景描述 |
 

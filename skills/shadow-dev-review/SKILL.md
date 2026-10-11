@@ -1,6 +1,6 @@
 ---
 name: shadow-dev-review
-description: 质量门禁 — 验证实现、领域模型一致性、方案与 active Knowledge，并给出最终知识影响。触发词：代码审查、review、验收、verify。
+description: 质量门禁 — 以不变量观察点对账验证实现、领域模型一致性与方案，并给出最终知识影响。触发词：代码审查、review、验收、verify。
 ---
 # Shadow Dev Review — 质量门禁
 
@@ -14,7 +14,7 @@ description: 质量门禁 — 验证实现、领域模型一致性、方案与 a
 
 ### 1. 自检验证
 
-代码变更运行类型检查、lint 和相关测试；Knowledge 治理运行字段、source、路由、死链接和残留扫描。无验证输出不得声称完成。
+代码变更运行类型检查、lint 以及与本次不变量相关的探针或真实命令；Knowledge 治理由 `scripts/check-knowledge.mjs` 执行（字段、source、路由、死链、残留措辞禁项）。**探针绿不构成完成证据**：无不变量×观察点对账不得声称完成，探针红无归因同判未验证。
 
 ### 2. 获取变更上下文
 
@@ -41,7 +41,7 @@ shadow-dev review execute --name <name> --conclusion <passed|blocked> --knowledg
    - 最终结论是新增、更新、废弃或无需变更。
    - 动作必须给出确定目标路径和理由。
    - 知识卡更新须按 `norms/knowledge-cards.md` 补 `verified-depth` 与 `verified-scope`。
-8. **验证强度与观察点对账：** 实际验证深度达到 brief 评级的期望深度（S: diff 走查 / M: 冒烟+既有测试绿+走查 / L: 每条不变量一个可追溯观察点）；逐条核对 brief「领域模型」段的不变量是否都有观察点或已标注证据缺口。强度不足退回，**过度验证同样指出**（S 级写测试、为凑证据补断言）。
+8. **验证强度与观察点对账：** 实际验证深度达到 brief 评级的期望深度（S: diff 走查 / M: 被触及不变量各有观察点 / L: 每条不变量一个可追溯观察点）；逐条核对 brief「领域模型」段的不变量是否都有观察点或已标注证据缺口。**以「套件全绿」代替观察点即退回**；探针红未归因亦退回；为一次变更新建测试文件按过度验证指出。
 9. **信号写回：** 本次探索中命中或证伪的路径按 `norms/signals.md` 提案信号（创建 / 加分 / 退役），随 review 结论一并输出。
 10. **模型一致性：** 按 `norms/domain-model.md` 检查——实现是否引入未登记的公开名词（命令键、字段、卡片标题、术语）；是否破坏了声明过的不变量；改动是否越出本 change 所属限界上下文去改其他上下文的语义（越界即阻塞，要求拆 change）；`shadow-docs/domain.md` 与知识卡 `domain:` 值是否仍然一致。
 
