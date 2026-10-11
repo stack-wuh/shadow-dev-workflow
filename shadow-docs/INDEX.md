@@ -21,3 +21,7 @@
 | 20261009-chore-manifest-version-sync | ✅ 完成 | shadow-docs/changes/archive/20261009-chore-manifest-version-sync/brief.md |
 | 20261009-feature-codex-host-support | ✅ 完成 | shadow-docs/changes/archive/20261009-feature-codex-host-support/brief.md |
 | 20261009-fix-distribution-gate-regex | ✅ 完成 | shadow-docs/changes/archive/20261009-fix-distribution-gate-regex/brief.md |
+| 20261010-build-quality-gate | committed | shadow-docs/changes/20261010-build-quality-gate/brief.md |
+| 20261010-feature-workflow-context-map | ✅ 完成 | shadow-docs/changes/archive/20261010-feature-workflow-context-map/brief.md |
+| 20261010-refactor-domain-driven-workflow | committed | shadow-docs/changes/20261010-refactor-domain-driven-workflow/brief.md |
+| 20261011-refactor-kill-tdd-verification | published | shadow-docs/changes/20261011-refactor-kill-tdd-verification/brief.md |

@@ -4,7 +4,7 @@
   "name": "20261010-feature-workflow-context-map",
   "type": "feature",
   "scope": "workflow-governance",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "feature/20261010-feature-workflow-context-map",
   "files": [
@@ -35,13 +35,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "202d792ef26ee2fe3f76a1da0d27a331f6315a67",
-    "verifiedAt": "2026-10-10T08:39:14.963Z"
+    "verifiedCommit": "7201d0b6440e9e4ccd9dc26772e2116e2fba786a",
+    "verifiedAt": "2026-10-11T09:57:02.841Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:44",
-    "planHash": "fc037a84d9e0f8c52e326dd79a819a642382aa3db15b75853ea3f4c2b1d7f9f0",
+    "checkpoint": "merged-pr:44",
+    "planHash": "eee716db97e19a89c8b62c054514ebb2d3500f286257949cfe1aca89e0429e2d",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -71,8 +71,8 @@
   },
   "knowledge": {
     "action": "无需变更",
-    "target": null,
-    "reason": "失败路径清理属本 change 内测试自身缺陷的修正，无新的跨项目长期事实"
+    "target": "knowledge/domain-driven-shadow-dev.md",
+    "reason": "重钉至合并后的 main HEAD（PR #44 已合并）。原结论不变：本 change 落地规范条款（domain 值域＝上下文地图登记名、source 归档兜底、M 级领域模型最小形态）并进门执法，未产生新的跨项目长期事实，故不建卡；两张卡只做字段归一与 source/verified 更新。"
   }
 }
 ---
