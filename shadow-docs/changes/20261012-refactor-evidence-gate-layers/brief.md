@@ -4,7 +4,7 @@
   "name": "20261012-refactor-evidence-gate-layers",
   "type": "refactor",
   "scope": "norms,rules,scripts,skills,knowledge",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "refactor/20261012-refactor-evidence-gate-layers",
   "files": [
@@ -28,8 +28,8 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 51,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/51"
   },
   "review": {
     "conclusion": "passed",
@@ -38,8 +38,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "99ad82f72b9e2f197891d7d60b695164c25edb63",
-    "planHash": "db32481603d206791ffa1ed6fc01f128f478d18539e4d659409de5847e515d15",
+    "checkpoint": "pr:51",
+    "planHash": "519f53408fd69ab34bde854a2aa3f6f102d005e9062c352ceee2ad6b5e10e4e4",
     "updatedAt": null,
     "lastError": null,
     "release": {
