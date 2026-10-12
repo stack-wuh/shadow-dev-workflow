@@ -4,7 +4,7 @@
   "name": "20261011-refactor-kill-tdd-verification",
   "type": "refactor",
   "scope": "workflow-governance",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "refactor/20261011-refactor-kill-tdd-verification",
   "files": [
@@ -38,13 +38,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "b39dd059e8f7db144a7bcaee4e30005b7cecdd13",
-    "verifiedAt": "2026-10-11T09:25:55.351Z"
+    "verifiedCommit": "5d8067d094beb5938c8ca32c4bd5429e18887d6a",
+    "verifiedAt": "2026-10-12T02:56:23.587Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:48",
-    "planHash": "71d0940ceac9d1ae2de449197fdae765d3b7d21d7c578ed4d168d200b16281bf",
+    "checkpoint": "merged-pr:48",
+    "planHash": "2b6da798f1a2751da38abeafd6f3e0eabd38c62ca20f9389f655887152df36a8",
     "updatedAt": null,
     "lastError": null,
     "commit": {
