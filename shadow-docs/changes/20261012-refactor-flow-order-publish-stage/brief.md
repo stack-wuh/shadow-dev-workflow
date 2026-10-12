@@ -4,7 +4,7 @@
   "name": "20261012-refactor-flow-order-publish-stage",
   "type": "refactor",
   "scope": "skills/,README.md,CLAUDE.md,menu.md,docs/,knowledge/,package.json,test/,shadow-docs/domain.md,.github/workflows/",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "refactor/20261012-refactor-flow-order-publish-stage",
   "files": [
@@ -30,8 +30,8 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 49,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/49"
   },
   "review": {
     "conclusion": "passed",
@@ -40,7 +40,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "pr:49",
     "planHash": "794dd04170f3864d41cf715dbc35f95f46915803aaf3b06fa7403dcd9b7c21f6",
     "updatedAt": null,
     "lastError": null,
