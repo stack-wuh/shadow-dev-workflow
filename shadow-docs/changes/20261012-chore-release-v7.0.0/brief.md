@@ -31,7 +31,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": "pr:52",
-    "planHash": "e7c41f366a29d719a563ad51915bbf606673b63b914ae556a309e654e3a26a66",
+    "planHash": "62acc11c51b25905abaad6dbf06fcb2144bac3eebeb0427ec7c33f3b71672fdd",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -47,6 +47,12 @@
       "message": "chore(release): v7.0.0 三处 manifest bump 与对外表述同源（五门/brief 契约/取证策略）",
       "title": "[chore] 发版载体 v7.0.0：bump 三处 manifest 与对外表述同源",
       "body": "覆盖范围：#44 上下文地图 · #47/#48 去先红仪式（验收对象＝不变量）· #49 流程重排（归档入 release 末段、publish 独立）· #50 质量门可复现与台账门（曾占号 6.10.0 未打 tag）· #51 证据门分层（SDD 规格层 INV-n 与对账表、门槛层 guard/regression、取证层 assert-first 四条判据，新增 scripts/check-brief.mjs）。 为什么 major：合并放行的判据本身变了，brief 格式新增 INV-n 与取证策略必填，宿主上所有后续 change 的执行方式随之改变。 内容：三份 manifest 6.10.0 升到 7.0.0；README 与 CLAUDE.md 的门表和流程段补第五门与三条放行判据；两份宿主清单描述同步 gate 与 probe 分层；INDEX 登记。 验证：npm run ci 五门 rc=0（check:brief briefs=3 fail=0、check:knowledge ok=11 fail=0、套件 20/20）。 合并后待用户执行发版三命令（发版能力不在已 pin 的 CLI 命令目录内，按技能响亮阻塞）：bump 复核、打 tag 推送、创建 Release，逐条见 brief。"
+    },
+    "commit": {
+      "files": [
+        "shadow-docs/changes/20261012-chore-release-v7.0.0/brief.md"
+      ],
+      "message": "docs(shadow): 载体 brief 记 percent-star 截断事故与 CLI 缺 body-file 的登记"
     }
   },
   "knowledge": {
@@ -94,6 +100,9 @@
 - [x] 宿主清单描述补 gate/probe 分层语义 — `.claude-plugin/plugin.json`
 - [x] 登记台账条目并跑四门一体（`npm run ci`） — `shadow-docs/INDEX.md`
 
+- 事故留痕（AI 侧，非脚手架缺陷）：为注入凭证而写的 `.cmd` 包装用 `call shadow-dev %*`，批处理的 `%*` 是文本级二次解析——我把含 `&&` 与换行的发版委托清单原样塞进 `--body`，参数被 cmd 截断，`--plan-hash` 与 `--confirm` 丢失，CLI 以 `CONFIRMATION_REQUIRED` 拒绝写操作且指针不动。核对结论：**未误建 tag、未误建 Release**，远端 tag 序列仍停在 v6.5.1。消毒（元字符与换行改散文）后同参数一次通过，产出 PR #52。
+- 脚手架缺口（交 `shadow-dev-cli` 后继 change）：`release` 与 `publish` 的 `plan|execute` 只有内联 `--body`，而 `change create` 有 `--body-file`；PR 正文天然多行且含命令示例，经 `cmd` 必然踩元字符。应补 `--body-file` 与 `--message-file`，并让入参校验对 shell 元字符响亮拒绝，而不是交给外层解释器切碎。
+- 另记：`--confirm` 漏写一次属执行者失误，登记以便 review 区分「护栏拦住的错」与「护栏漏放的错」。
 - 偏差记录：`CLAUDE.md` 的机器门表（四门→五门）属同一处对外表述，立项 files 未列，CLI 1.5.0 无 `change amend`，手工补入并留痕。
 
 ## 结果
