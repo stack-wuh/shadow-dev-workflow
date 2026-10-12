@@ -15,7 +15,7 @@
     "check:version": "node scripts/bump-version.mjs --check",
     "ci": "npm run check:version && npm run check:requires:strict && npm run check:knowledge && npm run check:brief && npm run check:smoke && npm test"
   },
-  "cliVersion": "v1.5.0",
+  "cliVersion": "v1.6.0",
   "requiresCommands": [
     "archive.execute",
     "archive.plan",
