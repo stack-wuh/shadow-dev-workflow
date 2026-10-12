@@ -4,7 +4,7 @@
   "name": "20261012-refactor-release-smoke-single-implementation",
   "type": "refactor",
   "scope": "distribution,ci,scripts",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "refactor/20261012-refactor-release-smoke-single-implementation",
   "files": [
@@ -23,8 +23,8 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": 56,
-    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/56"
+    "pullRequest": 57,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/57"
   },
   "review": {
     "conclusion": "passed",
@@ -33,8 +33,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "c2fdf159312601363f437fb813a8f70d70a0ce5c",
-    "planHash": "5e5dadb2e2c9e886fe04f7a3fbf15999351130d9c2ace5999e4e96e39425534b",
+    "checkpoint": "pr:57",
+    "planHash": "7781144698c516b85f62b354f3bff2345bd16bb9f6a54cf187eddd107c657b63",
     "updatedAt": null,
     "lastError": null,
     "release": {
