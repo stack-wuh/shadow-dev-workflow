@@ -26,10 +26,10 @@
 | 20261010-refactor-domain-driven-workflow | committed | shadow-docs/changes/20261010-refactor-domain-driven-workflow/brief.md |
 | 20261011-refactor-kill-tdd-verification | ✅ 完成 | shadow-docs/changes/archive/20261011-refactor-kill-tdd-verification/brief.md |
 | 20261012-build-gate-reproducibility | ✅ 完成 | shadow-docs/changes/archive/20261012-build-gate-reproducibility/brief.md |
-| 20261012-chore-cli-pin-v160 | published | shadow-docs/changes/20261012-chore-cli-pin-v160/brief.md |
+| 20261012-chore-cli-pin-v160 | ✅ 完成 | shadow-docs/changes/archive/20261012-chore-cli-pin-v160/brief.md |
 | 20261012-chore-release-v7.0.0 | ✅ 完成 | shadow-docs/changes/archive/20261012-chore-release-v7.0.0/brief.md |
 | 20261012-chore-release-v7.0.1 | ✅ 完成 | shadow-docs/changes/archive/20261012-chore-release-v7.0.1/brief.md |
-| 20261012-chore-release-v710 | branched | shadow-docs/changes/20261012-chore-release-v710/brief.md |
+| 20261012-chore-release-v710 | published | shadow-docs/changes/20261012-chore-release-v710/brief.md |
 | 20261012-docs-pr-message-norms | ✅ 完成 | shadow-docs/changes/archive/20261012-docs-pr-message-norms/brief.md |
 | 20261012-fix-release-smoke-field-contract | ✅ 完成 | shadow-docs/changes/archive/20261012-fix-release-smoke-field-contract/brief.md |
 | 20261012-fix-smoke-failure-as-fixture | published | shadow-docs/changes/20261012-fix-smoke-failure-as-fixture/brief.md |

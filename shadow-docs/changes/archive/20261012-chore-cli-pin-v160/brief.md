@@ -4,7 +4,7 @@
   "name": "20261012-chore-cli-pin-v160",
   "type": "chore",
   "scope": "distribution",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261012-chore-cli-pin-v160",
   "files": [
@@ -20,13 +20,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "53fd228b82afa6fbe5cacf19a6daa6601e19a41b",
-    "verifiedAt": "2026-10-12T11:26:28.839Z"
+    "verifiedCommit": "853372c765a31f4e8beca28b4825b0d232da58e0",
+    "verifiedAt": "2026-10-12T11:49:38.697Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:62",
-    "planHash": "3a1dce3ab2d822ed9c6d1b723c930bc787fa4c5413a1b5f8513870940bb58bb0",
+    "checkpoint": "merged-pr:62",
+    "planHash": "0ef4a95eea5335d82f8569216b44f68c7e8b48883812e6ab08636f5ab53921bc",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -57,8 +57,8 @@
   },
   "knowledge": {
     "action": "无需变更",
-    "target": "knowledge/distribution-capability-contract.md",
-    "reason": "pin 与能力的对应关系已由该卡承载，本次只是把取值往前推一个 CLI 版本，无新增长期事实"
+    "target": "knowledge/release-artifact-pipeline.md",
+    "reason": "合并后在 main 上重认：pin 取值与 #60 规范所需能力对应关系未变，quality-gate 已在 v1.6.0 落地后转绿（run 38243592406 success）"
   }
 }
 ---
