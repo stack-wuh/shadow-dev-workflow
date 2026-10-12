@@ -4,7 +4,7 @@
   "name": "20261012-fix-smoke-failure-as-fixture",
   "type": "fix",
   "scope": "ci,scripts,distribution",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "fix/20261012-fix-smoke-failure-as-fixture",
   "files": [
@@ -25,13 +25,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "f6cc7aefe434f9b6fdd9209dc9c6d1c1c0ee6802",
-    "verifiedAt": "2026-10-12T07:02:57.745Z"
+    "verifiedCommit": "bb76f89628156753ef915ea765ec0aa8b812f61f",
+    "verifiedAt": "2026-10-12T07:18:28.180Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:55",
-    "planHash": "80c8e50f128b88c21c19fb34333812fc7ce69e4f4e5d4be3a837eed2f9195f77",
+    "checkpoint": "merged-pr:55",
+    "planHash": "fff34ace32212eca9a8823d2a41c8ef1264ab8659be4e5f80b6224738d4aa9f4",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -52,7 +52,7 @@
   "knowledge": {
     "action": "更新",
     "target": "knowledge/contract-probe.md",
-    "reason": "门必须能复现上一次真实失败是探针层的长期纪律，已落卡并附反引号形态实证"
+    "reason": "门必须能复现上一次真实失败已落卡并附反引号形态实证"
   }
 }
 ---
