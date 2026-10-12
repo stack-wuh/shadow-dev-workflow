@@ -10,8 +10,9 @@ skills/
 ├── shadow-dev-design/      # UI 设计大师：高保真视觉提案与布局交互打磨
 ├── shadow-dev-apply/       # 加载 active Knowledge，执行与验证
 ├── shadow-dev-review/      # 质量门禁和最终知识评估
-├── shadow-dev-release/     # Knowledge 闭环 + 提交 + PR
-├── shadow-dev-archive/     # 归档 merged change + 重建 INDEX
+├── shadow-dev-release/     # Knowledge 闭环 + 提交 + PR + merged 后归档
+├── shadow-dev-archive/     # 归档恢复入口（漏归档 / Actions 失败时幂等补跑）
+├── shadow-dev-publish/     # 正式发版：bump + tag + Release + 审查发布链
 ├── shadow-dev-knowledge/   # 精确查询 active Knowledge
 └── shadow-dev-hotfix/      # 紧急修复快车道：最小修复直达 PR
 
@@ -58,14 +59,16 @@ shadow-docs/
 ## 工作流
 
 ```text
-propose → apply → review → release → archive
+propose → apply → review → release → publish
 ```
 
 - **propose：** 按 menu 读取和引用 active Knowledge，做领域对齐（限界上下文 / 不变量），记录预期知识影响。
 - **apply：** 按引用约束执行，以 brief 的不变量为验收对象逐条留观察点；冲突时暂停并查明原因。
 - **review：** 验证实现、约束、模型一致性和卡片检查方法，给出最终知识动作。
-- **release：** 新增、原位更新、废弃卡片或记录无需变更，然后提交发布 PR。
-- **archive：** PR merged 后将 brief 移到 archive/ 并重建 INDEX；也可由 GitHub Actions 在 issue close 时自动触发。
+- **release：** 新增、原位更新、废弃卡片或记录无需变更，提交并发布 PR；PR merged 后在本阶段末段把 brief 移入 `archive/` 并重建 INDEX——所有代码问题提交完即收口。
+- **publish：** 正式对外发版，**与单个 change 解耦**：只在要求发布可安装产物时运行，一次可攒多个已合并 change。bump 三份 manifest → 提交合并 → 打 tag 创建 Release → 审查 `publish-release` 发布链与冒烟。发版自身也建一个 `chore` change 作载体，结论回填后归档。
+
+漏归档、Actions 自动归档失败或 hotfix 事后补归档，用 `shadow-dev-archive` 作为幂等恢复入口。
 
 ## brief
 
@@ -143,18 +146,22 @@ shadow-dev bind plan --host auto && shadow-dev bind execute --host <名> --plan-
 
 产物与 adapters 契约：
 
-## 发版（Release 控制版本号）
+## 发版（publish 阶段）
+
+发版是独立入口，与单个 change 解耦——可攒多个已合并 change 一次发布，且每次发版自身建一个 `chore` 载体 change（`YYYYMMDD-chore-release-vX.Y.Z`）承接 bump、tag、run 结论与冒烟证据，merged 后随 release 末段归档。
 
 版本权威是 **GitHub Release tag**：tag 名去 `v` 必须与 `package.json.version` 及 `.claude-plugin`、`.codex-plugin` 三处同源，不一致时 `publish-release` 工作流直接判红。
 
 ```bash
-node scripts/bump-version.mjs 6.7.0    # 一次同步三处 manifest（也可 --check 只判定）
-npm run ci                             # 版本 + requires:strict + 知识治理 + 测试，四门一体
-git tag v6.7.0 && git push origin v6.7.0
-gh release create v6.7.0 --generate-notes   # 之后由 publish-release.yml 接手
+node scripts/bump-version.mjs 6.10.0    # 一次同步三处 manifest（也可 --check 只判定）
+npm run ci                              # 版本 + requires:strict + 知识治理 + 测试，四门一体
+git tag v6.10.0 && git push origin v6.10.0
+gh release create v6.10.0 --generate-notes   # 之后由 publish-release.yml 接手
 ```
 
-`publish-release.yml`（`on: release.published`）依次执行：版本权威判定 → 装 pin CLI → 四门 → `scripts/pack.mjs` → **资产名契约断言**（CLI 只认 `^shadow-dev-workflow-v[0-9][0-9.]*\.tar\.gz$`，名字写错等于没发布）→ `gh release upload --clobber` → **发布冒烟**：隔离 prefix 里用真实 CLI 跑 `workflow plan --release → workflow execute → bind plan`，核对物化的 8 个 skills 与规范文件。产物永远不被手工搬运，人只负责 bump 与打 tag。
+打 tag 与创建 Release 目前仍由人执行：已 pin 的 CLI 命令目录不含发版命令键，本仓按「能力缺失只能阻塞、不降级」的契约把这两步留在 `shadow-dev-publish` 的委托清单里。待 `execution-layer` 发布含该能力的版本后，本仓同步 `requiresCommands` 与 `cliVersion`，把委托换成 CLI 调用。
+
+`publish-release.yml`（`on: release.published`）依次执行：版本权威判定 → 装 pin CLI → 四门 → `scripts/pack.mjs` → **资产名契约断言**（CLI 只认 `^shadow-dev-workflow-v[0-9][0-9.]*\.tar\.gz$`，名字写错等于没发布）→ `gh release upload --clobber` → **发布冒烟**：隔离 prefix 里用真实 CLI 跑 `workflow plan --release → workflow execute → bind plan`，核对物化的 9 个 skills 与规范文件。产物永远不被手工搬运，人只负责 bump 与打 tag。
 
 ## 机器门（GitHub Actions）
 

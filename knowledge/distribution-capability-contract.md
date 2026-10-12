@@ -7,7 +7,8 @@ status: active
 source:
   - changes/20261009-build-artifact-capability-gate/brief.md
   - changes/20261010-build-quality-gate/brief.md
-verified: 2026-10-10
+  - changes/20261012-refactor-flow-order-publish-stage/brief.md
+verified: 2026-10-12
 verified-depth: runtime
 verified-scope: `npm run check:requires` 两级差集为空；把声明里删掉一键的门负例（exit 1 且点名该键）；越权 fixture 被 v1.5.0 以 `ARTIFACT_INCOMPATIBLE` 拒绝且指针不动
 ---
@@ -31,6 +32,8 @@ verified-scope: `npm run check:requires` 两级差集为空；把声明里删掉
 - 同一条纪律套在**自己的机器门**上：一致性门解析不到执行层命令目录时必须判红（`check:requires:strict`），禁止以「CLI 目录未参与断言」的半绿放行。非交互环境里 human 帮助层会与 JSON 同流写 stdout，命令目录必须取最后一个 `{"ok"` 契约行并带超时——否则门要么假红要么假绿（本仓实测：`check:requires` 非 strict 在 CLI 缺失时 rc=0 半绿，旧解析法在非 TTY 下恒 unresolved 假红）。
 - 观测面恒不抛：`workflow status` 回 `artifactVersion / cliVersion / missingCommands`，引导页/巡检读一个字段即可判断「内容比工具新」。
 - 跨仓演进顺序：消费方先行兼容（执行层发布支持断言的版本），生产方随后声明；反序会留下无人兜底的窗口。
+- **技能文本里的命令键，必须在该 PR 合入时就已由已 pin 的 CLI 提供**——`check-requires` 扫的是 `skills/**/SKILL.md` 正文里的 `shadow-dev <词>` 形态，未声明即 `undeclared` 判红，声明了但 CLI 没有即 `missing-in-cli` 判红。推论：能力尚未就位时，文档与技能**不得提前写出该命令**（含 README、docs、宿主清单文本），改用「委托清单 + 响亮阻塞」表述；命令引用与声明、pin 三者在同一提交内落地。实证：20261012 流程重排中 publish 技能曾写 `shadow-dev change list`（未进声明集）当场判红，改为不带 `shadow-dev` 前缀的描述后转绿。
+- **命令键不得改义，只能加键**：一个键一旦被历史 brief、文档或 workflow 引用，重新定义它等于静默打断所有既有读法（实证：`release.*` 已是 commit+push+PR、`publish.*` 已是推分支建 PR，故「正式发版」只能另起命令域，阶段名与本仓文档需显式与 CLI `publish.*` 消歧）。
 - 宿主差异只进描述符（`adapters/<host>.json`），插件/hook 轨与 bind 轨可并存（见 [多宿主插件分发](multi-host-plugin-distribution.md)），但两条轨都不得自行安装或选择 CLI 版本以外的东西。
 
 ## 适用边界

@@ -4,7 +4,7 @@
 
 ## 分层规则
 
-- `skills/`：定义 propose、apply、review、release、archive 和 Knowledge 查询流程。
+- `skills/`：定义 propose、apply、review、release、publish 和 Knowledge 查询流程；archive 为归档恢复入口。
 - `norms/`：跨项目硬规则与工程规范。
 - `knowledge/`：跨项目经验与协作知识。
 - 项目 `shadow-docs/domain.md`：限界上下文地图与统一语言（格式见 `norms/domain-model.md`）。
@@ -41,8 +41,9 @@
 | 布局/交互设计稿、视觉提案、改版打磨 | `shadow-dev-design`（propose 设计伴侣） |
 | 开始执行、实现 | `shadow-dev-apply` |
 | 审查、验收 | `shadow-dev-review` |
-| 提交、PR、发布 | `shadow-dev-release` |
-| 归档 | `shadow-dev-archive` |
+| 提交、PR、merged 后归档 | `shadow-dev-release` |
+| 归档恢复入口（漏归档、Actions 失败、hotfix 补跑） | `shadow-dev-archive` |
+| 正式发版（bump、tag、Release、发布链审查） | `shadow-dev-publish` |
 | Knowledge 查询 | `shadow-dev-knowledge`（propose 自动调用） |
 | 线上急修、紧急修复、hotfix | `shadow-dev-hotfix`（快车道，准入判定见其 SKILL.md） |
 

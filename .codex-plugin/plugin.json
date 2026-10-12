@@ -1,7 +1,7 @@
 {
   "name": "shadow-dev-workflow",
   "version": "6.9.0",
-  "description": "Self-contained development workflow with 3-tier knowledge base — propose → apply → review → release → archive with packaged planning, domain-model-driven specs, invariant-based verification, and knowledge-driven design constraints. Zero external workflow dependencies.",
+  "description": "Self-contained development workflow with 3-tier knowledge base — propose → apply → review → release → publish with packaged planning, domain-model-driven specs, invariant-based verification, and knowledge-driven design constraints. Zero external workflow dependencies.",
   "author": {
     "name": "Shadow (stack-wuh)",
     "url": "https://github.com/stack-wuh"
@@ -17,14 +17,15 @@
     "planning",
     "code-review",
     "release",
-    "archive"
+    "archive",
+    "publish"
   ],
   "skills": "./skills/",
   "hooks": "./hooks/hooks.codex.json",
   "interface": {
     "displayName": "Shadow Dev Workflow",
     "shortDescription": "Knowledge 驱动的开发工作流五段式管线",
-    "longDescription": "以 active Knowledge 驱动的 propose → apply → review → release → archive 工作流：需求对齐做领域对齐（限界上下文与不变量）并产出 brief、按 brief 以不变量观察点执行分级验证与依赖调度、质量门禁验收模型一致性、知识闭环后提交发布 PR、合并后归档并重建 INDEX。另含 hotfix 快车道、知识库查询与 UI 设计提案伴侣。",
+    "longDescription": "以 active Knowledge 驱动的 propose → apply → review → release → publish 工作流：需求对齐做领域对齐（限界上下文与不变量）并产出 brief、按 brief 以不变量观察点执行分级验证与依赖调度、质量门禁验收模型一致性、知识闭环后提交发布 PR 并在合并后归档重建 INDEX、正式发版独立成 publish 阶段（bump + tag + Release + 发布链冒烟）。另含 hotfix 快车道、归档恢复入口、知识库查询与 UI 设计提案伴侣。",
     "developerName": "Shadow (stack-wuh)",
     "category": "Coding",
     "capabilities": ["Read", "Write"],

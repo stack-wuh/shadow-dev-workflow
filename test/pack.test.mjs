@@ -69,7 +69,7 @@ test('pack: 运行必需文件齐全（hook fallback 依赖 scripts/install-cli.
   assert.equal(existsSync(join(packedRoot, '.codex-plugin', 'plugin.json')), true, '.codex-plugin/plugin.json（Codex 插件清单）')
   assert.equal(existsSync(join(packedRoot, '.agents', 'plugins', 'marketplace.json')), true, '.agents/plugins/marketplace.json（Codex marketplace）')
   assert.equal(existsSync(join(packedRoot, 'adapters', 'zcode.json')), true, 'adapters/zcode.json（bind 域消费）')
-  for (const s of ['shadow-dev-apply', 'shadow-dev-archive', 'shadow-dev-knowledge', 'shadow-dev-propose', 'shadow-dev-release', 'shadow-dev-review']) {
+  for (const s of ['shadow-dev-apply', 'shadow-dev-archive', 'shadow-dev-knowledge', 'shadow-dev-propose', 'shadow-dev-publish', 'shadow-dev-release', 'shadow-dev-review']) {
     assert.equal(existsSync(join(packedRoot, 'skills', s, 'SKILL.md')), true, `missing skill: ${s}`)
   }
 })

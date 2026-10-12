@@ -80,7 +80,7 @@ bash scripts/install-cli.sh install --from dist/shadow-dev-cli-v1.5.0.tar.gz  # 
 | `worktree execute --name <n> --path <dir> --confirm` | 创建或挂载并回写 `branch` + `workflow.worktree`；不切换当前工作区 |
 | `worktree remove plan --name <n>` / `worktree remove execute --name <n> --confirm` | 回收 brief 记录的 workspace；脏工作区 `WORKTREE_DIRTY` 拒绝，不隐式删除 |
 
-L 级变更或多变更并行时用 worktree 替代分支腾挪：apply §3 会先 `worktree inspect` 再决策；归档前回收（见 shadow-dev-archive 前置条件）。
+L 级变更或多变更并行时用 worktree 替代分支腾挪：apply §3 会先 `worktree inspect` 再决策；归档前回收（见 shadow-dev-release §5 归档前置）。
 
 ### Change 管理
 
@@ -121,18 +121,22 @@ L 级变更或多变更并行时用 worktree 替代分支腾挪：apply §3 会�
 | `release plan --name <n> --files <f> --message <m> --title <t>` | 一次返回 commit + PR 的完整计划；planHash 与执行参数写入 brief |
 | `release execute --name <n> --confirm` | 一次完成 commit → push → PR；幂等，可断点续跑 |
 
+**命名消歧**：本表的 `publish` 命令键（＝推分支 + 创建/复用 PR）与本仓的 **publish 阶段**（正式发版：bump + tag + Release）**无关**。发 PR 用 `release.*` 或 `publish.*` 命令键；发版走 `shadow-dev-publish` 技能。归属登记见 `shadow-docs/domain.md` 术语表。
+
 **release 断点续跑语义**：
 
 - `GIT_PUSH_FAILED` / `PR_CREATE_FAILED` / `API_TIMEOUT`：修复网络或凭证后，重新 `release plan` 再 `release execute`。已完成的 commit 自动跳过，已有 open PR 自动复用。
 - PR 查询使用 `owner:branch` 规范格式，重跑不会产生重复 PR。
 
-### 状态与归档
+### 归档（release 末段自动，本表为恢复入口）
 
 | 命令 | 说明 |
 |------|------|
 | `reconcile plan --name <n>` / `reconcile execute --name <n> --confirm` | 状态推导：任务全部完成 → implemented；HEAD 与 verifiedCommit 不一致 → review 重置为 pending |
 | `archive plan --name <n>` / `archive execute --name <n> --confirm` | 校验 review passed 且 GitHub API 证明 PR merged 后，brief 移入 `shadow-docs/changes/archive/` 并重建 INDEX |
 | `index rebuild plan` / `index rebuild execute --plan-hash <hash> --confirm` | 重建 `shadow-docs/INDEX.md`（无 brief 上下文，仍需显式传哈希） |
+
+归档是 `shadow-dev-release` 在 PR merged 后的末段动作，正常流程不需要单独调用；漏归档、Actions 自动归档失败与 hotfix 事后补归档时才作为恢复入口使用。发版（打 tag、创建 Release）属 `shadow-dev-publish` 阶段，与单个 change 解耦，可攒多个已合并 change 一次发布。
 
 ## 典型工作流
 
@@ -158,16 +162,21 @@ shadow-dev review plan --name 20260906-feat-export
 shadow-dev review execute --name 20260906-feat-export \
   --conclusion passed --knowledge 无需变更 --reason "未产生长期有效事实" --confirm
 
-# release：计划 → 确认 → 一键发布
+# release：计划 → 确认 → 一键发布（commit + push + PR）
 shadow-dev release plan --name 20260906-feat-export \
   --files src/export.ts,shadow-docs/changes/20260906-feat-export/brief.md \
   --message "feat(cli): 导出功能" --title "feat: 导出功能"
 # （向用户确认后）
 shadow-dev release execute --name 20260906-feat-export --confirm
 
-# archive：PR merged 后
+# release 末段：PR merged 后同步基线并归档（正常流程到此收口）
+shadow-dev sync plan --name 20260906-feat-export
+shadow-dev sync execute --name 20260906-feat-export --confirm
 shadow-dev archive plan --name 20260906-feat-export
 shadow-dev archive execute --name 20260906-feat-export --confirm
+
+# publish 阶段（按需，与单个 change 解耦）：bump → 合并 → 打 tag 创建 Release → 审查发布链
+node scripts/bump-version.mjs 6.10.0 && npm run ci
 ```
 
 ## 环境变量
