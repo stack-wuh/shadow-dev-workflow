@@ -4,7 +4,7 @@
   "name": "20261012-chore-release-v7.0.0",
   "type": "chore",
   "scope": "distribution",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "chore/20261012-chore-release-v7.0.0",
   "files": [
@@ -30,8 +30,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "e4fcf35f4851ac9bf2a1f088b868388b6c3a896a",
-    "planHash": "62acc11c51b25905abaad6dbf06fcb2144bac3eebeb0427ec7c33f3b71672fdd",
+    "checkpoint": "pr:52",
+    "planHash": "4d5a57d7dbb92efea65324c9143c7a875024d54620c82b4598545f53162db8f8",
     "updatedAt": null,
     "lastError": null,
     "release": {
