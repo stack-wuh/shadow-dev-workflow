@@ -48,7 +48,7 @@ npm run ci                              # 四门一体：版本 / requires:stric
 ## 4. 提交 bump 并等合并
 
 ```bash
-shadow-dev release plan --name <载体名> --files package.json,.claude-plugin/plugin.json,.codex-plugin/plugin.json,shadow-docs/changes/<载体名>/brief.md --message "chore(release): vX.Y.Z 版本号三处同源 bump" --title "chore(release): vX.Y.Z"
+shadow-dev release plan --name <载体名> --files package.json,.claude-plugin/plugin.json,.codex-plugin/plugin.json,shadow-docs/changes/<载体名>/brief.md --message "chore(release): vX.Y.Z 版本号三处同源 bump" --title "chore(release): vX.Y.Z 版本号三处同源 bump" --body-file <PR 正文文件>
 shadow-dev release execute --name <载体名> --confirm
 ```
 

@@ -25,10 +25,10 @@ Knowledge 不保存一次性实现过程或验证输出。Knowledge 写入和 me
 ## 2. 发布计划与确认
 
 ```bash
-shadow-dev release plan --name <name> --files <逗号分隔路径> --message "<message>" --title "<PR 标题>"
+shadow-dev release plan --name <name> --files <逗号分隔路径> --message "<type>(<scope>): <subject>" --title "<type>(<scope>): <subject>" --body "<PR 正文>"
 ```
 
-plan 输出已包含分支、变更文件、仓库状态和 PR 参数，planHash 和执行参数自动写入 brief——不需要读取、搬运哈希或在 execute 时重复传参。列出 change、文件和知识结论，向用户提问确认执行。
+**message / 标题 / 正文的结构按 `norms/pr-message.md` 执行（模板本体 `norms/templates/pr-body.md`）：三个参数必须显式传——缺省时 CLI 把标题回退成 brief slug、正文回退成一行 `Closes`，那正是历史脏格式的根源。** plan 输出已包含分支、变更文件、仓库状态和 PR 参数，planHash 和执行参数自动写入 brief——不需要读取、搬运哈希或在 execute 时重复传参。列出 change、文件和知识结论，向用户提问确认执行。
 
 ## 3. 执行发布
 
