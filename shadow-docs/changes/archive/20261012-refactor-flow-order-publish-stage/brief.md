@@ -4,7 +4,7 @@
   "name": "20261012-refactor-flow-order-publish-stage",
   "type": "refactor",
   "scope": "skills/,README.md,CLAUDE.md,menu.md,docs/,knowledge/,package.json,test/,shadow-docs/domain.md,.github/workflows/",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "refactor/20261012-refactor-flow-order-publish-stage",
   "files": [
@@ -35,13 +35,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "1711d5a004a69f6bc9559ffa738c68cc93abd33f",
-    "verifiedAt": "2026-10-12T00:33:18.604Z"
+    "verifiedCommit": "afdee481e153a918b3fb2af3ce9837f29b36265a",
+    "verifiedAt": "2026-10-12T02:56:04.303Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:49",
-    "planHash": "794dd04170f3864d41cf715dbc35f95f46915803aaf3b06fa7403dcd9b7c21f6",
+    "checkpoint": "merged-pr:49",
+    "planHash": "824b055b0cc7087e1c0167d8570262d092fc3342d877d7fcc32da5431c134ab9",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
