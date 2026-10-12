@@ -4,7 +4,7 @@
   "name": "20261012-docs-pr-message-norms",
   "type": "docs",
   "scope": "workflow-governance",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "docs/20261012-docs-pr-message-norms",
   "files": [
@@ -22,8 +22,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 59,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/59",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 60,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/60"
   },
   "review": {
     "conclusion": "passed",
@@ -32,7 +32,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:59",
+    "checkpoint": "pr:60",
     "planHash": "9c87904551cf8bd352ea09436a7a2d145614afec65ec065c5499bd615c268d8e",
     "updatedAt": null,
     "lastError": null,
