@@ -4,7 +4,7 @@
   "name": "20261012-refactor-evidence-gate-layers",
   "type": "refactor",
   "scope": "norms,rules,scripts,skills,knowledge",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "refactor/20261012-refactor-evidence-gate-layers",
   "files": [
@@ -39,8 +39,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "567bdbee73e542fac04f93bbdfa850cadae3a23d",
-    "planHash": "efd9580fe62751761df604cc693250da1f85ae437693b0105b0bff49898d42ef",
+    "checkpoint": "pr:51",
+    "planHash": "f4c5cb13623e9ce1e4cd5b164092dbfb3d39638a4b017410718be1e2a97ac41d",
     "updatedAt": null,
     "lastError": null,
     "release": {
