@@ -26,7 +26,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": "b30c29f1b8475fe5417bcddceb1dfadba45ba0d2",
-    "planHash": "f077edb33202a4c95cfdd63626622fd29d16cbf52d110b787e8c0ce598a0c747",
+    "planHash": "d6c9e58e437dc10f8938b29a2b54738a38d81f3a6d97d19b09cac4977595b887",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -49,9 +49,9 @@
     },
     "commit": {
       "files": [
-        "shadow-docs/INDEX.md"
+        "shadow-docs/changes/20261012-chore-cli-pin-v160/brief.md"
       ],
-      "message": "chore(distribution): INDEX 补登发版载体台账条目，消 check:knowledge 红灯"
+      "message": "chore(distribution): 结果段回填 quality-gate 的 404 实测依据（pin 前置条件显形）"
     }
   },
   "knowledge": {
@@ -104,5 +104,5 @@
 
 - pin 落值：`package.json.cliVersion = v1.6.0`；同文件 `version` 仍 7.0.2、`requiresCommands` 仍 29 条未动（`check:requires` → `✓ skills ⊆ requiresCommands ⊆ CLI 命令目录`；`check:version` → `✓ 三处 manifest 版本同源: 7.0.2`）。
 - 能力对照（取自 shadow-dev-cli 的 main，非发布产物）：`--body-file` 在命令目录出现 2 次；`PR_PARAMS_REQUIRED` 存在于 `lib/input.mjs` 或 `lib/i18n.mjs`：true；`lib/domains/release.mjs` 调用 `prParams(`：true；CLI `package.json.version = 1.6.0`（与本次 pin 目标一致）。
-- **时序观察点（红灯留痕）**：`git tag` 实测 尚无 v1.6.0 —— 因此本 PR **现在不能合**，必须等 tag 与 GitHub Release 落地。这条是决策段硬约束的实测依据，不是推测。
+- **时序观察点（已被机器证实）**：本 PR 的 Actions `quality-gate` 在六个矩阵上同一步失败——步骤名 `Install pinned shadow-dev CLI`，日志尾部 `curl: (22) The requested URL returned error: 404`（run 38242986751）。原因正是 pin 指向的 `v1.6.0` 尚未打 tag：门在装不存在的版本。**这不是代码回归，是本 PR 的合并前置条件显形**——打 tag 后复跑即绿。
 - 未覆盖项：未在本机跑 `workflow plan --release v1.6.0` 验证 release 轨解析（tag 不存在时它按设计应报 `RELEASE_NOT_FOUND`，验证要等发版后）；Actions 三平台矩阵为最终判定处。
