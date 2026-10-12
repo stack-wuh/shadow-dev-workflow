@@ -4,7 +4,7 @@
   "name": "20261012-build-gate-reproducibility",
   "type": "build",
   "scope": "scripts/,test/,shadow-docs/signals.md,package.json,.claude-plugin/plugin.json,.codex-plugin/plugin.json",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "build/20261012-build-gate-reproducibility",
   "files": [
@@ -21,8 +21,8 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 50,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/50"
   },
   "review": {
     "conclusion": "passed",
@@ -31,7 +31,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "pr:50",
     "planHash": "0c9872057a41c2a42d47e7101b26e25156c63122a1dfdce77896fdaafff5e883",
     "updatedAt": null,
     "lastError": null,
