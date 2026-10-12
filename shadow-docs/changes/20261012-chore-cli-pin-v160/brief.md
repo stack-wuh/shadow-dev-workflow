@@ -4,7 +4,7 @@
   "name": "20261012-chore-cli-pin-v160",
   "type": "chore",
   "scope": "distribution",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "chore/20261012-chore-cli-pin-v160",
   "files": [
@@ -25,8 +25,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "91e51880afa0f66016965f6718e5b9d737b552a8",
-    "planHash": "d6c9e58e437dc10f8938b29a2b54738a38d81f3a6d97d19b09cac4977595b887",
+    "checkpoint": "pr:62",
+    "planHash": "3a1dce3ab2d822ed9c6d1b723c930bc787fa4c5413a1b5f8513870940bb58bb0",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -41,6 +41,7 @@
     "release": {
       "files": [
         "package.json",
+        "shadow-docs/INDEX.md",
         "shadow-docs/changes/20261012-chore-cli-pin-v160/brief.md"
       ],
       "message": "chore(distribution): cliVersion pin v1.5.0 → v1.6.0，对齐 PR 必填门与 --body-file 能力",
