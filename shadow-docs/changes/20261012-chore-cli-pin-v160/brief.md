@@ -4,7 +4,7 @@
   "name": "20261012-chore-cli-pin-v160",
   "type": "chore",
   "scope": "distribution",
-  "status": "published",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "chore/20261012-chore-cli-pin-v160",
   "files": [
@@ -25,8 +25,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:62",
-    "planHash": "e348c534dbcf1957567741dad215f0984c4cbff8a849569096b1a3b8aa1686b8",
+    "checkpoint": "b30c29f1b8475fe5417bcddceb1dfadba45ba0d2",
+    "planHash": "f077edb33202a4c95cfdd63626622fd29d16cbf52d110b787e8c0ce598a0c747",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -46,6 +46,12 @@
       "message": "chore(distribution): cliVersion pin v1.5.0 → v1.6.0，对齐 PR 必填门与 --body-file 能力",
       "title": "chore(distribution): cliVersion pin v1.5.0 → v1.6.0，对齐 PR 必填门与 --body-file 能力",
       "body": "## 变更\n- `package.json`：`cliVersion` `v1.5.0` → `v1.6.0`。仅此一个字段；`version`（7.0.2）与 `requiresCommands`（29 条）不动。\n\n## 影响\n- 行为/触发面变化：产物声明的最低 CLI 能力抬到 v1.6.0 —— 即 `norms/pr-message.md`（已随 #60 合并）要求的 `release/publish plan` 必填 `--title`/`--body`、以及 `--body-file` 参数，在 v1.6.0 才存在。此前 pin 停在 v1.5.0，等于规范要求宿主用不认这些参数的旧 CLI 去传参。\n- 明确不受影响的范围：`requiresCommands` 判定集不变（本次无新增命令键），能力不齐仍是 `ARTIFACT_INCOMPATIBLE` 在任何落盘之前判红；三份 manifest 的 `version` 不变，发版 bump 属 `shadow-dev-publish` 独占。\n- **合并时序硬约束**：必须在 CLI 的 `v1.6.0` tag 与 GitHub Release 落地之后才能合。实测 `git tag` 当前**尚无 v1.6.0**，所以本 PR 现在不能合。\n- 回滚方式：revert 即把 pin 退回 v1.5.0，无其它副作用。\n\n## 验证\n- 命令与结果：`check:requires` → `✓ skills ⊆ requiresCommands ⊆ CLI 命令目录`；`check:version` → `✓ 三处 manifest 版本同源: 7.0.2`（证明没误碰发版版本）。\n- 能力对照（取自 shadow-dev-cli main）：`--body-file` 在命令目录出现 2 次；`PR_PARAMS_REQUIRED` 存在：true；`lib/domains/release.mjs` 调用 `prParams(`：true；CLI `package.json.version = 1.6.0`，与本 pin 目标一致。\n- 时序证据：`git tag` 无 `v1.6.0` → 本 PR 保持 open 待发版，非疏漏。\n- 未覆盖项（明说）：未跑 `workflow plan --release v1.6.0` 验证 release 轨解析（tag 不存在时按设计应 `RELEASE_NOT_FOUND`，要发版后才能验）；最终判定交 Actions 三平台矩阵。\n\n## 关联\n- Closes #61\n- 依赖：CLI tag `v1.6.0`（由 https://github.com/stack-wuh/shadow-dev-cli/pull/61 的 main 承载，待打 tag）\n- brief: shadow-docs/changes/20261012-chore-cli-pin-v160/brief.md"
+    },
+    "commit": {
+      "files": [
+        "shadow-docs/INDEX.md"
+      ],
+      "message": "chore(distribution): INDEX 补登发版载体台账条目，消 check:knowledge 红灯"
     }
   },
   "knowledge": {
