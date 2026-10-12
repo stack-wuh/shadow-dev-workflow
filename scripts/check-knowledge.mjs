@@ -19,6 +19,43 @@ const fail = m => fails.push(`[fail] ${m}`)
 const read = p => readFileSync(join(root, p), 'utf8').replaceAll('\r\n', '\n')
 const SKIP_DIRS = new Set(['.git', 'dist', 'node_modules', '.agents'])
 
+// 文件集合必须由 git 给出，不是 readdirSync。反例（2026-10-12 复盘实证）：本仓 .gitignore 里的 .zcode/
+// 存宿主会话计划，内含一句指向拆仓前旧单文件 CLI 入口的历史引用（该路径已随 20260916 拆仓消失），被无过滤的 walk() 读进引用扫描后，
+// 本机 check:knowledge 永久 fail=1、CI 干净 checkout 恒绿——同一 commit 两处结论分裂，门自身不可信，
+// 「本机四门全绿」于是从合法观察点退化成不可能兑现的承诺。该弱点在 20261010-feature-workflow-context-map
+// brief 里就记为「门应跳过 ignored 路径」，一直没人修。
+// 口径分两层：引用扫描＝tracked + 未跟踪但未 ignore；台账断言＝仅 tracked（未提交的在途 brief 不参与，
+// 否则 apply 中途会把在建目录误判成台账漂移）。git 不可用时退回 walk，但必须响亮 warn——静默降级是本仓所有门的禁项。
+function gitLs(args) {
+  if (process.env.SHADOW_DEV_NO_GIT === '1') return null // 退化路径的可复现开关，供拒绝路径观察点使用
+  try {
+    return execFileSync('git', ['-C', root, 'ls-files', '-z', ...args], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
+      .split('\0').filter(Boolean).map(p => p.split('\\').join('/'))
+  } catch { return null }
+}
+let enumeration = 'git'
+const trackedFiles = gitLs(['--cached'])
+const scanFiles = gitLs(['--cached', '--others', '--exclude-standard'])
+if (!trackedFiles || !scanFiles) {
+  enumeration = 'readdir'
+  warn('git 不可用：文件枚举退回 readdir，被 ignore 的路径未过滤，本门结论可能与干净 checkout 的 CI 分裂（可用 SHADOW_DEV_NO_GIT=1 复现该退化）')
+}
+const walkAll = () => {
+  const out = []
+  ;(function walk(dir) {
+    for (const e of readdirSync(join(root, dir), { withFileTypes: true })) {
+      if (SKIP_DIRS.has(e.name)) continue
+      const rel = dir === '.' ? e.name : dir + '/' + e.name
+      if (e.isDirectory()) walk(rel)
+      else out.push(rel)
+    }
+  })('.')
+  return out
+}
+const inSkip = p => p.split('/').some(seg => SKIP_DIRS.has(seg))
+const trackedList = trackedFiles || walkAll().filter(p => !inSkip(p))
+const scanList = scanFiles || trackedList.concat(walkAll().filter(p => !inSkip(p) && !trackedList.includes(p)))
+
 // 1) 知识卡与规范：frontmatter 字段、status 枚举、source 存在性、active 卡路由覆盖
 const REQUIRED = ['title', 'domain', 'keywords', 'scope', 'status', 'source', 'verified']
 const DEPTH = ['verified-depth', 'verified-scope']
@@ -104,6 +141,60 @@ for (const { rel, data } of cards) {
 }
 if (domainVocab) console.log(`[.] 上下文地图值域: ${[...domainVocab].join(', ')}（命中 ${domainChecked}/${cards.length} 卡）`)
 
+// 1c) 变更台账：INDEX 是 change 的对外视图，必须与 git 里的目录集合和每个 brief 的 status 同源。
+// 立项实证：20261012-refactor-flow-order-publish-stage 的 PR #49 已 merged，brief 既没归档也没进 INDEX，
+// 而它正是「归档并入 release 末段」那条新流程的第一次自证——门看不见台账漂移，等于新流程没有闭环证据。
+// 修复走 CLI 的 index rebuild plan/execute（唯一合法写入方），禁止手改 INDEX（rules/iron-laws.md §6）。
+const LEDGER = 'shadow-docs/INDEX.md'
+const ledgerText = existsSync(join(root, LEDGER)) ? read(LEDGER) : ''
+if (!ledgerText) fail(`${LEDGER}: 缺失或为空（变更台账是归档闭环的对外视图）`)
+const LIFECYCLE = ['draft', 'proposed', 'branched', 'reviewed', 'committed', 'published', 'archived', '✅ 完成']
+const rows = new Map()
+for (const line of ledgerText.split('\n')) {
+  const cells = line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim())
+  if (cells.length !== 3 || !cells[0] || cells[0] === '变更' || /^:?-{2,}:?$/.test(cells[0].replace(/-/g, '-'))) continue
+  if (/^\s*$/.test(cells[0].replace(/[-: ]/g, ''))) continue
+  rows.set(cells[0], { status: cells[1], path: cells[2] })
+}
+const briefDirs = new Map()
+for (const p of trackedList) {
+  const m = /^shadow-docs\/changes\/(?:archive\/)?([^/]+)\/brief\.md$/.exec(p)
+  if (m) briefDirs.set(m[1], { archived: p.startsWith('shadow-docs/changes/archive/'), path: p })
+}
+const briefStatus = p => {
+  try { return JSON.parse(read(p).slice(read(p).indexOf('{'), read(p).indexOf('\n---', 4))).status } catch { return null }
+}
+let ledgerLive = 0, ledgerArchived = 0
+for (const [name, d] of briefDirs) {
+  const row = rows.get(name)
+  if (!row) { fail(`台账缺条目 ${name}（${d.archived ? '已归档' : '在途'}目录已进 git，INDEX 未登记；用 shadow-dev index rebuild plan/execute 补）`); continue }
+  if (d.archived) {
+    ledgerArchived++
+    if (row.status !== '✅ 完成') fail(`台账条目 ${name} 状态为「${row.status}」，已归档目录应为「✅ 完成」`)
+    if (!row.path.includes('/archive/')) fail(`台账条目 ${name} 指向 ${row.path}，已归档 brief 的条目路径应含 changes/archive/`)
+  } else {
+    ledgerLive++
+    const st = briefStatus(d.path)
+    if (st === null) { fail(`台账条目 ${name}: brief frontmatter 无法解析，status 不可判定`); continue }
+    if (st === 'archived') fail(`台账条目 ${name}: brief status 为 archived，但目录仍在 changes/ 下未移入 archive/`)
+    if (!LIFECYCLE.includes(row.status)) fail(`台账条目 ${name} 状态列为非法值「${row.status}」（不在 brief 生命周期枚举内，台账被手改过）`)
+    // 在途 change 的滞后是**结构性**的，不是漂移：INDEX 是派生视图，只有 CLI 的 index rebuild/archive 会重写它，
+    // 而 brief.status 在 branch/review/release 每一步都会前进。本 change 自己撞上的第一条反例——
+    // index rebuild 写下行（branched）后 release 才把 brief 推到 published，若按严格相等执法，
+    // 每个在途 change 的 release 提交都必然判红，门就成了自毁装置。滞后降为 warn，非法值与缺条目仍判红。
+    if (row.status !== st) warn(`台账条目 ${name} 状态列为「${row.status}」，brief.status 已前进到「${st}」（在途滞后，archive 或 index rebuild 时消解）`)
+  }
+}
+for (const [name, row] of rows) {
+  if (briefDirs.has(name)) continue
+  // 允许「条目已登记、目录尚未提交」的在途形态（index rebuild 早于 commit 是合法顺序，
+  // 本 change 自己就走这条：先 index rebuild execute 写台账，再由 release 把 brief 与 INDEX 同批提交）。
+  // 真正要判红的是路径本身不存在——那是写错的或目录已被移动的死条目。
+  if (existsSync(join(root, row.path))) { warn(`台账条目 ${name} 指向 ${row.path}，但该 brief 尚未进 git（在途变更，提交后自动消解）`); continue }
+  fail(`台账幽灵条目 ${name} → ${row.path}（INDEX 有行但磁盘上没有对应 brief.md；路径写错或目录已被移动）`)
+}
+ok(`变更台账 INDEX 条目 ${rows.size} / 已跟踪变更目录 ${briefDirs.size}（在途 ${ledgerLive}、已归档 ${ledgerArchived}）`)
+
 // 2) 技能清单：SKILL.md 必有 name + description，且 name 与目录同名（宿主按 name 发现技能）
 const skillDirs = readdirSync(join(root, 'skills')).filter(d => statSync(join(root, 'skills', d)).isDirectory())
 for (const d of skillDirs) {
@@ -124,17 +215,9 @@ const changedFiles = new Set((() => {
       .split('\n').filter(Boolean).map(l => l.slice(3).trim().split(' -> ').pop())
   } catch { return [] }
 })())
-const live = []
-// rel 必须始终是仓库根相对路径：用绝对路径拼 walk 会让 startsWith('shadow-docs') 守卫失效，
-// 把 shadow-docs/changes/archive/** 的数十份历史 brief 当 live 文件读进来（既慢又会让历史文本污染判定）。
-;(function walk(dir) {
-  for (const e of readdirSync(join(root, dir), { withFileTypes: true })) {
-    if (SKIP_DIRS.has(e.name)) continue
-    const rel = dir === '.' ? e.name : `${dir}/${e.name}`
-    if (e.isDirectory()) walk(rel)
-    else if (/\.(md|json|mjs|sh)$/.test(e.name) && !rel.startsWith('shadow-docs')) live.push(rel)
-  }
-})('.')
+// rel 始终是仓库根相对路径，且 shadow-docs/** 不进引用扫描：归档 brief 是历史叙述，
+// 按现行文本执法会把「当时怎么写」误判成「现在怎么写错」。
+const live = scanList.filter(p => /\.(md|json|mjs|sh)$/.test(p) && !p.startsWith('shadow-docs'))
 const dead = []
 for (const rel of live) for (const m of new Set(read(rel).match(REF) || [])) {
   if (!existsSync(join(root, m)) && !changedFiles.has(rel) && !changedFiles.has(m)) dead.push(`${rel} → ${m}`)
@@ -144,7 +227,7 @@ for (const rel of live) {
   for (const m of new Set(read(rel).match(REF) || [])) if (!existsSync(join(root, m))) warn(`变更文件 ${rel} 引用了尚未落盘的 ${m}（提交前需确认该文件真实存在）`)
 }
 dead.forEach(d => fail(`死链 ${d}`))
-ok(`引用扫描 ${live.length} 个文件、路径断言 ${dead.length ? dead.length + ' 处死链' : '零死链'}`)
+ok(`引用扫描 ${live.length} 个文件、路径断言 ${dead.length ? dead.length + ' 处死链' : '零死链'}、enumeration=${enumeration}`)
 
 // 4) 孤儿规范：每个 norms/*.md 至少要被 menu 路由或被某处引用命中
 for (const f of readdirSync(join(root, 'norms')).filter(x => x.endsWith('.md'))) {

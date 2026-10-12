@@ -5,8 +5,12 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import test from 'node:test'
+import { resolveBash, bashUnavailableMessage } from '../scripts/resolve-bash.mjs'
 
 const PLUGIN_ROOT = fileURLToPath(new URL('..', import.meta.url))
+// 同 pack 用例：hook wrapper 与安装器都得由可信 bash 执行，WSL 入口桩不算（见 scripts/resolve-bash.mjs）。
+const BASH = resolveBash()
+if (!BASH) throw new Error(bashUnavailableMessage())
 const WRAPPER = join(PLUGIN_ROOT, 'hooks', 'bootstrap-cli.sh')
 const INSTALLER = join(PLUGIN_ROOT, 'scripts', 'install-cli.sh')
 const PIN = JSON.parse(readFileSync(join(PLUGIN_ROOT, 'package.json'), 'utf8')).cliVersion
@@ -30,7 +34,7 @@ function stubInstaller(root, body) {
 }
 
 function runWrapper(env, wrapper = WRAPPER) {
-  return spawnSync('bash', [wrapper], { encoding: 'utf8', env: { ...process.env, ...env } })
+  return spawnSync(BASH.path, [wrapper], { encoding: 'utf8', env: { ...process.env, ...env } })
 }
 
 function testCase(root, seed = true) {
@@ -130,7 +134,7 @@ test('installer: --from 离线安装到版本化布局并生成托管 shim', () 
   const bin = join(root, 'bin')
   // --from 传相对名并设 cwd：Git Bash 的 tar 对 `C:\...` 形态会按 host:path 解析
   const run = (...extra) =>
-    spawnSync('bash', [INSTALLER, 'install', '--from', 'fixture.tar.gz', '--prefix', prefix, '--bin', bin, ...extra], { cwd: root, encoding: 'utf8' })
+    spawnSync(BASH.path, [INSTALLER, 'install', '--from', 'fixture.tar.gz', '--prefix', prefix, '--bin', bin, ...extra], { cwd: root, encoding: 'utf8' })
 
   const first = run('--json')
   assert.equal(first.status, 0, first.stderr)
@@ -140,7 +144,7 @@ test('installer: --from 离线安装到版本化布局并生成托管 shim', () 
   const shim = join(bin, 'shadow-dev')
   assert.equal(existsSync(shim), true)
   // 经 bash 显式执行：Windows 无法直接 spawn 无扩展名 shebang 脚本（与安装器写 .cmd shim 同一约束）
-  const smoke = spawnSync('bash', [shim, '--help'], { encoding: 'utf8' })
+  const smoke = spawnSync(BASH.path, [shim, '--help'], { encoding: 'utf8' })
   assert.equal(smoke.status, 0, smoke.stderr)
   assert.match(smoke.stdout, /"ok":true/)
 

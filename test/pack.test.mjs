@@ -5,8 +5,14 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import test from 'node:test'
+import { resolveBash, bashUnavailableMessage } from '../scripts/resolve-bash.mjs'
 
 const PLUGIN_ROOT = fileURLToPath(new URL('..', import.meta.url))
+// 解释器必须走「可信 bash」口径（scripts/resolve-bash.mjs）：Windows 上裸写 'bash' 会命中
+// System32/WindowsApps 的 WSL 入口桩，rc=1 + 「装 WSL」提示，症状与 pack 内容契约失败同形。
+// 解析不到时当场抛指名原因的错——宁可红在装配层，也不让环境问题漂成代码回归。
+const BASH = resolveBash()
+if (!BASH) throw new Error(bashUnavailableMessage())
 const { version } = JSON.parse(readFileSync(join(PLUGIN_ROOT, 'package.json'), 'utf8'))
 
 // 打包一次，全部用例共享产物；结束后清理 dist/，不给仓库留未跟踪文件
@@ -24,7 +30,7 @@ const toUnix = process.platform === 'win32' ? (p) => {
   if (r.status === 0 && r.stdout.trim()) return r.stdout.trim()
   return p.replace(/^([A-Za-z]):[\\/]/, (_, d) => `/${d.toLowerCase()}/`).replace(/[\\/]+/g, '/')
 } : (p) => p
-const unpack = spawnSync('bash', ['-c', 'tar -xzf "$1" -C "$2"', 'pack-extract', toUnix(artifact), toUnix(extract)], { encoding: 'utf8' })
+const unpack = spawnSync(BASH.path, ['-c', 'tar -xzf "$1" -C "$2"', 'pack-extract', toUnix(artifact), toUnix(extract)], { encoding: 'utf8' })
 // 清理必须在失败路径上也可达：模块顶层抛错时 test.after 根本来不及注册，
 // 而 dist/ 未被 gitignore——留下未跟踪产物就违反本文件「不给仓库留未跟踪文件」的自订契约。
 const cleanup = () => {

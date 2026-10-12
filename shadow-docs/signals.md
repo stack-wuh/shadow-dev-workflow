@@ -2,6 +2,15 @@
 
 > 格式、生命周期与护栏见 workflow 仓 `norms/signals.md`。条目按命中时间排序，最新命中的在前。
 
+## SGN-011 · Windows 上 `npm test` 两挂先查 bash 来源：PATH 首命中 System32/WindowsApps 的 WSL 入口桩时 rc=1 并打印「装 WSL」提示，症状与 pack 解包/安装器内容断言失败同形，别按代码回归排查
+- 方向: negative
+- 权重: 4
+- 深度: runtime
+- 域/scope: 环境 · test/pack.test.mjs, test/install-cli.test.mjs, scripts/resolve-bash.mjs
+- 证据: 2026-10-12 复盘实测（本机 `Get-Command bash` 首命中 `C:\Windows\system32\bash.exe`，同一 commit afdee48 的 CI windows job 全绿，差异只在 runner 镜像把 Git Bash 放上了 PATH）；立项与修复见 shadow-docs/changes/20261012-build-gate-reproducibility/brief.md
+- 命中: 1（最近 2026-10-12）
+- 退役条件: 测试与脚本一律经 `scripts/resolve-bash.mjs` 取可信 bash —— **本 change 已满足**；保留条目作为「装配层失败」与「内容断言失败」的归因线索，解析器判不可用时会直接抛出指名缺 Git Bash 的错，不再漂成回归
+
 ## SGN-009 · 宿主插件兼容性判断先跑 `codex plugin marketplace add <目录>` + `plugin list`，清单违规会以 WARN 直出字段名，比读文档推演收敛更快
 - 方向: positive
 - 权重: 2
