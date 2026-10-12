@@ -13,6 +13,7 @@
     "knowledge/release-artifact-pipeline.md",
     "package.json",
     "scripts/check-release-smoke.mjs",
+    "scripts/pack.mjs",
     "scripts/release-smoke.sh",
     "shadow-docs/INDEX.md",
     "shadow-docs/changes/20261012-refactor-release-smoke-single-implementation/brief.md",
@@ -33,7 +34,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": "pr:56",
-    "planHash": "9f1e903510575f25d387b26ccf891b17d3ea4bfddc57ecf51f8ffddbf9e8573d",
+    "planHash": "5e5dadb2e2c9e886fe04f7a3fbf15999351130d9c2ace5999e4e96e39425534b",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -50,6 +51,14 @@
       "message": "refactor(release-chain): 冒烟收敛为唯一实现，yml 只剩一行委派",
       "title": "[refactor] 发布冒烟只留一份实现：yml 与本机门调同一个脚本",
       "body": "连续两次发版各炸一处（v7.0.0 借错字段、v7.0.1 变量写成反引号），结构性原因是同一段断言存在两份实现：CI 跑 yml 内联那份，本机门跑自己那份，改坏一份另一份毫无反应，于是「本机绿 + PR 绿 + 链红」可以同时成立。#55 用 failure-as-fixture 给第二份实现打补丁，本 change 消灭「两份」本身。 · 做法：断言唯一实现落在 scripts/release-smoke.sh（五条断言、双入口 --release 与 --from、set -euo pipefail、失败带 x 前缀可定位行号）；publish-release.yml 冒烟步骤只剩一行 bash 调用；门改为对唯一实现做静态对账（SMOKE_NOT_DELEGATED、SMOKE_INLINE_ASSERTION、SMOKE_ASSERTION_MISSING 用 7 条特征串守住条目、SMOKE_BACKTICK_SUBST、SMOKE_UNKNOWN_FIELD）并自检自身不得驱动 CLI（SMOKE_DUPLICATION），离线腿改为直接调用脚本、退出码即判据。 · 验证：node --test test/release-smoke.test.mjs 10/10；npm run ci 权威通道退出码 0，六门 fail=0，npm test 30/30；离线腿实跑输出 OK materialized root=...  skills=9 与 materialized=1 deferred=0——本机绿从此等价于 CI 将跑同一份代码。 · 诚实记录：本轮执行者自伤 7 次（多层转义、String.replace 的美元符后向引用、try/catch 吞掉 ReferenceError、把 resolveBash 返回对象当字符串、自指命中），根因与收敛纪律已写入 knowledge/contract-probe.md 新增条「AI 生成源码的转义纪律」，brief 结果段逐条留痕。 · 交付事实：v7.0.0 与 v7.0.1 两个发版载体仍未归档，等本 change 合入后再发一版让 publish-release 首次跑绿。"
+    },
+    "commit": {
+      "files": [
+        "scripts/check-release-smoke.mjs",
+        "scripts/pack.mjs",
+        "shadow-docs/changes/20261012-refactor-release-smoke-single-implementation/brief.md"
+      ],
+      "message": "fix(release-chain): pack 增加 --out 隔离产物目录，修 main 上 EBUSY 并行争用"
     }
   },
   "knowledge": {
@@ -136,3 +145,5 @@ v7.0.0 与 v7.0.1 连续两次发版各炸一个新点：第一次是 `workflow 
 2. `shadow-dev-cli` 清单（跨上下文后继）：`--body-file/--message-file`；`release execute` 不校验 review passed（实证：review 未落时照样开出 PR #54）；`archive` 要求 `verifiedCommit == HEAD` 过严（本轮第三次撞上，均需回 main 重跑 review）。
 3. `dist/` 仍未进 `.gitignore`：本 change 的离线腿会稳定产出 `dist`，当前靠显式文件列表提交侥幸不带入版本库。
 4. v7.0.0 / v7.0.1 两个发版载体仍未归档：等本 change 合入后再发一版，`publish-release` 首次跑绿才同时归档三者。
+
+6. **main 红灯归因（本 change 内发现并修复）**：`quality-gate push/main` 在 `e383212` 判红，Windows runner 报 `EBUSY: resource busy or locked, unlink dist/shadow-dev-workflow-v7.0.1.tar.gz`——根因是 #55 让门的离线腿与 `pack.test.mjs` 争用同一个 `dist/` 目录，而 `node --test` 并行执行测试文件。修复：`scripts/pack.mjs` 增加 `--out`（默认行为不变，tar 仍用相对路径但 `cwd` 换到 out 的父目录），门改为打包进各自隔离的 `<work>/dist`，并新增 INV-6 禁止争用共享产物目录。观察点：本机 `pack --out` 产出隔离 tarball，`npm run ci` 退出码 0 且 `tests 30 / pass 30`。
