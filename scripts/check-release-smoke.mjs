@@ -122,13 +122,13 @@ function staticChecks () {
 function materialize () {
   const where = 'offline-smoke'
   const pkgv = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version
-  const asset = join(root, 'dist', 'shadow-dev-workflow-v' + pkgv + '.tar.gz')
+  const work = resolve(matTmp || mkdtempSync(join(tmpdir(), 'rel-smoke-')))
   const bash = resolveBash()
   if (!bash) { warns.push('SMOKE_MATERIALIZE_DEFERRED offline-smoke: 本机无可信 bash（resolve-bash 拒绝 WSL 入口桩），离线腿未执行，不计入一致'); return }
-  const pk = spawnSync(process.execPath, ['scripts/pack.mjs'], { cwd: root, encoding: 'utf8' })
+  const pk = spawnSync(process.execPath, ['scripts/pack.mjs', '--out', join(work, 'dist')], { cwd: root, encoding: 'utf8' })
   if (pk.status !== 0) { bad('SMOKE_PACK_FAILED', where, '本地打包失败 rc=' + pk.status + '：' + String(pk.stderr || '').split(String.fromCharCode(10)).filter((x) => x && !/npm warn/.test(x)).slice(0, 2).join(' / ').slice(0, 200)); return }
+  const asset = join(work, 'dist', 'shadow-dev-workflow-v' + pkgv + '.tar.gz')
   if (!existsSync(asset)) { bad('SMOKE_PACK_FAILED', where, '本地产物不存在：' + asset); return }
-  const work = resolve(matTmp || mkdtempSync(join(tmpdir(), 'rel-smoke-')))
   const r = spawnSync(bash.path, [smokePath, '--from', asset.replace(/\\/g, '/'), '--work', work.replace(/\\/g, '/')], { cwd: root, encoding: 'utf8' })
   const out = String(r.stdout || '') + String(r.stderr || '')
   if (process.platform === 'win32' && (out.includes('bash -c tar') || out.includes('ENOENT') || out.includes('not recognized'))) { warns.push('SMOKE_MATERIALIZE_DEFERRED offline-smoke: 本机不物化——CLI 的 bash -c tar 收到反斜杠绝对路径（execution-layer 缺陷，已登记 shadow-dev-cli）；CI（Linux/macOS）跑实断言'); return }
