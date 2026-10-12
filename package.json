@@ -6,12 +6,13 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node --test test/install-cli.test.mjs test/pack.test.mjs",
+    "test": "node --test test/brief-gate.test.mjs test/install-cli.test.mjs test/pack.test.mjs",
     "check:requires": "node scripts/check-requires.mjs",
     "check:requires:strict": "node scripts/check-requires.mjs --strict",
     "check:knowledge": "node scripts/check-knowledge.mjs",
+    "check:brief": "node scripts/check-brief.mjs",
     "check:version": "node scripts/bump-version.mjs --check",
-    "ci": "npm run check:version && npm run check:requires:strict && npm run check:knowledge && npm test"
+    "ci": "npm run check:version && npm run check:requires:strict && npm run check:knowledge && npm run check:brief && npm test"
   },
   "cliVersion": "v1.5.0",
   "requiresCommands": [

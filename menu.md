@@ -7,8 +7,8 @@
 | 技术域 | 关键词 | 应查阅 |
 |--------|--------|--------|
 | Knowledge 治理 | knowledge 知识库 沉淀 卡片 路由 过期 冲突 verified 深度 | norms/knowledge-cards.md |
-| 领域建模 | 领域驱动 DDD 限界上下文 统一语言 聚合 不变量 观察点 上下文地图 领域模型 规格来源 | norms/domain-model.md, knowledge/domain-driven-shadow-dev.md |
-| 验证策略 | 复杂度评级 S/M/L 验证深度 评级矩阵 不变量观察点 验证强度 契约探针 probe 归因 假绿 完成证据 | norms/verification.md, knowledge/contract-probe.md |
+| 领域建模 | 规格驱动 SDD 领域驱动 DDD 限界上下文 统一语言 聚合 不变量 INV 行键 对账表 观察点 上下文地图 领域模型 规格来源 | norms/domain-model.md, knowledge/domain-driven-shadow-dev.md |
+| 验证策略 | 复杂度评级 S/M/L 验证深度 评级矩阵 不变量观察点 验证强度 契约探针 probe guard regression 分层门槛 门槛 放行判据 取证策略 断言优先 assert-first 归因 假绿 半读 夹具同构 完成证据 | norms/verification.md, knowledge/contract-probe.md |
 | 信号机制 | 信号 signals 探索 优先级 权重 衰减 负信号 | norms/signals.md |
 | UI 变更 | 页面 组件 布局 样式 配色 字体 按钮 卡片 弹窗 导航 列表 | norms/ui-patterns.md, norms/interaction.md, 项目相关 active Knowledge |
 | API 变更 | 接口 端点 API 路由 REST 查询 请求体 响应体 | norms/api-design.md, 项目相关 active Knowledge |
@@ -33,4 +33,4 @@
 5. deprecated 卡片仅在追溯替代关系时读取。
 6. 将适用卡片路径、当前结论和 scope 记录到 brief 的「引用规范」。
 7. 每条约束必须遵循，或在「决策」中说明为什么不适用。
-8. 项目存在 `shadow-docs/domain.md` 时先读上下文地图，确定任务所属限界上下文再路由；L 级变更必须在 brief 写「## 领域模型」段（`norms/domain-model.md`）。
+8. 项目存在 `shadow-docs/domain.md` 时先读上下文地图，确定任务所属限界上下文再路由；L 级变更必须在 brief 写「## 领域模型」段且不变量带 `INV-n` 行键（`norms/domain-model.md`），并由 `scripts/check-brief.mjs` 机器判定——缺段、缺编号、对账未闭合即阻塞 release。

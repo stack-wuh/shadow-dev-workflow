@@ -7,7 +7,7 @@
 
 | 上下文 | 职责 | 上游 / 下游 | 主目录与 scope | 关键术语 |
 |---|---|---|---|---|
-| `workflow-governance` | 开发流程治理：规范、技能、知识路由、brief 生命周期与质量门禁语义 | ← `execution-layer`；→ 各项目 `shadow-docs/` | `skills/`, `norms/`, `rules/`, `knowledge/`, `menu.md`, `scripts/check-knowledge.mjs`, `shadow-docs/changes/` | 限界上下文 / 统一语言 / 聚合 / 领域不变量 / 观察点 / 复杂度评级 / 分级验证 / 信号 / 阶段顺序 / publish 发版阶段 / 发版载体 / 攒版 |
+| `workflow-governance` | 开发流程治理：规范、技能、知识路由、brief 生命周期与质量门禁语义 | ← `execution-layer`；→ 各项目 `shadow-docs/` | `skills/`, `norms/`, `rules/`, `knowledge/`, `menu.md`, `scripts/check-knowledge.mjs`, `shadow-docs/changes/` | 限界上下文 / 统一语言 / 聚合 / 领域不变量 / INV 行键 / 对账表 / 观察点 / 复杂度评级 / 取证策略 / 断言优先 / 分级验证 / 门槛层 / guard 探针 / regression 探针 / 三条放行判据 / 信号 / 阶段顺序 / publish 发版阶段 / 发版载体 / 攒版 |
 | `distribution` | 产物打包、多宿主分发、版本与发布链 | ← `execution-layer`；→ claude-code / codex / zcode 三宿主 | `scripts/pack.mjs`, `scripts/bump-version.mjs`, `scripts/check-requires.mjs`, `scripts/install-cli.sh`, `adapters/`, `hooks/`, `.claude-plugin/`, `.codex-plugin/`, `.agents/`, `marketplace.json`, `package.json`, `.github/workflows/` | 能力契约 / requiresCommands / ARTIFACT_INCOMPATIBLE / pin / 资产契约 / 版本权威 / 发布冒烟 / 半绿 / 发版命令键（待 `execution-layer` 提供） |
 
 ## 横切实践

@@ -53,7 +53,11 @@ jobs:
 
       - name: 知识治理门（卡片字段 / source / menu 路由 / 死链 / 已废除措辞禁项）
         shell: bash
-        run: npm run check:knowledge -- --forbid 'tdd-verification,▶ [TDD],既有测试保持绿,测试总数,相关测试'
+        run: npm run check:knowledge -- --forbid 'tdd-verification,▶ [TDD],既有测试保持绿,测试总数,相关测试,或 CI 全绿链接'
 
-      - name: 产物与安装器测试
+      - name: brief 契约门（领域模型段 / INV 行键 / 对账闭合 / 断言优先边界）
+        shell: bash
+        run: npm run check:brief
+
+      - name: 产物与安装器测试（含 brief 契约门自身断言）
         run: npm test
