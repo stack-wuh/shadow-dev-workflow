@@ -4,7 +4,7 @@
   "name": "20261012-refactor-release-smoke-single-implementation",
   "type": "refactor",
   "scope": "distribution,ci,scripts",
-  "status": "published",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "refactor/20261012-refactor-release-smoke-single-implementation",
   "files": [
@@ -33,7 +33,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:56",
+    "checkpoint": "c2fdf159312601363f437fb813a8f70d70a0ce5c",
     "planHash": "5e5dadb2e2c9e886fe04f7a3fbf15999351130d9c2ace5999e4e96e39425534b",
     "updatedAt": null,
     "lastError": null,
