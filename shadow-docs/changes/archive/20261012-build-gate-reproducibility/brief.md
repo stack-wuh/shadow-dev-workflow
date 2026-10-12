@@ -4,7 +4,7 @@
   "name": "20261012-build-gate-reproducibility",
   "type": "build",
   "scope": "scripts/,test/,shadow-docs/signals.md,package.json,.claude-plugin/plugin.json,.codex-plugin/plugin.json",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "build/20261012-build-gate-reproducibility",
   "files": [
@@ -26,13 +26,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "3b500bb15a58faf7e72b0a866a9556b7aa4143b2",
-    "verifiedAt": "2026-10-12T03:21:43.831Z"
+    "verifiedCommit": "d5d35eb9d110b644295d87785a1f5fef63e964e3",
+    "verifiedAt": "2026-10-12T03:27:50.410Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:50",
-    "planHash": "0c9872057a41c2a42d47e7101b26e25156c63122a1dfdce77896fdaafff5e883",
+    "checkpoint": "merged-pr:50",
+    "planHash": "809eb661fe4bad763e162f54e8e685ee3fdb1ed86dcfc1f628db37750a40480a",
     "updatedAt": null,
     "lastError": null,
     "release": {

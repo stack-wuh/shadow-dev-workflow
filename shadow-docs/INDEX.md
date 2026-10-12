@@ -25,5 +25,5 @@
 | 20261010-feature-workflow-context-map | ✅ 完成 | shadow-docs/changes/archive/20261010-feature-workflow-context-map/brief.md |
 | 20261010-refactor-domain-driven-workflow | committed | shadow-docs/changes/20261010-refactor-domain-driven-workflow/brief.md |
 | 20261011-refactor-kill-tdd-verification | ✅ 完成 | shadow-docs/changes/archive/20261011-refactor-kill-tdd-verification/brief.md |
-| 20261012-build-gate-reproducibility | branched | shadow-docs/changes/20261012-build-gate-reproducibility/brief.md |
+| 20261012-build-gate-reproducibility | ✅ 完成 | shadow-docs/changes/archive/20261012-build-gate-reproducibility/brief.md |
 | 20261012-refactor-flow-order-publish-stage | ✅ 完成 | shadow-docs/changes/archive/20261012-refactor-flow-order-publish-stage/brief.md |
