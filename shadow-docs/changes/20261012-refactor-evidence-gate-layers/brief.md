@@ -40,7 +40,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": "pr:51",
-    "planHash": "f4c5cb13623e9ce1e4cd5b164092dbfb3d39638a4b017410718be1e2a97ac41d",
+    "planHash": "7880dbe1e8c408b9d64bed3f48bf9c893e1d15cb22e7e305f09e1a901d7dde28",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -67,10 +67,9 @@
     },
     "commit": {
       "files": [
-        "shadow-docs/INDEX.md",
         "shadow-docs/changes/20261012-refactor-evidence-gate-layers/brief.md"
       ],
-      "message": "docs(shadow): 登记在途 change 进变更台账并补 brief 半状态留痕（CI 台账门归因修复）"
+      "message": "docs(shadow): brief 回填补充观察点（PR #51 quality-gate CI run 链接）"
     }
   },
   "knowledge": {
@@ -165,7 +164,7 @@
 |---|---|
 | `INV-1 brief-contract` | 观察点（拒绝路径）：夹具 L 级缺段 → 门输出 `✗ MISSING_DOMAIN_MODEL shadow-docs/changes/20261012-refactor-x/brief.md` 且 rc=1；条目缺编号 → `BAD_INV_FORMAT`；编号重复 → `DUPLICATE_INV`。观察点（正例）：`npm run check:brief` → `[.] …/20261012-refactor-evidence-gate-layers/brief.md 评级=L status=branched 不变量=7`，`fail=0` |
 | `INV-2 reconciliation-closure` | 观察点（拒绝路径）：夹具 `status=published` 且「结果」段为空 → `✗ UNRECONCILED INV-1` 与 `✗ UNRECONCILED INV-2`，rc=1。观察点（正例）：同夹具补两行（一行写「观察点」、一行写「证据缺口」）→ rc=0；阶段边界另测 `status=branched` 不追对账 → rc=0 |
-| `INV-3 gate-not-void` | 观察点（三条放行判据实跑）：`npm run check:version` rc=0 · `npm run check:requires:strict` rc=0 · `npm run check:brief` rc=0 · `npm run check:knowledge -- --forbid <集合>` rc=0 · `npm test` → `ℹ tests 20 / pass 20 / fail 0` rc=0。**regression 红灯归因**：node_repl 子进程通道下 `npm test` 出 2 红（`test/install-cli.test.mjs` 与 `test/pack.test.mjs` 文件级加载失败，报「可信 bash 未找到」，只探到 `System32\bash.exe` 与 `WindowsApps\bash.exe` 两个 WSL 入口桩）；同一工作副本在 `exec_command` 通道下 20/20 绿 rc=0 → 判定为通道 PATH 差异导致的**环境噪声，非本次改动回归**。按本变更新增纪律：噪声归因不解除门槛，故另记**证据缺口**＝该通道不可复现 regression，补充观察点为 PR 的 quality-gate CI run（Linux runner，bash 真实可用） |
+| `INV-3 gate-not-void` | 观察点（三条放行判据实跑）：`npm run check:version` rc=0 · `npm run check:requires:strict` rc=0 · `npm run check:brief` rc=0 · `npm run check:knowledge -- --forbid <集合>` rc=0 · `npm test` → `ℹ tests 20 / pass 20 / fail 0` rc=0。**regression 红灯归因**：node_repl 子进程通道下 `npm test` 出 2 红（`test/install-cli.test.mjs` 与 `test/pack.test.mjs` 文件级加载失败，报「可信 bash 未找到」，只探到 `System32\bash.exe` 与 `WindowsApps\bash.exe` 两个 WSL 入口桩）；同一工作副本在 `exec_command` 通道下 20/20 绿 rc=0 → 判定为通道 PATH 差异导致的**环境噪声，非本次改动回归**。按本变更新增纪律：噪声归因不解除门槛，故另记**证据缺口**＝该通道不可复现 regression，补充观察点＝PR #51 的 quality-gate CI run https://github.com/stack-wuh/shadow-dev-workflow/actions/runs/38205052852 （ubuntu-latest/node 20 等 6 job 全 pass，bash 真实可用） |
 | `INV-4 assert-first-bounded` | 观察点：`ASSERT_FIRST_NEEDS_L`（S 级 + `files: [test/newone.test.mjs]` → rc=1）、`BAD_EVIDENCE_STRATEGY`（取值 `red-green` → rc=1）、`ASSERT_FIRST_NEEDS_STRATEGY`（L 级含套件文件但策略非 assert-first → rc=1）三条断言绿。**先红记录**：门实现前 `node --test test/brief-gate.test.mjs` 全红 `exit=1 Cannot find module 'scripts/check-brief.mjs'`，实现后 9/9 绿——assert-first 顺序在本变更自身跑通 |
 | `INV-5 no-green-substitution` | 观察点：`norms/verification.md` L 级行的 CI 链接替代写法与 `rules/iron-laws.md` §1 的「或 CI 全绿」已删，两处改为「证据缺口＋补充观察点」；`.github/workflows/quality-gate.yml` 的 `--forbid` 追加该被废除措辞后，`npm run check:knowledge` **首次 rc=1**：`[fail] 残留 token 出现在 knowledge/contract-probe.md:12`——门当场抓到执行者自己在新卡正文里逐字复现了禁项；改写为不逐字复现后 rc=0 |
 | `INV-6 no-retroactive-red` | 观察点：夹具在 `changes/archive/` 放一份不合规 brief → 门 rc=0 且输出不含该名字（断言 `doesNotMatch`）；真实仓 `npm run check:brief` → 2 份生效前在途 brief 以 `[!] GRANDFATHERED …` 点名、`warn=2 fail=0`，其 status 由 JSON frontmatter 正确读为 `committed`（豁免是显式留痕，不是静默跳过） |
