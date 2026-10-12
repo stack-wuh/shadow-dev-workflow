@@ -39,7 +39,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": null,
-    "planHash": "592462a02f69b3f5548efef44d1523f42119adb232126ff4639e38ffc887cfad",
+    "planHash": "db32481603d206791ffa1ed6fc01f128f478d18539e4d659409de5847e515d15",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -63,6 +63,12 @@
       "message": "refactor(workflow): 证据门分层——不变量作规格、探针作门槛、断言优先限 L 级取证策略",
       "title": "[refactor] 证据门分层：不变量作规格、探针作门槛、断言优先作 L 级取证策略",
       "body": "复盘裁决：2026-10-11 一刀切取消测试门槛时，误把唯一不由执行者解释的裁判一起砍了。本变更把职责拆成三层——规格层（brief 领域模型段的 INV-n 不变量与结果段对账表，由新增 scripts/check-brief.mjs 机器判定）、门槛层（guard 探针必须绿；regression 探针在该仓 CI 实测耗时 ≤ 60s 时必须绿）、取证层（先写失败断言降格为 L 级可选取证策略 assert-first，四条触发判据）。先红记录、6 类拒绝路径观察点与 regression 红灯归因见 brief「结果」段。"
+    },
+    "commit": {
+      "files": [
+        "shadow-docs/changes/20261012-refactor-evidence-gate-layers/brief.md"
+      ],
+      "message": "docs(shadow): brief 最终态——补 release 半状态留痕"
     }
   },
   "knowledge": {
@@ -164,6 +170,7 @@
 | `INV-7 single-context` | 观察点：`git diff --stat` 改动面全在 `workflow-governance` scope（`norms/`、`rules/`、`skills/`、`knowledge/`、`scripts/`、`test/`、`.github/`、`package.json`、`menu.md`、`shadow-docs/domain.md`），`shadow-dev-cli` 仓零改动；跨上下文部分登记为下方遗留第 2 条 |
 | 门的自我防线 | 观察点（本变更最大的一次真实返工）：真实 brief 的 frontmatter 是 `shadow-dev/v1` **JSON**，初版门按 YAML 行匹配解析 → **9 条断言全绿而门在真实仓静默半读**（status 读成默认 `draft`、files 读成空集）。修正为 JSON 解析 + 夹具与真实序列化路径同构 + 新增 `BAD_FRONTMATTER` 判红断言。教训写入 `knowledge/contract-probe.md`「夹具必须与真实产物同构」 |
 
+- 半状态留痕（本仓 CLI 1.5.0 实测）：`release execute` 走完 commit（`2822036`）与 push 后，在 PR 段以 `GITHUB_TOKEN_REQUIRED` exit=3 中断——凭证检查发生在写操作之后，留下「已推送无 PR」。据此改用 `publish plan/execute` 补 PR，凭证由本机 `gh auth token` 注入子进程环境、不落盘不回显。这正是 `shadow-dev-cli` PR #54「凭证前置」要根治的形态，已在该仓登记。
 - 偏差记录：`menu.md` 未在立项 `--files` 内（路由关键词与硬规则 8 须随门更新）。CLI 1.5.0 无 `change amend`（其能力声明仍待后继发版），故手工把 `menu.md` 补入 frontmatter `files` 并在此留痕，不改 status/checkpoint 等由 CLI 持有的字段。
 
 ## 遗留与后续
