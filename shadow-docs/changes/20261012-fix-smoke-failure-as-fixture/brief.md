@@ -4,7 +4,7 @@
   "name": "20261012-fix-smoke-failure-as-fixture",
   "type": "fix",
   "scope": "ci,scripts,distribution",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "fix/20261012-fix-smoke-failure-as-fixture",
   "files": [
@@ -20,8 +20,8 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 55,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/55"
   },
   "review": {
     "conclusion": "passed",
@@ -30,7 +30,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "pr:55",
     "planHash": "80c8e50f128b88c21c19fb34333812fc7ce69e4f4e5d4be3a837eed2f9195f77",
     "updatedAt": null,
     "lastError": null,
