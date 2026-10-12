@@ -101,7 +101,7 @@ jobs:
           ROOT="$SMOKE/prefix/$CUR/shadow-dev-workflow"
           test -f "$ROOT/norms/verification.md" || { echo "x materialized artifact missing norms/verification.md"; exit 1; }
           N=$(find "$ROOT/skills" -name SKILL.md | wc -l | tr -d ' ')
-          [ "$N" = "8" ] || { echo "x materialized skills count=$N expected 8"; exit 1; }
+          [ "$N" = "9" ] || { echo "x materialized skills count=$N expected 9"; exit 1; }
           echo "OK materialized root=$ROOT skills=$N"
           shadow-dev bind plan --host codex --prefix "$SHADOW_WORKFLOW_PREFIX" --json | grep '^{"ok"' | tail -1 > "$SMOKE/bind.json"
           node -e 'const d=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!d.ok){console.error("bind plan failed: "+JSON.stringify(d.error));process.exit(1)}const x=d.data;console.log("OK bind plan host-version="+x.version)' "$SMOKE/bind.json"

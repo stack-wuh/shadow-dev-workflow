@@ -94,7 +94,7 @@ shadow-dev release plan --name <name> --files <逗号分隔路径> --message "fi
 shadow-dev release execute --name <name> --confirm
 ```
 
-复合命令一次完成 commit → push → PR（直达 main，幂等可断点续跑）。无 issue：归档在 PR merged 后手动执行 `shadow-dev-archive`，或事后补 issue 交由 Actions 触发。
+复合命令一次完成 commit → push → PR（直达 main，幂等可断点续跑）。归档在 PR merged 后由 release 末段自动完成（快车道同样先 `review execute` 写入 passed 结论）；无 issue 时 Actions 不触发自动归档，漏归档用 `shadow-dev-archive` 幂等补跑。正式对外发版按需走 `shadow-dev-publish`——发版与 change 解耦，快修不单独决定版本号。
 
 ## 不可省清单
 
@@ -111,4 +111,4 @@ shadow-dev release execute --name <name> --confirm
 - 人工九维审查（机械门禁 + diff/验证输出核对替代）
 - 信号提案（除非修复命中 `norms/signals.md` 的明确信号）
 
-**离场：** 完成时输出：`✅ [离场] shadow-dev-hotfix · PR: <url> · 下一步: shadow-dev-archive（PR merged 后）`
+**离场：** 完成时输出：`✅ [离场] shadow-dev-hotfix · PR: <url> · 下一步: release 末段归档（漏归档时用 shadow-dev-archive 补跑）`

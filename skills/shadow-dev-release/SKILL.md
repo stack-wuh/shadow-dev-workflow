@@ -1,14 +1,14 @@
 ---
 name: shadow-dev-release
-description: Knowledge 闭环 + 提交 + PR — review 通过后完成知识评估、提交代码并发布 PR。触发词：提交、commit、push、PR、发布、release。
+description: Knowledge 闭环 + 提交 + PR + 合并后归档 — review 通过后完成知识评估、提交发布 PR，并在 merged 后归档 brief。触发词：提交、commit、push、PR、发布、release。
 ---
-# Shadow Dev Release — 知识闭环与发布
+# Shadow Dev Release — 知识闭环、提交与归档
 
-review 通过后先落实最终知识动作，再用复合命令一次完成提交、推送和 PR；若项目 Knowledge 声明部署触发方式（如 GitHub Release），交付发布**委托用户或 CI 执行**，AI 只做判定、整理与结果审查。归档由 `shadow-dev-archive` 在 PR merged 且部署链绿后独立处理。
+review 通过后先落实最终知识动作，再用复合命令一次完成提交、推送和 PR；PR merged 后在本阶段末段归档 brief 并重建 INDEX——所有代码问题提交完即收口，不再把归档留成需要单独记得跑的下一步。正式对外发版（打 release tag、创建 GitHub Release）不属本阶段，由 `shadow-dev-publish` 独立承担。
 
-**执行纪律：** AI 只负责推导、决策与审查 CLI 返回的结果。一切仓库与 GitHub 写操作一律经 `shadow-dev` CLI 完成；禁止原始 `git`/`gh` 写命令，禁止脚本旁路。唯一边界：知识卡片与 menu 的编辑是 AI 的内容产出（推导+决策的落地），交付发布的执行权在用户或项目 CI（见第 4 步），AI 不代跑。
+**执行纪律：** AI 只负责推导、决策与审查 CLI 返回的结果。一切仓库与 GitHub 写操作一律经 `shadow-dev` CLI 完成；禁止原始 `git`/`gh` 写命令，禁止脚本旁路。唯一边界：知识卡片与 menu 的编辑是 AI 的内容产出（推导+决策的落地）。
 
-**进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-release · 知识闭环与发布`
+**进场：** 任何操作前，先输出：`▶ [进场] shadow-dev-release · 知识闭环与提交`
 
 ## 1. 落实知识结论
 
@@ -40,20 +40,39 @@ shadow-dev release execute --name <name> --confirm
 
 禁止原始 Git/GitHub 写命令、`git add .`、`git add -A` 和 `--no-verify`。网络步骤失败立即停止，不换方式重试。
 
-## 4. 交付发布（项目条件性，委托执行）
+## 4. 等待 merged 并同步基线
 
-**PR merged ≠ 已部署。** 本仓库是否以 push/Release/tag 触发生产部署，答案只在项目 Knowledge 里——不得凭「CI 已绿」推断交付完成。
+归档前置是「GitHub API 证明 PR merged」，本阶段在此等待，不提前归档。合并后同步本地 main：
 
-1. **判定：** 查询项目 `shadow-docs/menu.md` 构建/部署域路由（关键词：构建 部署 发布 release 上线 CI），命中卡片后按其「当前结论」确认部署触发方式。无命中或卡片无结论 → 直接向用户提问「本仓库合并后如何上生产」，不猜。
-2. **委托：** 项目声明了部署触发 → **AI 不亲手执行发布脚本或任何 `gh` 写命令**。把需要执行的动作整理成清单（命令/参数/影响面/版本号与标题格式按卡片记录的实际先例），交给用户执行或由项目 CI 自动完成，然后等待用户确认或 CI 通知。
-3. **审查：** 只审查外部提供给 AI 的结果——用户反馈、CI run 结论、release URL 与实际耗时——将交付结论写入 brief 的「结果」段。部署链红 → 停止并报告，不归档。
+```bash
+shadow-dev sync plan --name <name>
+shadow-dev sync execute --name <name> --confirm
+```
 
-## 5. 输出
+`sync plan` 对非 `shadow-docs/` 的脏文件报 `DIRTY_WORKTREE`，此时先清理工作树再继续。HEAD 必须与 review 的 `verifiedCommit` 同源；不一致时在 main 上重跑 review 的 plan + execute，不带着漂移归档。
 
-报告 change、分支、commit、PR、验证结果、最终 Knowledge 动作，以及交付发布结论（已部署 + Release URL / 或项目无部署触发）。
+## 5. 归档 brief 与重建 INDEX
 
-## 6. 下一步
+```bash
+shadow-dev archive plan --name <name>
+shadow-dev archive execute --name <name> --confirm
+```
 
-PR merged 且**交付发布完成（或确认项目无部署触发）**后，执行 `shadow-dev-archive` 归档。也可由 GitHub Actions 在 issue close 时自动触发。
+CLI 校验 review passed 且 PR merged 后，把 `shadow-docs/changes/<name>/` 移入 `shadow-docs/changes/archive/<name>/` 并重建 `INDEX.md`，归档动作以本地提交落地。
 
-**离场：** 完成时输出：`✅ [离场] shadow-dev-release · PR: <url> · 部署: <release url 或 已委托待确认 或 无部署触发> · 下一步: shadow-dev-archive（PR merged 且部署链绿后）`
+- **归档提交只动 `shadow-docs/`**：不得触碰 `package.json` 与两份宿主清单——版本权威由发版阶段独占，混进来会让 tag 指向的 tree 与实际发布内容分裂。
+- **brief 需一并进提交**：本 change 的 brief 在 `release plan` 的 `--files` 里就要列入，不靠归档提交补。
+- 独立 workspace（`brief.workflow.worktree` 有记录）时归档前先回收：`shadow-dev worktree remove plan --name <name>` + `shadow-dev worktree remove execute --name <name> --confirm`；脏 workspace 以 `WORKTREE_DIRTY` 拒绝，用户明确要求保留现场时可跳过，但须在报告中写明路径。
+- 漏归档、Actions 自动归档失败或 hotfix 事后补归档，用 `shadow-dev-archive` 作为幂等恢复入口补跑，不手改目录与 INDEX。
+
+## 6. 输出
+
+报告 change、分支、commit、PR、验证结果、最终 Knowledge 动作与归档结果（brief 新路径、INDEX 是否已重建）。
+
+**正式发版不属本阶段**：需要对外发布可安装产物时，由 `shadow-dev-publish` 承担（bump → tag → 创建 Release → 审查 Actions 发布链 → 归档发版载体）。项目 Knowledge 若声明其它部署触发方式，按该卡片判定交付证据落点，不凭「CI 已绿」推断已交付。
+
+## 7. 下一步
+
+单个变更的流程到归档即收口。对外发布按需触发 `shadow-dev-publish`——发版与 change 解耦，可攒多个已合并 change 一次发布，不要求每个 change 都发版。
+
+**离场：** 完成时输出：`✅ [离场] shadow-dev-release · PR: <url> · 归档: <archive 路径> · 下一步: shadow-dev-publish（需对外发版时）`
