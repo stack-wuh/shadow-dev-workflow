@@ -17,6 +17,7 @@
     "package.json",
     "rules/iron-laws.md",
     "scripts/check-brief.mjs",
+    "shadow-docs/INDEX.md",
     "shadow-docs/changes/20261012-refactor-evidence-gate-layers/brief.md",
     "shadow-docs/domain.md",
     "skills/shadow-dev-apply/SKILL.md",
@@ -39,7 +40,7 @@
   "workflow": {
     "operation": null,
     "checkpoint": "pr:51",
-    "planHash": "519f53408fd69ab34bde854a2aa3f6f102d005e9062c352ceee2ad6b5e10e4e4",
+    "planHash": "efd9580fe62751761df604cc693250da1f85ae437693b0105b0bff49898d42ef",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -66,9 +67,10 @@
     },
     "commit": {
       "files": [
+        "shadow-docs/INDEX.md",
         "shadow-docs/changes/20261012-refactor-evidence-gate-layers/brief.md"
       ],
-      "message": "docs(shadow): brief 最终态——补 release 半状态留痕"
+      "message": "docs(shadow): 登记在途 change 进变更台账并补 brief 半状态留痕（CI 台账门归因修复）"
     }
   },
   "knowledge": {
@@ -171,6 +173,7 @@
 | 门的自我防线 | 观察点（本变更最大的一次真实返工）：真实 brief 的 frontmatter 是 `shadow-dev/v1` **JSON**，初版门按 YAML 行匹配解析 → **9 条断言全绿而门在真实仓静默半读**（status 读成默认 `draft`、files 读成空集）。修正为 JSON 解析 + 夹具与真实序列化路径同构 + 新增 `BAD_FRONTMATTER` 判红断言。教训写入 `knowledge/contract-probe.md`「夹具必须与真实产物同构」 |
 
 - 半状态留痕（本仓 CLI 1.5.0 实测）：`release execute` 走完 commit（`2822036`）与 push 后，在 PR 段以 `GITHUB_TOKEN_REQUIRED` exit=3 中断——凭证检查发生在写操作之后，留下「已推送无 PR」。据此改用 `publish plan/execute` 补 PR，凭证由本机 `gh auth token` 注入子进程环境、不落盘不回显。这正是 `shadow-dev-cli` PR #54「凭证前置」要根治的形态，已在该仓登记。
+- 台账偏差：CI 6/6 判红实证——在途 brief 进 git 后必须由 `index rebuild` 登记台账条目（#50 新增的变更台账一致性门），本机因当时目录仍未跟踪而漏检。同 `menu.md` 处理方式：手工把 `shadow-docs/INDEX.md` 补入 files 并跑门。
 - 偏差记录：`menu.md` 未在立项 `--files` 内（路由关键词与硬规则 8 须随门更新）。CLI 1.5.0 无 `change amend`（其能力声明仍待后继发版），故手工把 `menu.md` 补入 frontmatter `files` 并在此留痕，不改 status/checkpoint 等由 CLI 持有的字段。
 
 ## 遗留与后续
