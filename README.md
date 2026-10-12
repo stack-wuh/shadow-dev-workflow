@@ -63,8 +63,8 @@ propose → apply → review → release → publish
 ```
 
 - **propose：** 按 menu 读取和引用 active Knowledge，做领域对齐（限界上下文 / 不变量），记录预期知识影响。
-- **apply：** 按引用约束执行，以 brief 的不变量为验收对象逐条留观察点；冲突时暂停并查明原因。
-- **review：** 验证实现、约束、模型一致性和卡片检查方法，给出最终知识动作。
+- **apply：** 按引用约束执行，以 brief 的 `INV-n` 不变量为验收对象逐条留观察点；L 级在 propose 批准取证策略（`observation` 默认，`assert-first`＝先写失败断言，只在四条触发判据成立时）；冲突时暂停并查明原因。
+- **review：** 验证实现、约束、模型一致性和卡片检查方法，按**三条放行判据**收口——观察点闭合 ∧ `guard` 探针绿 ∧ `regression` 探针绿（该仓 CI 实测耗时 ≤ 60s 时适用），给出最终知识动作。
 - **release：** 新增、原位更新、废弃卡片或记录无需变更，提交并发布 PR；PR merged 后在本阶段末段把 brief 移入 `archive/` 并重建 INDEX——所有代码问题提交完即收口。
 - **publish：** 正式对外发版，**与单个 change 解耦**：只在要求发布可安装产物时运行，一次可攒多个已合并 change。bump 三份 manifest → 提交合并 → 打 tag 创建 Release → 审查 `publish-release` 发布链与冒烟。发版自身也建一个 `chore` change 作载体，结论回填后归档。
 
@@ -154,14 +154,14 @@ shadow-dev bind plan --host auto && shadow-dev bind execute --host <名> --plan-
 
 ```bash
 node scripts/bump-version.mjs 6.10.0    # 一次同步三处 manifest（也可 --check 只判定）
-npm run ci                              # 版本 + requires:strict + 知识治理 + 测试，四门一体
+npm run ci                              # 版本 + requires:strict + 知识治理 + brief 契约 + 测试，五门一体
 git tag v6.10.0 && git push origin v6.10.0
 gh release create v6.10.0 --generate-notes   # 之后由 publish-release.yml 接手
 ```
 
 打 tag 与创建 Release 目前仍由人执行：已 pin 的 CLI 命令目录不含发版命令键，本仓按「能力缺失只能阻塞、不降级」的契约把这两步留在 `shadow-dev-publish` 的委托清单里。待 `execution-layer` 发布含该能力的版本后，本仓同步 `requiresCommands` 与 `cliVersion`，把委托换成 CLI 调用。
 
-`publish-release.yml`（`on: release.published`）依次执行：版本权威判定 → 装 pin CLI → 四门 → `scripts/pack.mjs` → **资产名契约断言**（CLI 只认 `^shadow-dev-workflow-v[0-9][0-9.]*\.tar\.gz$`，名字写错等于没发布）→ `gh release upload --clobber` → **发布冒烟**：隔离 prefix 里用真实 CLI 跑 `workflow plan --release → workflow execute → bind plan`，核对物化的 9 个 skills 与规范文件。产物永远不被手工搬运，人只负责 bump 与打 tag。
+`publish-release.yml`（`on: release.published`）依次执行：版本权威判定 → 装 pin CLI → 五门 → `scripts/pack.mjs` → **资产名契约断言**（CLI 只认 `^shadow-dev-workflow-v[0-9][0-9.]*\.tar\.gz$`，名字写错等于没发布）→ `gh release upload --clobber` → **发布冒烟**：隔离 prefix 里用真实 CLI 跑 `workflow plan --release → workflow execute → bind plan`，核对物化的 9 个 skills 与规范文件。产物永远不被手工搬运，人只负责 bump 与打 tag。
 
 ## 机器门（GitHub Actions）
 
@@ -169,10 +169,11 @@ gh release create v6.10.0 --generate-notes   # 之后由 publish-release.yml 接
 |----|------|--------|-----|
 | 版本同源 | `npm run check:version` | `package.json` 与两份宿主清单版本一致 | quality-gate + publish-release |
 | 能力一致性 | `npm run check:requires` / `:strict` | `skills 引用 ⊆ requiresCommands ⊆ CLI 命令目录` | CI 用 **strict**：解析不到命令目录即判红，禁止「未参与断言」的半绿 |
+| brief 契约 | `npm run check:brief` | 领域模型段存在性、`INV-n` 编号与去重、结果段对账闭合、取证策略取值、S/M 级新建套件断言判红；`archive/` 与豁免名单不追溯判红，但每次点名 |
 | 知识治理 | `npm run check:knowledge` | 卡片字段与 status、source 存在性（含归档兜底）、active 卡 menu 路由、引用死链、废弃 token 残留（`--forbid`）、孤儿规范、技能 `name/description` 一致性 | quality-gate |
 | 产物与安装器 | `npm test` | pack 产物内容契约、三清单版本机检、hook wrapper 装配、离线安装 | quality-gate（ubuntu/macos/windows × node 20/22） |
 
-`quality-gate.yml` 在 push main 与每个 PR 上跑全部四门。它存在的原因很实在：这三类门此前只能靠执行者本机口头自证，而半绿的门比没有门更危险。
+`quality-gate.yml` 在 push main 与每个 PR 上跑全部五门。它存在的原因很实在：这些门此前只能靠执行者本机口头自证，而半绿的门比没有门更危险。
 
 但**门是探针，不是验收**：完成证据永远是 brief 里「不变量 × 观察点」的对账表；探针绿不加分，探针红必须归因（真实回归 / 环境噪声），未归因即未验证。分工见 `knowledge/contract-probe.md`。2026-10-11 用户裁定彻底去 TDD 后，「套件必须全绿」类门槛已从规范清除，旧措辞进入 CI 禁项集合，一出现即判红。
 
