@@ -116,9 +116,9 @@ L 级变更或多变更并行时用 worktree 替代分支腾挪：apply §3 会�
 |------|------|
 | `commit plan --name <n> --files <逗号分隔> --message <m>` | 预览提交 |
 | `commit execute --name <n> --files <f> --message <m> --confirm` | 精确 `git add -- <files>` + commit；拒绝 `.`、`-A`、越界路径（退出码 4） |
-| `publish plan --name <n> --title <t> --body <b>` | 预览 push + PR 载荷 |
+| `publish plan --name <n> --title <t> --body-file <f>` | 预览 push + PR 载荷；`--title` 与 `--body`/`--body-file` 必填，缺省即 `PR_PARAMS_REQUIRED` |
 | `publish execute --name <n> --title <t> --body <b> --confirm` | push 后查询/创建 PR；已存在的 open PR 会被复用 |
-| `release plan --name <n> --files <f> --message <m> --title <t>` | 一次返回 commit + PR 的完整计划；planHash 与执行参数写入 brief |
+| `release plan --name <n> --files <f> --message <m> --title <t> --body-file <f>` | 一次返回 commit + PR 的完整计划；`--title` 与 `--body`/`--body-file` 必填，缺省即 `PR_PARAMS_REQUIRED`；planHash 与执行参数写入 brief |
 | `release execute --name <n> --confirm` | 一次完成 commit → push → PR；幂等，可断点续跑 |
 
 **命名消歧**：本表的 `publish` 命令键（＝推分支 + 创建/复用 PR）与本仓的 **publish 阶段**（正式发版：bump + tag + Release）**无关**。发 PR 用 `release.*` 或 `publish.*` 命令键；发版走 `shadow-dev-publish` 技能。归属登记见 `shadow-docs/domain.md` 术语表。
@@ -165,7 +165,8 @@ shadow-dev review execute --name 20260906-feat-export \
 # release：计划 → 确认 → 一键发布（commit + push + PR）
 shadow-dev release plan --name 20260906-feat-export \
   --files src/export.ts,shadow-docs/changes/20260906-feat-export/brief.md \
-  --message "feat(cli): 导出功能" --title "feat: 导出功能"
+  --message "feat(cli): 导出功能" --title "feat(cli): 导出功能" --body-file .tmp/pr-body.md
+# （--title 与 --body/--body-file 必填：缺省时 CLI 直接 PR_PARAMS_REQUIRED 拒绝，不再回落变更名或代写一行 Closes）
 # （向用户确认后）
 shadow-dev release execute --name 20260906-feat-export --confirm
 

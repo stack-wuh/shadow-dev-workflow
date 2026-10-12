@@ -19,7 +19,7 @@
 | `rules/behavior.md` | 行为准则 |
 | `rules/iron-laws.md` | 验证、调试、分支、deterministic CLI 和领域模型铁律 |
 | `norms/knowledge-cards.md` | Knowledge 卡片格式、生命周期和冲突处理 |
-| `norms/*.md` | UI、API、交互、代码风格、领域模型和验证规范 |
+| `norms/*.md` | UI、API、交互、代码风格、领域模型、验证规范与 PR/commit message 结构（`norms/pr-message.md`，模板在 `norms/templates/pr-body.md`） |
 | `knowledge/*.md` | 跨项目经验与协作知识 |
 
 项目外 memory 不是工作流执行真相源。
