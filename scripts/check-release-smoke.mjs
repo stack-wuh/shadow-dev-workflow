@@ -65,7 +65,12 @@ function staticChecks () {
   if (/\[\s*"\$N"\s*=\s*"\d+"\s*\]/.test(blk.text)) bad('SMOKE_HARDCODED_SKILLS', where, 'skills 数与字面量比较——技能增删后要么假红要么假绿')
   if (!/EXPECTED=/.test(blk.text)) bad('SMOKE_HARDCODED_SKILLS', where, '缺 EXPECTED= 的实测期望值（应由 find skills -name SKILL.md | wc -l 派生）')
 
-  if (!fails.length) oks.push('静态对账：字段契约、布局派生与动态 skills 期望值成立')
+  // INV-2 gate-coverage：反引号包裹变量在 bash 里是命令替换，变量取空——v7.0.1 的链红即此形态
+  const ticks = []
+  for (let i = blk.from; i < blk.to; i++) if (/`[A-Za-z_][\w]*`/.test(lines[i])) ticks.push(i + 1)
+  if (ticks.length) bad('SMOKE_BACKTICK_SUBST', where, '冒烟步骤把变量写成反引号包裹形态（行 ' + ticks.join(',') + '）：bash 视作命令替换，取值为空且会把变量名当命令执行——变量引用必须是美元符号形态')
+
+  if (!fails.length) oks.push('静态对账：字段契约、布局派生、动态 skills 期望值与反引号误用检查成立')
 }
 
 function repoSkillCount () {
@@ -126,7 +131,7 @@ const out = []
 for (const o of oks) out.push('[.] ' + o)
 for (const w of warns) out.push('[!] ' + w)
 for (const x of fails) out.push('✗ ' + x)
-if (!fails.length) out.push('✅ 发布冒烟契约门：静态字段/布局/skills 期望值成立' + (warns.length ? '（本机物化 deferred）' : '，离线物化一致'))
+if (!fails.length) out.push('✅ 发布冒烟契约门：静态字段/布局/skills 期望值与反引号误用检查成立' + (oks.some((o) => /OK materialized/.test(o)) ? '，离线物化一致' : warns.length ? '（离线腿 deferred：本机不物化）' : doMaterialize ? '（离线腿未产出物化证据）' : '（离线腿按 flag 跳过，不计入一致）'))
 console.log(out.join('\n'))
-console.log('摘要: smoke checks=' + (oks.length + fails.length + warns.length) + ' fail=' + fails.length + ' deferred=' + warns.length)
+console.log('摘要: smoke checks=' + (oks.length + fails.length + warns.length) + ' fail=' + fails.length + ' deferred=' + warns.length + ' materialized=' + (oks.some((o) => /OK materialized/.test(o)) ? 1 : 0))
 if (fails.length) { console.error('✗ 发布冒烟契约门判红 ' + fails.length + ' 项——release 阻塞，指针不动'); process.exit(1) }

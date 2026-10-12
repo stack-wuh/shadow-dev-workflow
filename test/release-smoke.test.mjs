@@ -9,6 +9,7 @@ import { tmpdir } from 'node:os'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+const BT = '`'; const DQ = String.fromCharCode(39);
 const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(HERE, '..')
 const GATE = join(ROOT, 'scripts', 'check-release-smoke.mjs')
@@ -105,4 +106,36 @@ test('INV-4 离线物化：--from 本地资产安装到隔离 prefix 后断言�
     assert.match(r.out, /deferred=0/)
   }
   rmSync(dir, { recursive: true, force: true })
+})
+
+// 回归即夹具：下面这段是 v7.0.1 发布链 run 38214942988 判红时的 yml 原文（变量被写成反引号形态）。
+// 门对该原文必须判红——否则它守的是想象中的世界，而不是上一次真实失败。
+const REAL_FAILURE = [
+  '      - name: 发布冒烟（隔离 prefix：plan --release → execute → status → bind plan）',
+  '        run: |',
+  '          N=$(find "' + BT + 'ROOT' + BT + '/skills" -name SKILL.md | wc -l | tr -d ' + DQ + ' ' + DQ + ')',
+  '          EXPECTED=$(find skills -name SKILL.md | wc -l | tr -d ' + DQ + ' ' + DQ + ')',
+  '          [ "' + BT + 'N' + BT + '" = "' + BT + 'EXPECTED' + BT + '" ] || { echo "x materialized skills count=' + BT + 'N' + BT + ' expected ' + BT + 'EXPECTED' + BT + '"; exit 1; }',
+].join('\n')
+
+test('INV-1 failure-as-fixture：v7.0.1 真实失败原文必须被门判红', () => {
+  const fx = fixture(REAL_FAILURE)
+  const r = run(['--root', fx.dir, '--workflow', fx.wf, '--no-materialize'])
+  assert.equal(r.code, 1, r.out)
+  assert.match(r.out, /SMOKE_BACKTICK_SUBST/)
+})
+
+test('INV-4 no-double-green：修复后的真实 yml 不得含任何反引号变量形态', () => {
+  const r = run(['--root', ROOT, '--workflow', REAL, '--no-materialize'])
+  assert.equal(r.code, 0, r.out)
+  assert.doesNotMatch(r.out, /SMOKE_BACKTICK_SUBST/)
+})
+
+test('摘要位：--no-materialize 不得被读成「离线物化一致」（门的自我防线）', () => {
+  const fx = fixture(GOOD)
+  const off = run(['--root', fx.dir, '--workflow', fx.wf, '--no-materialize'])
+  assert.equal(off.code, 0, off.out)
+  assert.match(off.out, /materialized=0/)
+  assert.doesNotMatch(off.out, /离线物化一致/)
+  assert.match(off.out, /离线腿按 flag 跳过/)
 })

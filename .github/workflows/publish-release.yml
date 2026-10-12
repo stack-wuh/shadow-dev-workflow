@@ -104,9 +104,9 @@ jobs:
           PTR=$(node -pe 'JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).data.current' "$SMOKE/status.json")
           [ "$PTR" = "$VER" ] || { echo "x CURRENT pointer=$PTR but materialized version=$VER"; exit 1; }
           test -f "$ROOT/norms/verification.md" || { echo "x materialized artifact missing norms/verification.md"; exit 1; }
-          N=$(find "`ROOT`/skills" -name SKILL.md | wc -l | tr -d ' ')
+          N=$(find "$ROOT/skills" -name SKILL.md | wc -l | tr -d ' ')
           EXPECTED=$(find skills -name SKILL.md | wc -l | tr -d ' ')
-          [ "`N`" = "`EXPECTED`" ] || { echo "x materialized skills count=`N` expected `EXPECTED`"; exit 1; }
+          [ "$N" = "$EXPECTED" ] || { echo "x materialized skills count=$N expected $EXPECTED"; exit 1; }
           echo "OK materialized root=$ROOT skills=$N"
           shadow-dev bind plan --host codex --prefix "$SHADOW_WORKFLOW_PREFIX" --json | grep '^{"ok"' | tail -1 > "$SMOKE/bind.json"
           node -e 'const d=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!d.ok){console.error("bind plan failed: "+JSON.stringify(d.error));process.exit(1)}const x=d.data;console.log("OK bind plan host-version="+x.version)' "$SMOKE/bind.json"
