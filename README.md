@@ -154,14 +154,14 @@ shadow-dev bind plan --host auto && shadow-dev bind execute --host <名> --plan-
 
 ```bash
 node scripts/bump-version.mjs 6.10.0    # 一次同步三处 manifest（也可 --check 只判定）
-npm run ci                              # 版本 + requires:strict + 知识治理 + brief 契约 + 测试，五门一体
+npm run ci                              # 版本 + requires:strict + 知识治理 + brief 契约 + 发布冒烟契约 + 测试，六门一体
 git tag v6.10.0 && git push origin v6.10.0
 gh release create v6.10.0 --generate-notes   # 之后由 publish-release.yml 接手
 ```
 
 打 tag 与创建 Release 目前仍由人执行：已 pin 的 CLI 命令目录不含发版命令键，本仓按「能力缺失只能阻塞、不降级」的契约把这两步留在 `shadow-dev-publish` 的委托清单里。待 `execution-layer` 发布含该能力的版本后，本仓同步 `requiresCommands` 与 `cliVersion`，把委托换成 CLI 调用。
 
-`publish-release.yml`（`on: release.published`）依次执行：版本权威判定 → 装 pin CLI → 五门 → `scripts/pack.mjs` → **资产名契约断言**（CLI 只认 `^shadow-dev-workflow-v[0-9][0-9.]*\.tar\.gz$`，名字写错等于没发布）→ `gh release upload --clobber` → **发布冒烟**：隔离 prefix 里用真实 CLI 跑 `workflow plan --release → workflow execute → bind plan`，核对物化的 9 个 skills 与规范文件。产物永远不被手工搬运，人只负责 bump 与打 tag。
+`publish-release.yml`（`on: release.published`）依次执行：版本权威判定 → 装 pin CLI → 六门 → `scripts/pack.mjs` → **资产名契约断言**（CLI 只认 `^shadow-dev-workflow-v[0-9][0-9.]*\.tar\.gz$`，名字写错等于没发布）→ `gh release upload --clobber` → **发布冒烟**：隔离 prefix 里用真实 CLI 跑 `workflow plan --release → workflow execute → bind plan`，核对物化的 9 个 skills 与规范文件。产物永远不被手工搬运，人只负责 bump 与打 tag。
 
 ## 机器门（GitHub Actions）
 
@@ -169,11 +169,12 @@ gh release create v6.10.0 --generate-notes   # 之后由 publish-release.yml 接
 |----|------|--------|-----|
 | 版本同源 | `npm run check:version` | `package.json` 与两份宿主清单版本一致 | quality-gate + publish-release |
 | 能力一致性 | `npm run check:requires` / `:strict` | `skills 引用 ⊆ requiresCommands ⊆ CLI 命令目录` | CI 用 **strict**：解析不到命令目录即判红，禁止「未参与断言」的半绿 |
+| 发布冒烟契约 | `npm run check:smoke` | yml 读的 payload 字段、物化 ROOT 派生、skills 期望值不得写死；离线 `--from` 本地资产复现冒烟（Windows 遇 execution-layer 的 tar 路径缺陷时显式 deferred） |
 | brief 契约 | `npm run check:brief` | 领域模型段存在性、`INV-n` 编号与去重、结果段对账闭合、取证策略取值、S/M 级新建套件断言判红；`archive/` 与豁免名单不追溯判红，但每次点名 |
 | 知识治理 | `npm run check:knowledge` | 卡片字段与 status、source 存在性（含归档兜底）、active 卡 menu 路由、引用死链、废弃 token 残留（`--forbid`）、孤儿规范、技能 `name/description` 一致性 | quality-gate |
 | 产物与安装器 | `npm test` | pack 产物内容契约、三清单版本机检、hook wrapper 装配、离线安装 | quality-gate（ubuntu/macos/windows × node 20/22） |
 
-`quality-gate.yml` 在 push main 与每个 PR 上跑全部五门。它存在的原因很实在：这些门此前只能靠执行者本机口头自证，而半绿的门比没有门更危险。
+`quality-gate.yml` 在 push main 与每个 PR 上跑全部六门。它存在的原因很实在：这些门此前只能靠执行者本机口头自证，而半绿的门比没有门更危险。
 
 但**门是探针，不是验收**：完成证据永远是 brief 里「不变量 × 观察点」的对账表；探针绿不加分，探针红必须归因（真实回归 / 环境噪声），未归因即未验证。分工见 `knowledge/contract-probe.md`。2026-10-11 用户裁定彻底去 TDD 后，「套件必须全绿」类门槛已从规范清除，旧措辞进入 CI 禁项集合，一出现即判红。
 

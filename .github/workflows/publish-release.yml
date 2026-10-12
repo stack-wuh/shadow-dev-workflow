@@ -84,7 +84,7 @@ jobs:
           ARTIFACT: ${{ steps.pack.outputs.artifact }}
         run: gh release upload "$GITHUB_REF_NAME" "$ARTIFACT" --clobber
 
-      - name: 发布冒烟（隔离 prefix：plan --release → execute → bind plan）
+      - name: 发布冒烟（隔离 prefix：plan --release → execute → status → bind plan）
         shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -96,12 +96,17 @@ jobs:
           node -e 'const d=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!d.ok){console.error("plan failed: "+JSON.stringify(d.error));process.exit(1)}console.log("OK plan version="+d.data.version+" missing="+JSON.stringify(d.data.missingCommands))' "$SMOKE/plan.json"
           HASH=$(node -pe 'JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).planHash' "$SMOKE/plan.json")
           shadow-dev workflow execute --release "$GITHUB_REF_NAME" --plan-hash "$HASH" --confirm --json | grep '^{"ok"' | tail -1 > "$SMOKE/exec.json"
-          node -e 'const d=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!d.ok){console.error("execute failed: "+JSON.stringify(d.error));process.exit(1)}console.log("OK execute current="+d.data.current)' "$SMOKE/exec.json"
-          CUR=$(node -pe 'JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).data.current' "$SMOKE/exec.json")
-          ROOT="$SMOKE/prefix/$CUR/shadow-dev-workflow"
+          node -e 'const d=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!d.ok){console.error("execute failed: "+JSON.stringify(d.error));process.exit(1)}console.log("OK execute version="+d.data.version)' "$SMOKE/exec.json"
+          VER=$(node -pe 'JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).data.version' "$SMOKE/exec.json")
+          [ -n "$VER" ] || { echo "x execute returned no version"; exit 1; }
+          ROOT="$SMOKE/prefix/shadow-dev-workflow-$VER"
+          shadow-dev workflow status --prefix "$SHADOW_WORKFLOW_PREFIX" --json | grep '^{"ok"' | tail -1 > "$SMOKE/status.json"
+          PTR=$(node -pe 'JSON.parse(require("fs").readFileSync(process.argv[1],"utf8")).data.current' "$SMOKE/status.json")
+          [ "$PTR" = "$VER" ] || { echo "x CURRENT pointer=$PTR but materialized version=$VER"; exit 1; }
           test -f "$ROOT/norms/verification.md" || { echo "x materialized artifact missing norms/verification.md"; exit 1; }
-          N=$(find "$ROOT/skills" -name SKILL.md | wc -l | tr -d ' ')
-          [ "$N" = "9" ] || { echo "x materialized skills count=$N expected 9"; exit 1; }
+          N=$(find "`ROOT`/skills" -name SKILL.md | wc -l | tr -d ' ')
+          EXPECTED=$(find skills -name SKILL.md | wc -l | tr -d ' ')
+          [ "`N`" = "`EXPECTED`" ] || { echo "x materialized skills count=`N` expected `EXPECTED`"; exit 1; }
           echo "OK materialized root=$ROOT skills=$N"
           shadow-dev bind plan --host codex --prefix "$SHADOW_WORKFLOW_PREFIX" --json | grep '^{"ok"' | tail -1 > "$SMOKE/bind.json"
           node -e 'const d=JSON.parse(require("fs").readFileSync(process.argv[1],"utf8"));if(!d.ok){console.error("bind plan failed: "+JSON.stringify(d.error));process.exit(1)}const x=d.data;console.log("OK bind plan host-version="+x.version)' "$SMOKE/bind.json"

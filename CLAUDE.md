@@ -49,17 +49,18 @@
 
 ## 机器门（scripts/ 是执法层）
 
-规范文本里的「不可议」必须由非零退出的脚本兜住，AI 的本机口头自证不可替代 CI。五门一体入口 `npm run ci`：
+规范文本里的「不可议」必须由非零退出的脚本兜住，AI 的本机口头自证不可替代 CI。六门一体入口 `npm run ci`：
 
 | 门 | 命令 | 要点 |
 |----|------|------|
 | 版本同源 | `npm run check:version` | `package.json` == `.claude-plugin` == `.codex-plugin` == release tag 去 `v` |
 | 能力一致性 | `npm run check:requires:strict` | CI 必须 strict：解析不到 CLI 命令目录即判红，禁止「未参与断言」半绿 |
+| 发布冒烟契约 | `npm run check:smoke` | yml 读的 payload 字段、物化 ROOT 派生、skills 期望值不得写死；离线 `--from` 本地资产复现冒烟（Windows 遇 execution-layer 的 tar 路径缺陷时显式 deferred） |
 | brief 契约 | `npm run check:brief` | 领域模型段存在性、`INV-n` 编号与去重、结果段对账闭合、取证策略取值、S/M 级新建套件断言判红 |
 | 知识治理 | `npm run check:knowledge` | 卡片字段/status/source（含归档兜底）/menu 路由/死链/废弃残留/孤儿规范/技能 frontmatter |
 | 产物与安装器 | `npm test` | pack 内容契约与离线安装器断言，矩阵覆盖 windows |
 
-CI 两条流水：`quality-gate.yml`（push main + 全部 PR）、`publish-release.yml`（`release.published` → 版本权威判定 → 五门 → pack → 资产名契约断言 → 上传 → 隔离 prefix 发布冒烟）。**版本权威＝release tag**，不做 CI 事后回写修正。
+CI 两条流水：`quality-gate.yml`（push main + 全部 PR）、`publish-release.yml`（`release.published` → 版本权威判定 → 六门 → pack → 资产名契约断言 → 上传 → 隔离 prefix 发布冒烟）。**版本权威＝release tag**，不做 CI 事后回写修正。
 
 ## Deterministic CLI
 

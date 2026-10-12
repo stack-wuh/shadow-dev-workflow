@@ -26,6 +26,7 @@
 | 20261010-refactor-domain-driven-workflow | committed | shadow-docs/changes/20261010-refactor-domain-driven-workflow/brief.md |
 | 20261011-refactor-kill-tdd-verification | ✅ 完成 | shadow-docs/changes/archive/20261011-refactor-kill-tdd-verification/brief.md |
 | 20261012-build-gate-reproducibility | ✅ 完成 | shadow-docs/changes/archive/20261012-build-gate-reproducibility/brief.md |
-| 20261012-chore-release-v7.0.0 | branched | shadow-docs/changes/20261012-chore-release-v7.0.0/brief.md |
+| 20261012-chore-release-v7.0.0 | published | shadow-docs/changes/20261012-chore-release-v7.0.0/brief.md |
+| 20261012-fix-release-smoke-field-contract | branched | shadow-docs/changes/20261012-fix-release-smoke-field-contract/brief.md |
 | 20261012-refactor-evidence-gate-layers | ✅ 完成 | shadow-docs/changes/archive/20261012-refactor-evidence-gate-layers/brief.md |
 | 20261012-refactor-flow-order-publish-stage | ✅ 完成 | shadow-docs/changes/archive/20261012-refactor-flow-order-publish-stage/brief.md |
