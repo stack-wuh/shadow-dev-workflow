@@ -4,7 +4,7 @@
   "name": "20261012-chore-cli-pin-v160",
   "type": "chore",
   "scope": "distribution",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "chore/20261012-chore-cli-pin-v160",
   "files": [
@@ -15,8 +15,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 61,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/61",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 62,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/62"
   },
   "review": {
     "conclusion": "passed",
@@ -25,7 +25,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:61",
+    "checkpoint": "pr:62",
     "planHash": "e348c534dbcf1957567741dad215f0984c4cbff8a849569096b1a3b8aa1686b8",
     "updatedAt": null,
     "lastError": null,
