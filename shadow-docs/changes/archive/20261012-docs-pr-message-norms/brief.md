@@ -4,7 +4,7 @@
   "name": "20261012-docs-pr-message-norms",
   "type": "docs",
   "scope": "workflow-governance",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "docs/20261012-docs-pr-message-norms",
   "files": [
@@ -27,13 +27,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "8db66b2389965e7ec753a86c15489fb3853e19ef",
-    "verifiedAt": "2026-10-12T10:16:37.501Z"
+    "verifiedCommit": "c9060cb5b21ad7ff248f09053fb6b8113345ad8f",
+    "verifiedAt": "2026-10-12T11:11:58.577Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:60",
-    "planHash": "9c87904551cf8bd352ea09436a7a2d145614afec65ec065c5499bd615c268d8e",
+    "checkpoint": "merged-pr:60",
+    "planHash": "7fabf1b4d8d0302372711a8202890c05dc85415a23ecc56ac7d560515383ed5c",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -65,7 +65,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": "knowledge/multi-host-plugin-distribution.md",
-    "reason": "结构规范即真源文档本身，卡片不重复散文；bind 遇 skill 子目录抛 EISDIR 这条约束已写进 norms/pr-message.md 的落位约束条目，暂不另建卡"
+    "reason": "结构规范即真源文档本身，卡片不重复散文；bind 遇 skill 子目录抛 EISDIR 的落位约束已写进 norms/pr-message.md"
   }
 }
 ---
