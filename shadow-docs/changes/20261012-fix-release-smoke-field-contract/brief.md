@@ -4,7 +4,7 @@
   "name": "20261012-fix-release-smoke-field-contract",
   "type": "fix",
   "scope": "distribution,scripts,ci",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "fix/20261012-fix-release-smoke-field-contract",
   "files": [
@@ -23,8 +23,8 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 53,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/53"
   },
   "review": {
     "conclusion": "passed",
@@ -33,7 +33,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "pr:53",
     "planHash": "6c86ae8401cd7adb5b8ae7d09e23dfe96ec34da0424c8d432cb99400b913a069",
     "updatedAt": null,
     "lastError": null,
