@@ -4,7 +4,7 @@
   "name": "20261012-chore-release-v710",
   "type": "chore",
   "scope": "distribution",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261012-chore-release-v710",
   "files": [
@@ -22,13 +22,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "53fd228b82afa6fbe5cacf19a6daa6601e19a41b",
-    "verifiedAt": "2026-10-12T11:32:25.595Z"
+    "verifiedCommit": "06e9ad537d45c72ca3fb927851503d0befc58599",
+    "verifiedAt": "2026-10-12T11:49:48.132Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:64",
-    "planHash": "6a3ddab047d29086a415dd69da1f3629fd0cf0769bba198ae76cd40fe6f7c040",
+    "checkpoint": "merged-pr:64",
+    "planHash": "f151f9148ba32dd6c5feee12e32c42c1b2262237df928a887322725b7a62c86d",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -56,7 +56,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": "knowledge/release-artifact-pipeline.md",
-    "reason": "常规发版载体，资产名契约与冒烟语义未变；pin 与发版分离的既有约定已在卡内"
+    "reason": "发版载体在 main 上重认：三处 manifest 同源 7.1.0，发布链 run 38244992419 success，资产名契约与冒烟均已核对"
   }
 }
 ---
