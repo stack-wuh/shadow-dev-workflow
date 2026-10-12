@@ -4,7 +4,7 @@
   "name": "20261012-refactor-release-smoke-single-implementation",
   "type": "refactor",
   "scope": "distribution,ci,scripts",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "refactor/20261012-refactor-release-smoke-single-implementation",
   "files": [
@@ -28,13 +28,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "e383212a264d598d15a07d842f11289e593853b2",
-    "verifiedAt": "2026-10-12T07:34:59.609Z"
+    "verifiedCommit": "19359ea1c81c90c9ccb9401987bbbba985a18cbc",
+    "verifiedAt": "2026-10-12T07:53:58.106Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:57",
-    "planHash": "7781144698c516b85f62b354f3bff2345bd16bb9f6a54cf187eddd107c657b63",
+    "checkpoint": "merged-pr:57",
+    "planHash": "8786e6c97f9b731ce62056bb83ac34f52f212d94994f693d84f63427667182f1",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -64,7 +64,7 @@
   "knowledge": {
     "action": "更新",
     "target": "knowledge/release-artifact-pipeline.md",
-    "reason": "冒烟单实现化达成是发布链的长期事实；同时把执行者生成源码的转义纪律落进 contract-probe 卡"
+    "reason": "单实现化达成是发布链长期事实；已完成达成本轮验证"
   }
 }
 ---

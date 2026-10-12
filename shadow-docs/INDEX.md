@@ -32,4 +32,4 @@
 | 20261012-fix-smoke-failure-as-fixture | published | shadow-docs/changes/20261012-fix-smoke-failure-as-fixture/brief.md |
 | 20261012-refactor-evidence-gate-layers | ✅ 完成 | shadow-docs/changes/archive/20261012-refactor-evidence-gate-layers/brief.md |
 | 20261012-refactor-flow-order-publish-stage | ✅ 完成 | shadow-docs/changes/archive/20261012-refactor-flow-order-publish-stage/brief.md |
-| 20261012-refactor-release-smoke-single-implementation | branched | shadow-docs/changes/20261012-refactor-release-smoke-single-implementation/brief.md |
+| 20261012-refactor-release-smoke-single-implementation | ✅ 完成 | shadow-docs/changes/archive/20261012-refactor-release-smoke-single-implementation/brief.md |
