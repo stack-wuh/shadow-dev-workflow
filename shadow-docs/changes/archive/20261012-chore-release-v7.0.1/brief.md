@@ -4,7 +4,7 @@
   "name": "20261012-chore-release-v7.0.1",
   "type": "chore",
   "scope": "distribution",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261012-chore-release-v7.0.1",
   "files": [
@@ -23,13 +23,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "046c17ffc077c96d53a90ec2dc491bde2ae7cd6a",
-    "verifiedAt": "2026-10-12T06:52:26.512Z"
+    "verifiedCommit": "5e4107eb9ada38c65f28d27b04765ace1764bb3c",
+    "verifiedAt": "2026-10-12T08:03:41.301Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:54",
-    "planHash": "b092c4f95f0e07929f1f24e5d7fe2c816d6efee3e8f77ca1c2adcfffa4e22ab6",
+    "checkpoint": "merged-pr:54",
+    "planHash": "253427e890a528e6c6deb25a4ecb0d34b4d10dd48fda4d4f3b9266c4f48314a2",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -54,7 +54,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "发版事实待第5步执行后回填，长期结论已由发布链卡持有"
+    "reason": "发版链已绿，交付证据闭合"
   }
 }
 ---
