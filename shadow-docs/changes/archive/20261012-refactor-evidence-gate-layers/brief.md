@@ -4,7 +4,7 @@
   "name": "20261012-refactor-evidence-gate-layers",
   "type": "refactor",
   "scope": "norms,rules,scripts,skills,knowledge",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "refactor/20261012-refactor-evidence-gate-layers",
   "files": [
@@ -34,13 +34,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "16e4e74e78d358976b5142cd1f3705abea7d1725",
-    "verifiedAt": "2026-10-12T04:38:17.945Z"
+    "verifiedCommit": "812afc7bd073b6a8eccce4765538f6f26f495521",
+    "verifiedAt": "2026-10-12T06:10:30.402Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:51",
-    "planHash": "d94501e53ba56fc63863cc695ed793a92027b893abf1a160a76bbcb274b6df51",
+    "checkpoint": "merged-pr:51",
+    "planHash": "d6b596b9da01aa510963a53aed594e597bbbdcc0d8e126ee77671a20bb4e2b54",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -75,7 +75,7 @@
   "knowledge": {
     "action": "更新",
     "target": "knowledge/contract-probe.md",
-    "reason": "\"分层门槛（guard必须绿·regression按60s实测成本）与断言优先四条判据属长期有效事实；本仓实测的夹具半读教训必须沉淀为第四则\""
+    "reason": "分层门槛与断言优先四条判据属长期有效事实；夹具半读教训沉淀为第四则（在main上重跑以绑定verifiedCommit）"
   }
 }
 ---
