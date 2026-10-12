@@ -4,7 +4,7 @@
   "name": "20261012-chore-release-v7.0.0",
   "type": "chore",
   "scope": "distribution",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261012-chore-release-v7.0.0",
   "files": [
@@ -25,13 +25,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "8ba27984ecc452137b5799328c3c94c3f89e02af",
-    "verifiedAt": "2026-10-12T06:18:58.333Z"
+    "verifiedCommit": "7933ee5d90703d6c53e3e0bfe43d7e68f320eb18",
+    "verifiedAt": "2026-10-12T08:03:20.897Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:52",
-    "planHash": "4d5a57d7dbb92efea65324c9143c7a875024d54620c82b4598545f53162db8f8",
+    "checkpoint": "merged-pr:52",
+    "planHash": "7839480ed0166a0cf7eb2fbe92fb57088660d1fe27186c6839b553f94f3d6fd4",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -58,7 +58,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "发版揭示的资产契约与tag权威已由release-artifact-pipeline卡持有，本次无新长期事实"
+    "reason": "发版链已绿，交付证据闭合"
   }
 }
 ---
