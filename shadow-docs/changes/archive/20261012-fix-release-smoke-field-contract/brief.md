@@ -4,7 +4,7 @@
   "name": "20261012-fix-release-smoke-field-contract",
   "type": "fix",
   "scope": "distribution,scripts,ci",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "fix/20261012-fix-release-smoke-field-contract",
   "files": [
@@ -28,13 +28,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "9ce4f855cbe611a8576109cad47ec9a0f9935f8d",
-    "verifiedAt": "2026-10-12T06:44:49.560Z"
+    "verifiedCommit": "803594e5f2dfc4fa5ba06f814a9dd29fd68a8558",
+    "verifiedAt": "2026-10-12T06:48:47.423Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:53",
-    "planHash": "6c86ae8401cd7adb5b8ae7d09e23dfe96ec34da0424c8d432cb99400b913a069",
+    "checkpoint": "merged-pr:53",
+    "planHash": "84b4a810af4ae8ddbafb4eb05b38201f2722f05792ae8c6b65e1df8695eb89a5",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -58,7 +58,7 @@
   "knowledge": {
     "action": "更新",
     "target": "knowledge/release-artifact-pipeline.md",
-    "reason": "字段契约、冒烟可本机复现与Windows物化缺陷是发布链的长期事实，已由该卡持有并更新"
+    "reason": "字段契约与离线冒烟为发布链长期事实，已在该卡落地并附 run 取证"
   }
 }
 ---
