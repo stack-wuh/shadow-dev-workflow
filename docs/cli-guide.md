@@ -97,8 +97,8 @@ L 级变更或多变更并行时用 worktree 替代分支腾挪：apply §3 会�
 | `issue execute --name <n> --confirm` | 创建 GitHub issue（参数从 brief 恢复，无需重复传入），`github.repository` 自动从 `origin` remote 推导并写回 brief |
 | `branch plan --name <n>` | 预览分支名 `{type}/{name}` |
 | `branch execute --name <n> --confirm` | 创建并切换分支，写回 `brief.branch` |
-| `sync plan --name <n>` | fetch origin 并检查可快进；非 shadow-docs 脏文件报 `DIRTY_WORKTREE` |
-| `sync execute --name <n> --confirm` | `git merge --ff-only` 快进到上游 |
+| `sync plan [--name <n>] [--base-branch <b>]` | fetch origin 并检查可快进；基线取 `--base-branch` > `brief.baseBranch` > 当前分支；非 shadow-docs 脏文件报 `DIRTY_WORKTREE` |
+| `sync execute [--name <n>] [--plan-hash <h>] --confirm` | `git merge --ff-only` 快进**当前分支**到上游；brief 不在盘时 `--plan-hash` 为唯一凭证 |
 
 ### 任务与审查（review 阶段）
 
@@ -171,8 +171,9 @@ shadow-dev release plan --name 20260906-feat-export \
 shadow-dev release execute --name 20260906-feat-export --confirm
 
 # release 末段：PR merged 后同步基线并归档（正常流程到此收口）
-shadow-dev sync plan --name 20260906-feat-export
-shadow-dev sync execute --name 20260906-feat-export --confirm
+git switch main
+shadow-dev sync plan
+shadow-dev sync execute --plan-hash <hash> --confirm
 shadow-dev archive plan --name 20260906-feat-export
 shadow-dev archive execute --name 20260906-feat-export --confirm
 
