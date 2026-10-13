@@ -4,11 +4,12 @@
   "name": "20261013-docs-sync-briefless-form",
   "type": "docs",
   "scope": null,
-  "status": "published",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "docs/20261013-docs-sync-briefless-form",
   "files": [
     "docs/cli-guide.md",
+    "shadow-docs/INDEX.md",
     "shadow-docs/changes/20261013-docs-sync-briefless-form/brief.md",
     "skills/shadow-dev-publish/SKILL.md",
     "skills/shadow-dev-release/SKILL.md"
@@ -21,14 +22,14 @@
     "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/65"
   },
   "review": {
-    "conclusion": "passed",
-    "verifiedCommit": "c6dc76a46628a7eea33357f1e371db6c2f20613f",
-    "verifiedAt": "2026-10-13T06:38:56.954Z"
+    "conclusion": "pending",
+    "verifiedCommit": null,
+    "verifiedAt": null
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:65",
-    "planHash": "f821d4b2f1f7f5084ab96eaeea391843343912185c33602596769c40c1f9ffce",
+    "checkpoint": "16318e683a14c2b22d9436d510d0402d743c1c8b",
+    "planHash": "6a35b9001b35fe4b54ffce50b90a94514a4726c44b3800772fe50ae1926c89e3",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -41,6 +42,12 @@
       "message": "docs: 同步 sync 无 brief 调用形态到插件三处文档",
       "title": "docs: 同步 sync 无 brief 调用形态到插件三处文档",
       "body": "## 变更\n- `docs/cli-guide.md`：sync 命令表两行改为可选 `--name` / `--base-branch`，收口示例改无 brief 形态\n- `skills/shadow-dev-release/SKILL.md`：§4 命令块与说明改为 `git switch main` + 无 `--name` 形态\n- `skills/shadow-dev-publish/SKILL.md`：§4 末段「合并后同步本地基线」同一形态\n- 文档首次写明语义代价：非 main 基线必须显式传 `--base-branch`\n\n## 影响\n- 行为/触发面变化：AI 在 squash 收口时不再被文档引向会 `BRIEF_NOT_FOUND` 的旧形态\n- 消除隐性人工步骤：不再需要人退回去跑裸 `git merge --ff-only`\n- 明确不受影响的范围：apply 段 `sync plan --name` 示例保留（那里 brief 在盘，行为未变）\n- `rules/`、`knowledge/`、`norms/`、三份 manifest 版本与 `cliVersion` 均未触碰（不混交）\n\n## 验证\n- 命令与结果：`npm run check:brief` → `摘要: briefs=4 ok=2 warn=2 fail=0`（两条 warn 是既有 GRANDFATHERED 豁免）\n- 残留扫描：`grep -rn \"sync execute --name\" docs skills norms rules knowledge`\n  扫描面另含 `README.md`、`CLAUDE.md`、`menu.md` → 唯一命中 `docs/cli-guide.md:158`（有意保留）\n- 差异面：`git diff --stat` = 3 文件 13 增 9 删\n- 本形态实证：CLI 仓两次收口（#70 → `92515be`、#71 → `840ee88`）均用这条命令序列跑通，工作树干净\n- 未覆盖项：本机不跑 `npm run ci`（含 install-cli/pack，依赖 `SHADOW_DEV_BASH` 口径），由本仓 `quality-gate` 承担\n\n## 关联\n- Closes #59\n- brief: shadow-docs/changes/20261013-docs-sync-briefless-form/brief.md"
+    },
+    "commit": {
+      "files": [
+        "shadow-docs/INDEX.md"
+      ],
+      "message": "docs(shadow): 补登记 20261013-docs-sync-briefless-form 到变更台账，INDEX 与在途目录同源"
     }
   },
   "knowledge": {
