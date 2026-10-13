@@ -4,7 +4,7 @@
   "name": "20261013-docs-sync-briefless-form",
   "type": "docs",
   "scope": null,
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "docs/20261013-docs-sync-briefless-form",
   "files": [
@@ -23,13 +23,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "0443dadacd0c431736132d4d4db455acb86adb0e",
-    "verifiedAt": "2026-10-13T06:57:18.000Z"
+    "verifiedCommit": "83914bcd672c45c77e7ebaecd13d125c95ecf7e9",
+    "verifiedAt": "2026-10-13T07:01:35.618Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:65",
-    "planHash": "7dd9a2eb2629c8e91dfff428b211a0250d4a3bbb5a0b520f3d56c1bb6234db14",
+    "checkpoint": "merged-pr:65",
+    "planHash": "b52a965ad9099bc82e56a05576d89dfc9aeb8d4db92450e689fac65775bba0c1",
     "updatedAt": null,
     "lastError": null,
     "release": {
