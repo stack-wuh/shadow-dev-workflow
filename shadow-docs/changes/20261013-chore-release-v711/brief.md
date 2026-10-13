@@ -4,7 +4,7 @@
   "name": "20261013-chore-release-v711",
   "type": "chore",
   "scope": null,
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "chore/20261013-chore-release-v711",
   "files": [
@@ -18,8 +18,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 66,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/66"
   },
   "review": {
     "conclusion": "passed",
@@ -28,7 +28,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "pr:66",
     "planHash": "306e6a462653807032f5ec40bbc6ea43fc009dff9e8d44c5c10ac0bad20cf9f5",
     "updatedAt": null,
     "lastError": null,
