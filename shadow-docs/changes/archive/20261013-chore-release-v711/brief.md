@@ -4,7 +4,7 @@
   "name": "20261013-chore-release-v711",
   "type": "chore",
   "scope": null,
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261013-chore-release-v711",
   "files": [
@@ -23,13 +23,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "59ae33711f8405ba47728f53c95bf7525e13d676",
-    "verifiedAt": "2026-10-13T07:04:36.120Z"
+    "verifiedCommit": "95197ae36d76912fdd9e62ec60caa3f0981b8c38",
+    "verifiedAt": "2026-10-13T07:15:21.287Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:66",
-    "planHash": "306e6a462653807032f5ec40bbc6ea43fc009dff9e8d44c5c10ac0bad20cf9f5",
+    "checkpoint": "merged-pr:66",
+    "planHash": "c780701821630a3219f06c65555ffd675d3b17eefcddd34b3ad1e1c7fe8d1911",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -42,7 +42,7 @@
       ],
       "message": "chore: v7.1.1 三份 manifest 同源 bump 与 cliVersion pin v1.7.0",
       "title": "chore: v7.1.1 三份 manifest 同源 bump 与 cliVersion pin v1.7.0",
-      "body": "## 变更\n- `package.json`：`version` 7.1.0 → 7.1.1、`cliVersion` v1.6.0 → v1.7.0\n- `.claude-plugin/plugin.json`、`.codex-plugin/plugin.json`：`version` → 7.1.1\n- 三份由 `node scripts/bump-version.mjs 7.1.1` 一处命令写入，不手改\n- `shadow-docs/INDEX.md`：登记本载体；载体 brief 自身\n\n## 影响\n- 行为/触发面变化：安装轨自此拿到带无 brief `sync` 的 CLI，与已合并的文档形态（PR #65）同源\n- 装 v1.6.0 的机器上「文档教无 `--name`、CLI 却 `NAME_REQUIRED`」的错配自此消除\n- 明确不受影响的范围：`skills/**`、`norms/**`、`rules/**`、`scripts/**` 未触碰\n- `requiresCommands` 29 项不动——`sync.plan` / `sync.execute` 键名未变，是判定结果而非省略\n\n## 验证\n- 命令与结果：`npm run check:version` → `✓ 三处 manifest 版本同源: 7.1.1（3 个文件）`\n- `npm run check:requires:strict` → `declared=29 undeclared=[] missing-in-cli=[] strict=on`\n- `npm run check:knowledge` → `ok=11 warn=16 fail=0`；`npm run check:brief` → `briefs=4 ok=2 warn=2 fail=0`\n- 差异面：`git diff --stat` = 4 文件 5 增 4 删\n- pin 目标在位：`gh release download v1.7.0 --pattern *.tar.gz` 实取 `49057B`，`uploader=github-actions[bot]`\n- 本机 `curl` 直连 github https 下载不通（`HTTP 000`/`exit 43`），故 runner 侧可达性以本 PR 的 `quality-gate` 为准\n- 未覆盖项：本机不跑 `npm test`（含 install-cli/pack/release-smoke，依赖 `SHADOW_DEV_BASH` 口径）\n- 未覆盖项：发布链端到端需 tag `v7.1.1` 落地才可取证，已在 brief 结果段登记为待回填\n\n## 关联\n- Refs #65\n- brief: shadow-docs/changes/20261013-chore-release-v711/brief.md"
+      "body": "## 变更\n- `package.json`：`version` 7.1.0 → 7.1.1、`cliVersion` v1.6.0 → v1.7.0\n- `.claude-plugin/plugin.json`、`.codex-plugin/plugin.json`：`version` → 7.1.1\n- 三份由 `node scripts/bump-version.mjs 7.1.1` 一处命令写入，不手改\n- `shadow-docs/INDEX.md`：登记本载体；载体 brief 自身\n\n## 影响\n- 行为/触发面变化：安装轨自此拿到带无 brief `sync` 的 CLI，与已合并的文档形态（PR #65）同源\n- 装 v1.6.0 的机器上「文档教无 `--name`、CLI 却 `NAME_REQUIRED`」的错配自此消除\n- 明确不受影响的范围：`skills/**`、`norms/**`、`rules/**`、`scripts/**` 未触碰\n- `requiresCommands` 29 项不动——`sync.plan` / `sync.execute` 键名未变，是判定结果而非省略\n\n## 验证\n- 命令与结果：`npm run check:version` → `✓ 三处 manifest 版本同源: 7.1.1（3 个文件）`\n- `npm run check:requires:strict` → `declared=29 undeclared=[] missing-in-cli=[] strict=on`\n- `npm run check:knowledge` → `ok=11 warn=16 fail=0`\n  `npm run check:brief` → `briefs=4 ok=2 warn=2 fail=0`\n- 差异面：`git diff --stat` = 4 文件 5 增 4 删\n- pin 目标在位：`gh release download v1.7.0 --pattern *.tar.gz` 实取 `49057B`\n  资产 `uploader=github-actions[bot]`（`gh api …/releases/tags/v1.7.0`）\n- 本机 `curl` 直连 github https 下载不通（`HTTP 000`/`exit 43`），故 runner 侧可达性以本 PR 的 `quality-gate` 为准\n- 未覆盖项：本机不跑 `npm test`（含 install-cli、pack、release-smoke 三类）\n  该套件依赖 `SHADOW_DEV_BASH` 指向 Git bash，本机口径易错，由 `quality-gate` 承担\n- 未覆盖项：发布链端到端需 tag `v7.1.1` 落地才可取证，已在 brief 结果段登记为待回填\n\n## 关联\n- Refs #65\n- brief: shadow-docs/changes/20261013-chore-release-v711/brief.md"
     }
   },
   "knowledge": {
@@ -98,6 +98,7 @@
 - 能力面：`npm run check:requires:strict` → `declared=29 skills-referenced=23 undeclared=[] cli-catalog=47 catalog=resolved strict=on missing-in-cli=[]`，尾行 `✓ skills ⊆ requiresCommands ⊆ CLI 命令目录`。`sync.plan` / `sync.execute` 键名未变，故 `requiresCommands` 不动是判定结果而非偷懒。
 - 知识与台账：`npm run check:knowledge` → `摘要: ok=11 warn=16 fail=0`；`npm run check:brief` → `摘要: briefs=4 ok=2 warn=2 fail=0`；`grep -c 20261013-chore-release-v711 shadow-docs/INDEX.md` = 1（PR #65 曾因台账缺条目被 CI 判红，本次一次到位）。
 
+- 正文首版有行超出「单行 ≤ 100 字符」（最长 106），违反 `norms/pr-message.md` §3 与模板约束——已拆行，`gh pr edit` 同步 PR 正文，并同步 brief 内持久化副本，在此留痕。
 **未覆盖项（明说）**
 
 - 本机不跑 `npm test`：含 `install-cli` / `pack` / `release-smoke`，依赖 `SHADOW_DEV_BASH` 指向 Git bash，本机口径易错；由本仓 `quality-gate`（6 matrix）承担，checks 未绿前不视为交付完成。
