@@ -36,4 +36,5 @@
 | 20261012-refactor-evidence-gate-layers | ✅ 完成 | shadow-docs/changes/archive/20261012-refactor-evidence-gate-layers/brief.md |
 | 20261012-refactor-flow-order-publish-stage | ✅ 完成 | shadow-docs/changes/archive/20261012-refactor-flow-order-publish-stage/brief.md |
 | 20261012-refactor-release-smoke-single-implementation | ✅ 完成 | shadow-docs/changes/archive/20261012-refactor-release-smoke-single-implementation/brief.md |
+| 20261013-chore-release-v711 | branched | shadow-docs/changes/20261013-chore-release-v711/brief.md |
 | 20261013-docs-sync-briefless-form | ✅ 完成 | shadow-docs/changes/archive/20261013-docs-sync-briefless-form/brief.md |

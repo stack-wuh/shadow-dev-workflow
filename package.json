@@ -1,6 +1,6 @@
 {
   "name": "shadow-dev-workflow",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "type": "module",
   "engines": {
     "node": ">=20"
@@ -15,7 +15,7 @@
     "check:version": "node scripts/bump-version.mjs --check",
     "ci": "npm run check:version && npm run check:requires:strict && npm run check:knowledge && npm run check:brief && npm run check:smoke && npm test"
   },
-  "cliVersion": "v1.6.0",
+  "cliVersion": "v1.7.0",
   "requiresCommands": [
     "archive.execute",
     "archive.plan",
