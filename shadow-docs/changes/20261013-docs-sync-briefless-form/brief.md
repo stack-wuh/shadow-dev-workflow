@@ -4,7 +4,7 @@
   "name": "20261013-docs-sync-briefless-form",
   "type": "docs",
   "scope": null,
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "docs/20261013-docs-sync-briefless-form",
   "files": [
@@ -17,8 +17,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 65,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/65"
   },
   "review": {
     "conclusion": "passed",
@@ -27,7 +27,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "pr:65",
     "planHash": "f821d4b2f1f7f5084ab96eaeea391843343912185c33602596769c40c1f9ffce",
     "updatedAt": null,
     "lastError": null,
