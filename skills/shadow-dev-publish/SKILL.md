@@ -54,7 +54,7 @@ shadow-dev release execute --name <载体名> --confirm
 
 向用户确认后执行。**tag 必须指向已含 bump 的 main**——先合并，后打 tag；顺序颠倒会让产物与 tag 指向的 tree 分裂，等于把版本权威降级成补丁（`knowledge/release-artifact-pipeline.md`）。
 
-合并后同步本地基线：`shadow-dev sync plan` + `shadow-dev sync execute --name <载体名> --confirm`。
+合并后同步本地基线：先 `git switch main`，再 `shadow-dev sync plan`（**不传 `--name`**——squash 合并后载体 brief 尚未落到 main）+ `shadow-dev sync execute --plan-hash <hash> --confirm`。
 
 ## 5. 发版（打 tag + 创建 GitHub Release）
 

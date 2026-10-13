@@ -42,14 +42,17 @@ shadow-dev release execute --name <name> --confirm
 
 ## 4. 等待 merged 并同步基线
 
-归档前置是「GitHub API 证明 PR merged」，本阶段在此等待，不提前归档。合并后同步本地 main：
+归档前置是「GitHub API 证明 PR merged」，本阶段在此等待，不提前归档。合并后把本地基线快进到上游：
 
 ```bash
-shadow-dev sync plan --name <name>
-shadow-dev sync execute --name <name> --confirm
+git switch main
+shadow-dev sync plan
+shadow-dev sync execute --plan-hash <hash> --confirm
 ```
 
-`sync plan` 对非 `shadow-docs/` 的脏文件报 `DIRTY_WORKTREE`，此时先清理工作树再继续。HEAD 必须与 review 的 `verifiedCommit` 同源；不一致时在 main 上重跑 review 的 plan + execute，不带着漂移归档。
+`sync` 快进的是**当前分支**，所以先 `git switch main`（切工作区不属 §3 禁止的原始写命令）。squash 合并后载体 brief 还没落到 main，这里**不传 `--name`**——v1.7.0 起 brief 不再是 `sync` 的前置条件。基线取 `--base-branch` > `brief.baseBranch` > 当前分支：非 main 基线要显式传 `--base-branch`。`sync plan` 对非 `shadow-docs/` 的脏文件报 `DIRTY_WORKTREE`，此时先清理工作树再继续。
+
+HEAD 必须与 review 的 `verifiedCommit` 同源；squash 合并必然带来漂移，这是设计内的门而非缺陷：在 main 上重跑 review 的 plan + execute，不带着漂移归档。
 
 ## 5. 归档 brief 与重建 INDEX
 
