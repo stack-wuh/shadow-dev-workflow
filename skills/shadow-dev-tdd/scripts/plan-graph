@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+# Validate and render the SDD wave table for an implementation plan.
+#
+# The controller assigns waves/tiers/scopes by reading the plan (semantic
+# judgment no script can make); this script is the mechanical gate on that
+# assignment: every task named in a wave must exist in the plan, and file
+# scopes inside one wave must be pairwise disjoint — so a typo or a wishful
+# "these don't overlap" dies here, before any implementer is dispatched.
+#
+# Usage:
+#   plan-graph PLAN_FILE --wave N,M,... [--wave ...] [--scope "1=glob;2=glob"]
+#
+# Scope globs use dir/** or exact file paths; the overlap check is
+# path-prefix based ("src" overlaps "src/auth/x"; "src/a" vs "src/b" is
+# clean). Tasks without a scope draw a warning — they are serial material.
+# Output: a normalized `## Waves` block to paste into the ledger.
+# Exit: 0 clean; 3 unknown task; 4 in-wave scope overlap (all findings
+# reported before exiting).
+set -euo pipefail
+
+[ $# -ge 1 ] || { echo "usage: plan-graph PLAN_FILE --wave N,M,... [--wave ...] [--scope \"1=glob;2=glob\"]" >&2; exit 2; }
+plan=$1; shift
+
+[ -f "$plan" ] || { echo "no such plan file: $plan" >&2; exit 2; }
+
+waves=()
+scope_arg=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --wave) [ $# -ge 2 ] || { echo "--wave needs a value" >&2; exit 2; }; waves+=("$2"); shift 2 ;;
+    --scope) [ $# -ge 2 ] || { echo "--scope needs a value" >&2; exit 2; }; scope_arg=$2; shift 2 ;;
+    *) echo "unexpected argument: $1" >&2; exit 2 ;;
+  esac
+done
+[ ${#waves[@]} -gt 0 ] || { echo "no --wave given (a plan with no parallelism needs no wave table)" >&2; exit 2; }
+
+# Task numbers present in the plan — same heading rule as task-brief.
+plan_tasks=$(awk '
+  /^```/ { infence = !infence }
+  !infence && /^#+[ \t]+Task[ \t]+[0-9]+/ {
+    line = $0
+    sub(/^#+[ \t]+Task[ \t]+/, "", line)
+    sub(/[^0-9].*$/, "", line)
+    print line
+  }
+' "$plan" | sort -nu)
+[ -n "$plan_tasks" ] || { echo "no 'Task N' headings found in $plan" >&2; exit 3; }
+
+# scope[id] = normalized glob (declared scopes only).
+declare -A scope=()
+if [ -n "$scope_arg" ]; then
+  IFS=';' read -ra pairs <<< "$scope_arg"
+  for pair in "${pairs[@]}"; do
+    [ -n "$pair" ] || continue
+    id=${pair%%=*}
+    glob=${pair#*=}
+    [ "$id" != "$pair" ] || { echo "bad scope entry (want id=glob): $pair" >&2; exit 2; }
+    glob=${glob#.\/}
+    glob=${glob%\/\*\*}
+    glob=${glob%/}
+    scope[$id]=$glob
+  done
+fi
+
+errors=0
+seen_all=""
+ledger=""
+wnum=0
+for w in "${waves[@]}"; do
+  wnum=$((wnum + 1))
+  IFS=',' read -ra members <<< "$w"
+  line="wave $wnum:"
+  for id in "${members[@]}"; do
+    line="$line task $id"
+  done
+  ledger="$ledger$line"$'\n'
+  for id in "${members[@]}"; do
+    case "$seen_all" in
+      *"|task $id|"*) echo "task $id appears in more than one wave" >&2; errors=3 ;;
+      *) seen_all="$seen_all|task $id|" ;;
+    esac
+    if ! printf '%s\n' "$plan_tasks" | grep -qx "$id"; then
+      echo "task $id not found in plan headings" >&2
+      errors=3
+    fi
+    if [ -z "${scope[$id]:-}" ]; then
+      echo "warning: task $id has no declared scope — treat as serial material" >&2
+    fi
+  done
+  # Pairwise scope overlap inside this wave.
+  n=${#members[@]}
+  for ((i = 0; i < n; i++)); do
+    for ((j = i + 1; j < n; j++)); do
+      a=${scope[${members[i]}]:-}
+      b=${scope[${members[j]}]:-}
+      [ -n "$a" ] && [ -n "$b" ] || continue
+      if [ "$a" = "$b" ] || [[ "$b/" == "$a"/* ]] || [[ "$a/" == "$b"/* ]]; then
+        echo "scope overlap in one wave: task ${members[i]} ($a) vs task ${members[j]} ($b)" >&2
+        errors=4
+      fi
+    done
+  done
+done
+
+if [ "$errors" -eq 0 ]; then
+  printf '%s' "$ledger"
+else
+  echo "wave table invalid — fix and re-run before dispatching" >&2
+  exit "$errors"
+fi

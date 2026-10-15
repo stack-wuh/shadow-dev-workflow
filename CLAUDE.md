@@ -40,6 +40,8 @@
 | 新需求、提案、方案设计 | `shadow-dev-propose` |
 | 布局/交互设计稿、视觉提案、改版打磨 | `shadow-dev-design`（propose 设计伴侣） |
 | 开始执行、实现 | `shadow-dev-apply` |
+| 执行实现计划、并行调度、TDD 执行 | `shadow-dev-tdd`（独立 plan 场景，与 apply 并列不互替） |
+| 修 Bug、排查、根因定位 | `shadow-dev-debug`（调查态，与 hotfix 互补） |
 | 审查、验收 | `shadow-dev-review` |
 | 提交、PR、merged 后归档 | `shadow-dev-release` |
 | 归档恢复入口（漏归档、Actions 失败、hotfix 补跑） | `shadow-dev-archive` |
