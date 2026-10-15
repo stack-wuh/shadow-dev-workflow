@@ -4,7 +4,7 @@
   "name": "20261015-feature-tdd-debug-skills",
   "type": "feature",
   "scope": "shadow-dev-workflow/skills",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": null,
   "files": [
