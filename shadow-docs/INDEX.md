@@ -40,5 +40,5 @@
 | 20261013-docs-sync-briefless-form | ✅ 完成 | shadow-docs/changes/archive/20261013-docs-sync-briefless-form/brief.md |
 | 20261015-chore-release-v7.2.0 | ✅ 完成 | shadow-docs/changes/archive/20261015-chore-release-v7.2.0/brief.md |
 | 20261015-chore-release-v7.2.1 | ✅ 完成 | shadow-docs/changes/archive/20261015-chore-release-v7.2.1/brief.md |
-| 20261015-feature-plugin-self-sync | published | shadow-docs/changes/20261015-feature-plugin-self-sync/brief.md |
+| 20261015-feature-plugin-self-sync | ✅ 完成 | shadow-docs/changes/archive/20261015-feature-plugin-self-sync/brief.md |
 | 20261015-feature-tdd-debug-skills | ✅ 完成 | shadow-docs/changes/archive/20261015-feature-tdd-debug-skills/brief.md |

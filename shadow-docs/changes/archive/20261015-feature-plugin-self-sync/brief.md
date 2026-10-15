@@ -4,7 +4,7 @@
   "name": "20261015-feature-plugin-self-sync",
   "type": "feature",
   "scope": "distribution",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "feature/20261015-feature-plugin-self-sync",
   "files": [
@@ -31,13 +31,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "4984ed64526875742389df91fb8c2564c6ac8d9d",
-    "verifiedAt": "2026-10-15T07:48:18.381Z"
+    "verifiedCommit": "29e5005ee9dfe4d78b3aa62db6f29211d7ce86c9",
+    "verifiedAt": "2026-10-15T08:01:44.323Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:71",
-    "planHash": "704cc168ee626d99c345e5788338b054421885c9a6c3e91c47466cb0968efa09",
+    "checkpoint": "merged-pr:71",
+    "planHash": "77708d0893cf2596844ac5d02c90ab263933b1f89f7b0855380ef51a1033e625",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -73,7 +73,7 @@
   "knowledge": {
     "action": "更新",
     "target": "knowledge/multi-host-plugin-distribution.md",
-    "reason": "宿主 hook 装配的 bash 陷阱（直 spawn 宿主 + Windows WSL 入口桩）与 node 形态入口/本机自同步纪律属长期有效事实，已原位更新卡片约束并追加 source"
+    "reason": "宿主 hook 装配的 bash 陷阱与 node 形态入口/本机自同步纪律属长期有效事实，卡片已原位更新"
   }
 }
 ---
