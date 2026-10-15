@@ -12,7 +12,7 @@
   "hooks": {
     "supported": true,
     "mode": "manual",
-    "note": "SessionStart 自举脚本随产物分发于 hooks/bootstrap-cli.sh；hook 自动装配留待后续 adapter 版本"
+    "note": "SessionStart 自举入口随产物分发于 hooks/bootstrap.mjs（node 形态，内部经 scripts/resolve-bash.mjs 解析可信 bash 调用 hooks/bootstrap-cli.sh）；hook 自动装配留待后续 adapter 版本"
   },
   "plugin": {
     "optional": true,

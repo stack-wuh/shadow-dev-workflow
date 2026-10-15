@@ -1,15 +1,15 @@
 {
-  "description": "Shadow Dev Workflow — Codex 宿主生命周期钩子。SessionStart 自举锁版本 shadow-dev CLI：成功静默、失败仅告警、恒不阻塞会话。",
+  "description": "Shadow Dev Workflow — Codex 宿主生命周期钩子。SessionStart 自举：CLI 锁版本就位 + 本机插件自同步；成功静默、失败仅告警、恒不阻塞会话。node 形态跨宿主统一（Windows 上不依赖 PATH 里的 bash，避免命中 WSL 入口桩）。",
   "hooks": {
     "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${PLUGIN_ROOT:-$CLAUDE_PLUGIN_ROOT}/hooks/bootstrap-cli.sh\"",
-            "commandWindows": "$p = if ($env:PLUGIN_ROOT) { $env:PLUGIN_ROOT } else { $env:CLAUDE_PLUGIN_ROOT }; $b = \"${env:ProgramFiles}\\Git\\bin\\bash.exe\"; if (-not (Test-Path -LiteralPath $b)) { $b = 'bash' }; if ($p -and (Get-Command $b -ErrorAction SilentlyContinue)) { & $b (($p -replace '\\\\','/') + '/hooks/bootstrap-cli.sh') }",
+            "command": "node \"${PLUGIN_ROOT:-$CLAUDE_PLUGIN_ROOT}/hooks/bootstrap.mjs\"",
+            "commandWindows": "$p = if ($env:PLUGIN_ROOT) { $env:PLUGIN_ROOT } else { $env:CLAUDE_PLUGIN_ROOT }; if ($p) { node (($p -replace '\\\\','/') + '/hooks/bootstrap.mjs') }",
             "timeout": 60,
-            "statusMessage": "shadow-dev CLI 自举"
+            "statusMessage": "shadow-dev 环境自举（CLI 锁版本 + 插件自同步）"
           }
         ]
       }

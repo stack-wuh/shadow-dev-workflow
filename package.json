@@ -6,7 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node --test test/brief-gate.test.mjs test/install-cli.test.mjs test/pack.test.mjs test/release-smoke.test.mjs",
+    "test": "node --test test/bootstrap.test.mjs test/brief-gate.test.mjs test/install-cli.test.mjs test/pack.test.mjs test/release-smoke.test.mjs",
     "check:requires": "node scripts/check-requires.mjs",
     "check:requires:strict": "node scripts/check-requires.mjs --strict",
     "check:knowledge": "node scripts/check-knowledge.mjs",

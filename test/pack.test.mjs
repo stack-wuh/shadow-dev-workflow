@@ -68,6 +68,8 @@ test('pack: 运行必需文件齐全（hook fallback 依赖 scripts/install-cli.
     assert.equal(existsSync(join(packedRoot, d)), true, `missing dir: ${d}`)
   }
   assert.equal(existsSync(join(packedRoot, 'hooks', 'hooks.json')), true, 'hooks.json')
+  assert.equal(existsSync(join(packedRoot, 'hooks', 'bootstrap.mjs')), true, 'hooks/bootstrap.mjs（SessionStart 自举入口，node 形态）')
+  assert.equal(existsSync(join(packedRoot, 'scripts', 'resolve-bash.mjs')), true, 'scripts/resolve-bash.mjs（可信 bash 解析，bootstrap.mjs 依赖）')
   assert.equal(existsSync(join(packedRoot, 'scripts', 'install-cli.sh')), true, 'install-cli.sh')
   assert.equal(existsSync(join(packedRoot, 'hooks', 'hooks.codex.json')), true, 'hooks/hooks.codex.json（Codex 宿主 hook 清单）')
   assert.equal(existsSync(join(packedRoot, 'adapters', 'claude-code.json')), true, 'adapters/claude-code.json（bind 域消费）')
