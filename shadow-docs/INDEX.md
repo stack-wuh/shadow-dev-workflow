@@ -38,4 +38,4 @@
 | 20261012-refactor-release-smoke-single-implementation | ✅ 完成 | shadow-docs/changes/archive/20261012-refactor-release-smoke-single-implementation/brief.md |
 | 20261013-chore-release-v711 | ✅ 完成 | shadow-docs/changes/archive/20261013-chore-release-v711/brief.md |
 | 20261013-docs-sync-briefless-form | ✅ 完成 | shadow-docs/changes/archive/20261013-docs-sync-briefless-form/brief.md |
-| 20261015-feature-tdd-debug-skills | published | shadow-docs/changes/20261015-feature-tdd-debug-skills/brief.md |
+| 20261015-feature-tdd-debug-skills | ✅ 完成 | shadow-docs/changes/archive/20261015-feature-tdd-debug-skills/brief.md |

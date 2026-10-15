@@ -4,7 +4,7 @@
   "name": "20261015-feature-tdd-debug-skills",
   "type": "feature",
   "scope": "shadow-dev-workflow/skills",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": null,
   "files": [
@@ -32,13 +32,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "502fd384dc9975055e94a7192a946e1cf97e7692",
-    "verifiedAt": "2026-10-15T06:31:54.578Z"
+    "verifiedCommit": "d9c9a30d5f2ea4e1749c1ac2deb277f04a140400",
+    "verifiedAt": "2026-10-15T06:50:59.256Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:68",
-    "planHash": "0c3e6d980d16457a5cc980358b9d9cc6ec20ceeebd85c4ec2e4af238ce26be6d",
+    "checkpoint": "merged-pr:68",
+    "planHash": "7984eb5c4a6353003ee9ce9f55356f3ca90fe40e635933495f50c5564d42135b",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
