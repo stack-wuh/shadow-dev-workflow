@@ -1,6 +1,6 @@
 {
   "name": "shadow-dev-workflow",
-  "version": "7.1.1",
+  "version": "7.2.0",
   "description": "Self-contained development workflow with 3-tier knowledge base — propose → apply → review → release → publish with packaged planning, domain-model-driven specs, invariant-based verification with machine-checked brief contract gates (guard/regression probes), and knowledge-driven design constraints. Zero external workflow dependencies.",
   "author": {
     "name": "Shadow (stack-wuh)",
@@ -25,7 +25,7 @@
   "interface": {
     "displayName": "Shadow Dev Workflow",
     "shortDescription": "Knowledge 驱动的开发工作流五段式管线",
-    "longDescription": "以 active Knowledge 驱动的 propose → apply → review → release → publish 工作流：需求对齐做领域对齐（限界上下文与不变量）并产出 brief、按 brief 以 `INV-n` 不变量观察点执行分级验证与依赖调度、质量门禁按三条放行判据（观察点闭合 ∧ guard 探针绿 ∧ regression 探针绿）验收模型一致性、知识闭环后提交发布 PR 并在合并后归档重建 INDEX、正式发版独立成 publish 阶段（bump + tag + Release + 发布链冒烟）。另含 hotfix 快车道、归档恢复入口、知识库查询与 UI 设计提案伴侣。",
+    "longDescription": "以 active Knowledge 驱动的 propose → apply → review → release → publish 工作流：需求对齐做领域对齐（限界上下文与不变量）并产出 brief、按 brief 以 `INV-n` 不变量观察点执行分级验证与依赖调度、质量门禁按三条放行判据（观察点闭合 ∧ guard 探针绿 ∧ regression 探针绿）验收模型一致性、知识闭环后提交发布 PR 并在合并后归档重建 INDEX、正式发版独立成 publish 阶段（bump + tag + Release + 发布链冒烟）。另含 hotfix 快车道、归档恢复入口、知识库查询、UI 设计提案伴侣，以及实现计划执行调度（波次并行、分级审查）与 Bug 根因调查技能。",
     "developerName": "Shadow (stack-wuh)",
     "category": "Coding",
     "capabilities": ["Read", "Write"],
