@@ -4,7 +4,7 @@
   "name": "20261015-feature-tdd-debug-skills",
   "type": "feature",
   "scope": "shadow-dev-workflow/skills",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": null,
   "files": [
@@ -26,8 +26,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 67,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/67",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 68,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/68"
   },
   "review": {
     "conclusion": "passed",
@@ -36,7 +36,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:67",
+    "checkpoint": "pr:68",
     "planHash": "bd8470512fac4adcd7b02540b0f482a0dae03942b59448c313e61cfecba4e08b",
     "updatedAt": null,
     "lastError": null,
