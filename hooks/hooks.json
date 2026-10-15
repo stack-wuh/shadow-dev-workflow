@@ -5,10 +5,10 @@
         "hooks": [
           {
             "type": "process",
-            "command": "bash",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/bootstrap-cli.sh"],
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/bootstrap.mjs"],
             "timeoutMs": 60000,
-            "statusMessage": "shadow-dev CLI 自举"
+            "statusMessage": "shadow-dev 环境自举（CLI 锁版本 + 插件自同步）"
           }
         ]
       }

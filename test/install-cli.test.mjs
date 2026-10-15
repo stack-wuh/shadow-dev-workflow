@@ -161,7 +161,7 @@ test('installer: --from 离线安装到版本化布局并生成托管 shim', () 
   assert.equal(readFileSync(join(prefix, 'CURRENT'), 'utf8').trim(), '9.9.9')
 })
 
-test('hook 装配静态契约：plugin.json 声明 hooks、hooks.json 注册 SessionStart、wrapper 可执行', () => {
+test('hook 装配静态契约：plugin.json 声明 hooks、hooks.json 注册 SessionStart（node 入口）、wrapper 可执行', () => {
   const pkg = JSON.parse(readFileSync(join(PLUGIN_ROOT, 'package.json'), 'utf8'))
   assert.match(pkg.cliVersion, /^v\d+\.\d+\.\d+$/, 'cliVersion 必须是 vA.B.C 形态的精确 pin')
 
@@ -173,11 +173,15 @@ test('hook 装配静态契约：plugin.json 声明 hooks、hooks.json 注册 Ses
   assert.ok(Array.isArray(entries) && entries.length >= 1, '必须注册 SessionStart')
   const hook = entries[0].hooks[0]
   assert.equal(hook.type, 'process', '用 process 类型免 shell，跨平台最稳')
-  assert.equal(hook.command, 'bash')
+  // node 形态是 2026-10-15 的契约修订：部分宿主（实测 ZCode）直接 spawn 裸 `bash`，Windows 上
+  // 先命中 WindowsApps\bash.exe（WSL 入口桩）→ hook 恒失败。node 是宿主 PATH 上的稳定可达项，
+  // 由入口内部经 scripts/resolve-bash.mjs 解析可信 bash 再调 bootstrap-cli.sh。
+  assert.equal(hook.command, 'node', 'command 必须是 node（bash 形态在 Windows 宿主会命中 WSL 入口桩）')
   assert.ok(
-    hook.args.some((a) => a.includes('bootstrap-cli.sh')),
-    'args 必须指向 bootstrap-cli.sh',
+    hook.args.some((a) => a.includes('bootstrap.mjs')),
+    'args 必须指向 bootstrap.mjs（SessionStart 自举入口）',
   )
   assert.equal(typeof hook.timeoutMs, 'number')
-  assert.equal(existsSync(WRAPPER), true, 'wrapper 脚本必须存在（经 bash 显式调用，不依赖可执行位）')
+  assert.equal(existsSync(join(PLUGIN_ROOT, 'hooks', 'bootstrap.mjs')), true, 'bootstrap.mjs 入口必须存在')
+  assert.equal(existsSync(WRAPPER), true, 'bootstrap-cli.sh 仍由入口经可信 bash 调用，必须存在')
 })

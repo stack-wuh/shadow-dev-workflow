@@ -30,7 +30,7 @@ norms/                      # 跨项目硬规则与工程规范
 knowledge/                  # 跨项目经验与协作知识
 menu.md                     # 任务到规范和 Knowledge 的路由
 rules/                      # 行为准则与铁律
-hooks/                      # SessionStart 自举：确保锁版本 shadow-dev-cli 就位
+hooks/                      # SessionStart 自举（node）：CLI 锁版本就位 + 本机插件自同步
 scripts/install-cli.sh      # vendored CLI 仓库安装器（hook 与手工共用）
 ```
 
@@ -137,7 +137,7 @@ codex plugin add shadow-dev-workflow@shadow-dev-workflow-local   # 装完重启�
 
 **bind 路线** —— `shadow-dev workflow link`/`install` 就位产物后 `shadow-dev bind plan --host codex` + `bind execute`，描述符为 `adapters/codex.json`（`skillsDir: ~/.codex/skills`）。注意 bind 只复制 `skills/`，技能正文对 `norms/` 与 `menu.md` 的引用会脱离产物根目录，需要插件路线才等价。
 
-Windows 自举：Codex 走 `hooks.codex.json` 里的 `commandWindows` 覆盖，优先 `%ProgramFiles%\Git\bin\bash.exe`，找不到再退回 PATH 上的 `bash`。若 PATH 上只有 WSL 的 `System32\bash.exe`，自举会把 CLI 装进 WSL 文件系统、Windows 侧看不到 shim——此时手动 `bash scripts/install-cli.sh install`，或设 `SHADOW_CLI_HOOK_DISABLE=1` 关掉自举。
+Windows 自举：hook 入口是 node（`hooks/bootstrap.mjs`，三宿主统一），不再依赖 PATH 上的裸 `bash`——Windows 上 `bash` 常先命中 `System32\bash.exe` / `WindowsApps\bash.exe` 这两个 WSL 入口桩（未启用子系统时只打印安装提示、不执行脚本，hook 静默失败）。可信 bash 由 `scripts/resolve-bash.mjs` 统一解析（先认 `%ProgramFiles%\Git\bin\bash.exe` 等 Git 安装位，明确去桩）；可用 `SHADOW_DEV_BASH` 显式指定（指向无效路径即按不可用告警，不静默改用别的解释器），`SHADOW_CLI_HOOK_DISABLE=1` 关闭 CLI 自举。
 
 CLI 轨（shadow-dev-cli 的 workflow/bind 域，v1.4.0 起可用，已实测）：
 

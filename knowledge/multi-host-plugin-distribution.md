@@ -1,15 +1,16 @@
 ---
 title: 插件多宿主分发（Claude Code / Codex / zcode）
 domain: distribution
-keywords: [Codex, Claude Code, 插件清单, marketplace, hooks, 宿主适配, 打包分发, 技能加载]
+keywords: [Codex, Claude Code, 插件清单, marketplace, hooks, 宿主适配, 打包分发, 技能加载, WSL 入口桩, SessionStart 自举]
 scope: [.codex-plugin/, .claude-plugin/, .agents/, hooks/, adapters/, scripts/pack.mjs, skills/]
 status: active
 source:
   - changes/20261009-feature-codex-host-support/brief.md
   - changes/20261010-feature-workflow-context-map/brief.md
-verified: 2026-10-10
+  - changes/20261015-feature-plugin-self-sync/brief.md
+verified: 2026-10-15
 verified-depth: runtime
-verified-scope: 本机 Codex CLI 0.160.1 实测——`codex plugin marketplace add D:/works/shadow-dev-workflow` 回 `Added marketplace shadow-dev-workflow-local`；`codex plugin add shadow-dev-workflow@shadow-dev-workflow-local` 落地 `~/.codex/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/6.4.0`（8 技能 + menu/norms/knowledge/rules 齐备，逐文件哈希与源一致）；重启后技能表出现 `shadow-dev-workflow:shadow-dev-*` 命名空间条目；探针版 `commandWindows` 在 `codex exec --dangerously-bypass-hook-trust` 下输出 `hook: SessionStart` → `SessionStart Completed` 并落标记文件
+verified-scope: 本机 Codex CLI 0.160.1 实测——`codex plugin marketplace add D:/works/shadow-dev-workflow` 回 `Added marketplace shadow-dev-workflow-local`；`codex plugin add shadow-dev-workflow@shadow-dev-workflow-local` 落地 `~/.codex/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/6.4.0`（8 技能 + menu/norms/knowledge/rules 齐备，逐文件哈希与源一致）；重启后技能表出现 `shadow-dev-workflow:shadow-dev-*` 命名空间条目；探针版 `commandWindows` 在 `codex exec --dangerously-bypass-hook-trust` 下输出 `hook: SessionStart` → `SessionStart Completed` 并落标记文件。2026-10-15 ZCode 实测：裸 `bash` 入口的 hook 失败 ×11（宿主 PATH 的 `bash` 命中 WindowsApps 的 WSL 入口桩），node 形态入口在宿主 PATH 下静默 `exit 0`、解析器落 `git-bin`
 ---
 
 # 插件多宿主分发（Claude Code / Codex / zcode）
@@ -30,7 +31,8 @@ verified-scope: 本机 Codex CLI 0.160.1 实测——`codex plugin marketplace a
 - 新宿主清单目录必须同步进打包分发集（`scripts/pack.mjs` 的 `DIRS`），否则 release tarball 缺描述符，`workflow install` 路线拿不到清单。
 - 各宿主 `plugin.json` 的 `version` 必须与 `package.json` 一致，由 `test/pack.test.mjs` 的三清单版本机检守护；版本改动只走 release 流程。
 - 技能正文与 norms/rules 禁止出现宿主专有工具名与文件名（`AskUserQuestion`、`Grep`/`Glob`、`CLAUDE.md`），一律用宿主中立表述，否则跨宿主执行时指令落空。
-- 依赖 bash 的 Windows 自举必须同时给出 `commandWindows` 覆盖与失败兜底（本仓走 Git Bash 优先链，且脚本恒 `exit 0` 不阻塞会话）。
+- **hook 入口用 node 形态，bash 只在内部显式解析**：直 spawn 型宿主（实测 ZCode 3.15：`type: "process"` + `command` 直接执行）在 Windows 上裸 `bash` 会先命中 `System32\bash.exe` / `WindowsApps\bash.exe` 的 WSL 入口桩——未启用子系统时只打印安装提示、不执行脚本，hook 恒失败且宿主日志仅留 `hook.run.failed` 无原因（2026-10-15 实证：失败 ×11、CLI pin 数日未自举）。入口统一 `command: "node"` → `hooks/bootstrap.mjs`，内部经 `scripts/resolve-bash.mjs`（唯一口径、明确去桩）调 bash 脚本；失败兜底语义不变（仅 stderr 告警、恒 `exit 0` 不阻塞会话）。
+- **目录型 marketplace 支持本机插件自同步**：ZCode 插件形态下（宿主注入 `ZCODE_PLUGIN_ID`/`ZCODE_PLUGIN_NAME`），已装版本与 marketplace 源仓版本不一致且源仓在 `main` 时，`zcode plugins marketplace update` + `plugins update` 可自动完成本机安装更新（重启宿主生效）；GitHub 型源走宿主自身更新路径，不代管。
 
 ## 适用边界
 

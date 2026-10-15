@@ -7,8 +7,10 @@
 插件通过 SessionStart hook 自动确保锁版本 CLI 就位，无需手动初始化：
 
 - **布局**：`~/.local/share/shadow-dev-cli/shadow-dev-cli-<ver>/`（版本化目录，`CURRENT`/`PREVIOUS` 指针文件）+ 托管 shim `~/.local/bin/shadow-dev`（运行时读 `CURRENT`，更新与回滚不动 shim 文件）。
+- **入口形态**：hook 命令为 `node hooks/bootstrap.mjs`（三宿主统一）；由它经 `scripts/resolve-bash.mjs`（可信 bash 解析，排除 Windows 的 WSL 入口桩）调用 `hooks/bootstrap-cli.sh` 完成安装——直接 spawn 裸 `bash` 的形态在部分宿主（实测 ZCode）会命中 `WindowsApps\bash.exe` 桩而静默失败。
 - **幂等**：已就位时 hook 秒退，不触安装器、不触网；pin 变更或指针漂移时才精确安装 pin 版本。
 - **失败语义**：hook 恒不阻塞会话——离线等失败仅 stderr 警告，此时 skills 中 `shadow-dev` 命令不可用。
+- **插件自同步（ZCode 插件形态）**：本机安装版本与目录型 marketplace 源仓版本不一致且源仓在 `main` 时，hook 自动 `zcode plugins marketplace update` + `plugins update`，重启 ZCode 后生效；`SHADOW_PLUGIN_SYNC_DISABLE=1` 可关闭。
 
 手动管理（vendored 安装器 `scripts/install-cli.sh` 随插件分发，供 hook 与人工共用）：
 
