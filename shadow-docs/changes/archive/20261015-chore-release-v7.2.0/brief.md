@@ -4,7 +4,7 @@
   "name": "20261015-chore-release-v7.2.0",
   "type": "chore",
   "scope": "distribution",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261015-chore-release-v7.2.0",
   "files": [
@@ -23,13 +23,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "d09c5d6a5f2e54771c63615c4332f958894a46f7",
-    "verifiedAt": "2026-10-15T06:58:28.581Z"
+    "verifiedCommit": "fe9cd401ae8a89967b0801aa17b534b369f93873",
+    "verifiedAt": "2026-10-15T07:16:02.441Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:69",
-    "planHash": "301afe81c40be192f66992217805383d2289bad78cbfa7b479a4b0b7393a9906",
+    "checkpoint": "merged-pr:69",
+    "planHash": "48e507dab41a1660355c12da0c4116c0f4faea8d16ed0e4dd75f113984d2cc12",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -48,7 +48,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "声明式发版载体（bump + 表述同步），无新增跨项目结论；发布链如有新事实按需更新 release-artifact-pipeline 卡片"
+    "reason": "声明式发版载体（bump + 表述同步），无新增跨项目结论；发布链结果已按实回填"
   }
 }
 ---
@@ -96,6 +96,10 @@
 - 台账一次到位：`index rebuild plan/execute` 登记本载体，`shadow-docs/INDEX.md` 已纳入 release 文件集（规避 PR 阶段「台账缺条目」判红）。
 - 差异面：`git diff --stat` = `.claude-plugin/plugin.json | 2 +-`、`.codex-plugin/plugin.json | 4 ++--`、`package.json | 2 +-`、`shadow-docs/INDEX.md | 1 +`，共 4 文件 5 增 4 删；`skills/**`、`norms/**`、`scripts/**` 未被本载体触碰。
 
-**未覆盖项（明说）**
+**发布链端到端（回填）**
 
-- 发布链端到端（tag `v7.2.0` → `publish-release` Actions → 资产名契约断言 → 隔离 prefix 冒烟）在 tag 落地后回填本节；tag 与 Release 由用户按委托清单执行（已 pin 的 CLI 命令目录不含发版命令键，按能力契约阻塞不降级）。
+- 版本权威：`✓ 版本权威成立：v7.2.0`（tag 去 `v` == `package.json.version`），`check:version` 在发布链内复跑通过。
+- 资产契约：`shadow-dev-workflow-v7.2.0.tar.gz` · 129119B · `uploader=github-actions[bot] state=uploaded`（`gh api …/releases/tags/v7.2.0` 实取），资产名匹配 `^shadow-dev-workflow-v[0-9][0-9.]*\.tar\.gz$`。
+- 隔离 prefix 冒烟（run `38697454104`，success · 13s）：`OK plan version=7.2.0 missing=null` → `OK execute version=7.2.0` → `OK materialized root=… skills=11`（与 `skills/` 目录数一致：9 旧 + 2 新）→ `OK bind plan host-version=7.2.0`。
+- Release：https://github.com/stack-wuh/shadow-dev-workflow/releases/tag/v7.2.0
+- 执行注记：tag 与 Release 按用户明确指示由 AI 代跑委托清单命令（能力缺口已在「决策」与本节如实登记，非静默降级；待 execution-layer 提供发版命令键后替换为 CLI 调用）。
