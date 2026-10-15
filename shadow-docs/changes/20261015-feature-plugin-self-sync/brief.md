@@ -4,7 +4,7 @@
   "name": "20261015-feature-plugin-self-sync",
   "type": "feature",
   "scope": "distribution",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "feature/20261015-feature-plugin-self-sync",
   "files": [
@@ -26,8 +26,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 70,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/70",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 71,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/71"
   },
   "review": {
     "conclusion": "passed",
@@ -36,7 +36,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:70",
+    "checkpoint": "pr:71",
     "planHash": "704cc168ee626d99c345e5788338b054421885c9a6c3e91c47466cb0968efa09",
     "updatedAt": null,
     "lastError": null,
