@@ -4,13 +4,14 @@
   "name": "20261015-feature-tdd-debug-skills",
   "type": "feature",
   "scope": "shadow-dev-workflow/skills",
-  "status": "published",
+  "status": "reviewed",
   "baseBranch": "main",
   "branch": null,
   "files": [
     ".gitignore",
     "CLAUDE.md",
     "README.md",
+    "shadow-docs/INDEX.md",
     "shadow-docs/changes/20261015-feature-tdd-debug-skills/brief.md",
     "skills/shadow-dev-debug/SKILL.md",
     "skills/shadow-dev-tdd/SKILL.md",
@@ -31,13 +32,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "3e6d26243d7ad31c601b6078af7406aa47d7e656",
-    "verifiedAt": "2026-10-15T06:26:49.896Z"
+    "verifiedCommit": "502fd384dc9975055e94a7192a946e1cf97e7692",
+    "verifiedAt": "2026-10-15T06:31:54.578Z"
   },
   "workflow": {
     "operation": null,
     "checkpoint": "pr:68",
-    "planHash": "bd8470512fac4adcd7b02540b0f482a0dae03942b59448c313e61cfecba4e08b",
+    "planHash": "0c3e6d980d16457a5cc980358b9d9cc6ec20ceeebd85c4ec2e4af238ce26be6d",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -54,6 +55,7 @@
         ".gitignore",
         "CLAUDE.md",
         "README.md",
+        "shadow-docs/INDEX.md",
         "shadow-docs/changes/20261015-feature-tdd-debug-skills/brief.md",
         "skills/shadow-dev-debug/SKILL.md",
         "skills/shadow-dev-tdd/SKILL.md",
@@ -65,7 +67,7 @@
         "skills/shadow-dev-tdd/scripts/tdd-workspace",
         "skills/shadow-dev-tdd/task-reviewer-prompt.md"
       ],
-      "message": "feat(skills): 新增 shadow-dev-tdd 与 shadow-dev-debug 技能",
+      "message": "docs(shadow): 补登记 20261015-feature-tdd-debug-skills 到变更台账，INDEX 与在途目录同源",
       "title": "feat(skills): 新增 shadow-dev-tdd 与 shadow-dev-debug 技能",
       "body": "## 变更\n- `skills/shadow-dev-tdd/`（新增）：计划执行调度技能——波次并行、审查重叠、分级审查、测试提速纪律四机制，含 `implementer-prompt.md` 与 `task-reviewer-prompt.md` 两份派发模板和 5 个调度脚本（`plan-graph`、`task-worktree`、`review-package`、`task-brief`、`tdd-workspace`）。\n- `skills/shadow-dev-debug/SKILL.md`（新增）：根因调查技能——复现固定、假设至少两个逐个实验证伪、最小修复、同源扫描、同上下文回归的 8 步流程与 8 条红线，锚定 `norms/verification.md` 调试节与 `knowledge/bug-investigation.md`。\n- `README.md`、`CLAUDE.md`：技能族清单与触发表补两个技能（含与 apply 并列不互替的边界说明）；`.gitignore`：`.tdd/` 工作区忽略项。\n- `shadow-docs/changes/20261015-feature-tdd-debug-skills/brief.md`：本 change 载体（M 级，5 个观察点闭合）。\n\n## 影响\n- 行为/触发面变化：独立 plan 的执行获得调度技能（原用户级 `subagent-driven-development` 退役，替代件随插件分发）；Bug 调查获得根因流程技能，未根因即改代码的修复仍按既有纪律 review 驳回。\n- 明确不受影响的范围：不改 CLI 命令面、不改任何 `scripts/` 门判定集、不动 `requiresCommands` 与 `cliVersion` pin（v1.7.0）；`shadow-dev-apply`、`shadow-dev-hotfix` 主流程不变。\n- 存量交叠（明说）：与休眠在途 change `20261010-build-quality-gate`、`20261010-refactor-domain-driven-workflow` 在 `CLAUDE.md`/`README.md` 声明文件集有交叠（两者均无 PR、被 brief 契约门豁免）；本 PR 为两行增量，后续其推进时留意合入即可。\n- 回滚方式：revert 本 PR 即移除两个技能目录与三处文档增量；无跨仓副作用。\n\n## 验证\n- `npm run check:knowledge -- --forbid 'tdd-verification,▶ [TDD],既有测试保持绿,测试总数,相关测试,或 CI 全绿链接'`（与 `quality-gate.yml:56` 同源）→ `技能 11 个` 校验通过、6 个废弃 token 零命中、引用扫描 66 文件零死链，`ok=12 warn=15 fail=0`。\n- `npm run check:requires:strict` → `✓ skills ⊆ requiresCommands ⊆ CLI 命令目录`；`npm run check:version` → 三处 manifest 同源 7.1.1；`npm run check:brief` → 4 份在途 brief 契约全绿。\n- `npm test` → 30/30 通过；`npm run check:smoke` → `checks=4 fail=0 deferred=1`。\n- 调度脚本在临时 git 仓冒烟：波次渲染、scope 重叠拒绝（exit 4）、未知任务拒绝（exit 3）、worktree 生命周期、pathspec 审查包排除兄弟提交全过——并修复 `review-package` 的 `--` 解析真 bug。\n- 两个技能各留 RED/GREEN 验证记录（含「无技能对照直接成功」的诚实定位修正），详见 brief「结果」段。\n- 未覆盖项（明说）：`check:smoke` 离线物化腿本机 deferred（CLI 的 `bash -c tar` Windows 反斜杠路径缺陷，已登记 shadow-dev-cli），三平台矩阵判定交给本 PR 的 Actions。\n\n## 关联\n- Closes #67\n- brief: shadow-docs/changes/20261015-feature-tdd-debug-skills/brief.md"
     }
