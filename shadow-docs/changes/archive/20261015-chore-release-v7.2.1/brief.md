@@ -4,7 +4,7 @@
   "name": "20261015-chore-release-v7.2.1",
   "type": "chore",
   "scope": "distribution",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261015-chore-release-v7.2.1",
   "files": [
@@ -23,13 +23,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "8ca6b7f0e213f90fc587db7b15b6954336a9314f",
-    "verifiedAt": "2026-10-15T07:57:39.950Z"
+    "verifiedCommit": "39075b9edb75e0fcb226bb890deb36b1e936d07e",
+    "verifiedAt": "2026-10-15T08:01:19.826Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:72",
-    "planHash": "800ad6d99921f33825969237ce0ba4697b95696143c16e2b59cb651fbbc5ad34",
+    "checkpoint": "merged-pr:72",
+    "planHash": "acfbb04d3b0a9d7cba015161f1a4e68afa3bca4be053886db995b6cf87b02bf5",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -48,7 +48,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "声明式发版载体（bump），无新增跨项目结论"
+    "reason": "声明式发版载体（bump），发布链结果已按实回填"
   }
 }
 ---
@@ -91,6 +91,10 @@
 - 台账一次到位：`index rebuild` 登记本载体，`shadow-docs/INDEX.md` 已纳入 release 文件集。
 - 差异面：`git diff --stat` = `.claude-plugin/plugin.json | 2 +-`、`.codex-plugin/plugin.json | 2 +-`、`package.json | 2 +-`、`shadow-docs/INDEX.md | 3 ++-`，共 4 文件 5 增 4 删；`skills/**`、`hooks/**`、`scripts/**` 未被本载体触碰。
 
-**未覆盖项（明说）**
+**发布链端到端（回填）**
 
-- 发布链端到端（tag `v7.2.1` → `publish-release` Actions → 资产名契约断言 → 隔离 prefix 冒烟）在 tag 落地后回填本节。
+- 版本权威：`✓ 版本权威成立：v7.2.1`（tag 去 `v` == `package.json.version`）。
+- 资产契约：`shadow-dev-workflow-v7.2.1.tar.gz` · `uploader=github-actions[bot] state=uploaded`（`gh api …/releases/tags/v7.2.1` 实取），资产名匹配 `^shadow-dev-workflow-v[0-9][0-9.]*\.tar\.gz$`。
+- 隔离 prefix 冒烟（run `38702601252`，success）：`OK plan version=7.2.1 missing=null` → `OK execute version=7.2.1` → `OK materialized root=… skills=11` → `OK bind plan host-version=7.2.1`。
+- Release：https://github.com/stack-wuh/shadow-dev-workflow/releases/tag/v7.2.1
+- 执行注记：tag 与 Release 按用户既有指示执行（能力缺口已在 v7.2.0 载体与本节登记，非静默降级）。
