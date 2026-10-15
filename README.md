@@ -9,6 +9,8 @@ skills/
 ├── shadow-dev-propose/     # 需求对齐、方案设计、知识影响预评估
 ├── shadow-dev-design/      # UI 设计大师：高保真视觉提案与布局交互打磨
 ├── shadow-dev-apply/       # 加载 active Knowledge，执行与验证
+├── shadow-dev-tdd/         # 实现计划执行调度：波次并行 + 审查重叠 + 分级审查（可选，独立 plan 场景）
+├── shadow-dev-debug/       # Bug 根因调查：复现固定、假设验证、同源扫描（调查态技能）
 ├── shadow-dev-review/      # 质量门禁和最终知识评估
 ├── shadow-dev-release/     # Knowledge 闭环 + 提交 + PR + merged 后归档
 ├── shadow-dev-archive/     # 归档恢复入口（漏归档 / Actions 失败时幂等补跑）

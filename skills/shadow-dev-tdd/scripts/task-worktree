@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Per-task worktree lifecycle for SDD parallel waves.
+#
+# Each concurrent task gets its own worktree and branch so implementers
+# never share a working tree — interleaved edits and half-staged files are
+# what forced SDD's old serial-only rule. Paths live under
+# <repo-root>/.tdd/wt-<task-id>, inside the SDD workspace the
+# tdd-workspace script already keeps git-ignored, so worktrees never
+# pollute `git status` of the main tree.
+#
+# Usage:
+#   task-worktree <task-id> <base-sha>     create worktree + branch tdd/<task-id>, print path
+#   task-worktree --clean <task-id>|all    remove worktree(s) and delete their branches
+#
+# task-id is the ledger's task key (task-N). The printed path is what the
+# controller passes to the implementer as `Work from:`.
+set -euo pipefail
+
+ws="$(git rev-parse --show-toplevel)/.tdd"
+mkdir -p "$ws"
+# Self-ignoring even if tdd-workspace has not run yet in this repo.
+printf '*\n' > "$ws/.gitignore"
+
+usage() { echo "usage: task-worktree <task-id> <base-sha> | task-worktree --clean <task-id>|all" >&2; exit 2; }
+
+case "${1:-}" in
+  --clean)
+    [ $# -eq 2 ] || usage
+    target=$2
+    if [ "$target" = "all" ]; then
+      found=0
+      for d in "$ws"/wt-*; do
+        [ -d "$d" ] || continue
+        found=1
+        t=${d##*/wt-}
+        git worktree remove --force "$d"
+        git branch -D "tdd/$t" >/dev/null 2>&1 || true
+        echo "cleaned $d (branch tdd/$t)"
+      done
+      [ "$found" -eq 1 ] || echo "no task worktrees to clean"
+    else
+      d="$ws/wt-$target"
+      if [ -d "$d" ]; then
+        git worktree remove --force "$d"
+        echo "cleaned $d"
+      fi
+      git branch -D "tdd/$target" >/dev/null 2>&1 || true
+    fi
+    ;;
+  --help|-h)
+    usage
+    ;;
+  *)
+    [ $# -eq 2 ] || usage
+    task=$1
+    base=$2
+    git rev-parse --verify --quiet "$base" >/dev/null || { echo "bad BASE: $base" >&2; exit 2; }
+    dir="$ws/wt-$task"
+    if [ -e "$dir" ]; then
+      echo "worktree already exists: $dir (task-worktree --clean $task to remove)" >&2
+      exit 3
+    fi
+    git worktree add -b "tdd/$task" "$dir" "$base" >/dev/null
+    printf '%s\n' "$dir"
+    ;;
+esac

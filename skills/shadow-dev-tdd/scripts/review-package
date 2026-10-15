@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# Generate a review package: commit list, stat summary, and the net
+# diff with extended context, written to a file the reviewer reads in one
+# call. Using the recorded per-task BASE (not HEAD~1) keeps multi-commit
+# tasks intact.
+#
+# Usage: review-package BASE HEAD [OUTFILE] [-- pathspec...]
+# Default OUTFILE: <repo-root>/.tdd/review-<base7>..<head7>.diff
+# (named per range, so a re-review after fixes gets a distinct fresh file).
+#
+# The `--` pathspec form exists for overlap: when sibling tasks commit
+# inside the BASE..HEAD range while a fix loop is in flight, the pathspec
+# keeps the package (and the re-review) limited to this task's files —
+# interleaved sibling changes stay out of the reviewer's diff.
+set -euo pipefail
+
+if [ $# -lt 2 ]; then
+  echo "usage: review-package BASE HEAD [OUTFILE] [-- pathspec...]" >&2
+  exit 2
+fi
+
+base=$1
+head=$2
+shift 2
+
+out=""
+paths=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --)
+      shift
+      while [ $# -gt 0 ]; do
+        paths+=("$1")
+        shift
+      done
+      break
+      ;;
+    *)
+      if [ -z "$out" ]; then
+        out=$1
+      else
+        echo "unexpected argument: $1" >&2
+        exit 2
+      fi
+      ;;
+  esac
+  shift
+done
+
+git rev-parse --verify --quiet "$base" >/dev/null || { echo "bad BASE: $base" >&2; exit 2; }
+git rev-parse --verify --quiet "$head" >/dev/null || { echo "bad HEAD: $head" >&2; exit 2; }
+
+if [ -z "$out" ]; then
+  dir=$("$(cd "$(dirname "$0")" && pwd)/tdd-workspace")
+  out="$dir/review-$(git rev-parse --short "$base")..$(git rev-parse --short "$head").diff"
+fi
+
+commits=$(git rev-list --count "${base}..${head}" -- "${paths[@]}")
+
+{
+  echo "# Review package: ${base}..${head}"
+  if [ ${#paths[@]} -gt 0 ]; then
+    echo "# Pathspec-limited to this task's files: ${paths[*]}"
+  fi
+  echo
+  echo "## Commits"
+  git log --oneline "${base}..${head}" -- "${paths[@]}"
+  echo
+  echo "## Files changed"
+  git diff --stat "${base}..${head}" -- "${paths[@]}"
+  echo
+  echo "## Diff"
+  git diff -U10 "${base}..${head}" -- "${paths[@]}"
+} > "$out"
+
+echo "wrote ${out}: ${commits} commit(s), $(wc -c < "$out" | tr -d ' ') bytes"
