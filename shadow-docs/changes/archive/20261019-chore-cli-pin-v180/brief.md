@@ -4,7 +4,7 @@
   "name": "20261019-chore-cli-pin-v180",
   "type": "chore",
   "scope": "shadow-dev-workflow",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261019-chore-cli-pin-v180",
   "files": [
@@ -20,13 +20,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "eefee983306bff83198b22f563136b77af4ad043",
-    "verifiedAt": "2026-10-30T15:39:43.189Z"
+    "verifiedCommit": "c642331228017dc6f39d92dd27d290f34e634335",
+    "verifiedAt": "2026-10-30T15:45:50.261Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:76",
-    "planHash": "d6cb5d26226ccd6e0ee7d91ded47b141be3ffd378fbcdbaad480053e7ead189a",
+    "checkpoint": "merged-pr:76",
+    "planHash": "0f66dd4863015174cb5c198ab57692510343c85057d5a6d924ed902774587191",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -58,7 +58,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "版本配对机制由既有卡片承载,本次为其常规执行"
+    "reason": "squash 合并后 HEAD 同源重跑"
   }
 }
 ---
