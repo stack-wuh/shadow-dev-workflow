@@ -4,7 +4,7 @@
   "name": "20261019-chore-cli-pin-v180",
   "type": "chore",
   "scope": "shadow-dev-workflow",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "chore/20261019-chore-cli-pin-v180",
   "files": [
@@ -15,8 +15,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 75,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/75",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 76,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/76"
   },
   "review": {
     "conclusion": "passed",
@@ -25,8 +25,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:75",
-    "planHash": "bf65cec0d8714299851652f77895d7926434ebe7ccc0913f7951c1a45c7d48e4",
+    "checkpoint": "pr:76",
+    "planHash": "d6cb5d26226ccd6e0ee7d91ded47b141be3ffd378fbcdbaad480053e7ead189a",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -46,6 +46,13 @@
       "message": "chore(release): cliVersion pin 升至 v1.8.0——承接 blog publish upsert 与 video 模板",
       "title": "chore: cliVersion pin 升至 v1.8.0",
       "body": "Closes #75\n\n完整 brief：shadow-docs/changes/20261019-chore-cli-pin-v180/brief.md"
+    },
+    "commit": {
+      "files": [
+        "shadow-docs/INDEX.md",
+        "shadow-docs/changes/20261019-chore-cli-pin-v180/brief.md"
+      ],
+      "message": "chore(index): 登记台账条目——补 gate 的 INDEX 门"
     }
   },
   "knowledge": {
