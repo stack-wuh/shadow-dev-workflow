@@ -44,6 +44,7 @@ description: wuh.site 视频工作室制作流程——从需求到成片的两�
 - **渲染前清场是铁律**：`lsof -ti :3211 | xargs kill -9` + pkill 孤儿 Chrome——端口僵尸是数小时连败的头号真凶
 - **帧号只用局部**：Sequence 挂载后 useCurrentFrame 已是局部帧；镜内动画 `frame - shotStart`，禁止再减幕起点（六幕全军覆没的教训）
 - **镜渲染确定性**：随机只 `random(seed)`，禁 `Date.now`/`Math.random`/渲染期网络请求——同 bundle 同帧同像素是镜级缓存成立的前提
+- **长任务三禁**：禁阻塞等待（>3 分钟一律后台+轮询）；禁无心跳裸跑（`render-status.json` 的 `updatedAt` 是活/卡唯一判据，停更 120s=卡死即杀，同任务 3 轮止损后通知+停）；禁静默硬磨（每单元完成播报一行进度，会话级 45 分钟无进展停下汇报）。编排进程自身段错误（exit 139）由「退出必通知 + 缓存续跑 ≤3 次」外层保险丝兜底
 - **改 N 处引用 grep 清零**；typecheck 必须跑出明确绿/红（静默失败=没验证），绿后才渲
 - **全屏动画 radial-gradient 禁用**：本机 Chrome 确定性崩溃，用纯色 opacity 渐隐替代
 - **渲染前 rm 旧产物**（防存在性检查假阳性）；渲染任务独占串行（防 pkill/端口互杀）
