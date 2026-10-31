@@ -69,6 +69,7 @@ videos/<slug>/
 7. **降级链**：镜级失败 → 360f→120f→30f 收敛梯 → 仍败终败通知退出。
 8. **组装**：ffmpeg **concat 滤镜 + trim 帧级对齐**（demuxer 拼接会补重复帧，playbook 实证）→ CFR 终装 → SiteFilmAudio 渲染 mux → 三重终验（帧数/两路时长/分段音量）+ 音轨边界不越总帧。
 9. 仪表盘进度按镜粒度，状态文件照旧。
+10. **驱动器双轨（2026-10-31 用户拍板）**：A 轨 = `render-all.sh` 非 Node 外层驱动——`remotion bundle` 预打包一次 + 逐镜 `--only --bundle-dir` 短命进程 ×3 重试 + 退出必通知 + `--assemble` 终装；段错误（exit 139）最多损失一镜，驱动器自身不是 Node。B 轨 = GitHub Actions `render-film.yml` 手动触发，复用同一驱动器（`CHROME_EXECUTABLE=none` 交 Remotion 下载 headless-shell），作为 A 轨做不下去时的承接；CI 有字体漂移（sans/mono 无 Linux 字体），成片用于链路验证与兜底，像素定稿以本机为准——字体资产化（入仓 + @remotion/fonts）后消除。
 8. **进度与可见性（2026-10-31 定稿：HTML 面板 + macOS 通知）**：
    - 数据源 = Remotion 官方进度流：Node API `renderMedia` 的 `onProgress`（`progress`/`renderedFrames`/`encodedFrames`/`stitchStage`——CLI 进度条同款数据源，文档明言）；返回值 `slowestFrames`（最慢 10 帧）顺手入 status 供性能诊断
    - 三层事件：阶段级（bundle/清场/逐镜/拼接/终装/mux/终验）、镜级（镜号/缓存命中/重试；**开场即报「N 镜已缓存，本次重渲 M 镜 ≈ X 分钟」**）、帧级（onProgress 节流写 status）
@@ -104,3 +105,4 @@ v1 冻结：镜渲染无音轨，音轨唯一来源 SiteFilmAudio。启用镜内
 4. **site-film**：全量迁移另立 change。弃不迁移（「反馈微调只重渲对应段」是技能写死的常态流程，现役痛点）；弃惰性迁移（装配层双形态最脏）。
 5. **进度展示层**：HTML 面板 + macOS 通知（重试静默、终败才通知）。Remotion 接入点在数据层——`renderMedia.onProgress` 官方进度流；Studio Renders 面板只跟踪 UI 发起的渲染，脚本管线不适用。弃 SwiftBar（多一依赖）；弃 Bark 手机推送（v2 后长渲场景收窄）。
 6. **卡死预防三层**（2026-10-31 用户拍板）：A 层看门狗——心跳停更 120s 击杀重试、同镜 3 轮止损、编排进程段错误由「退出必通知 + 缓存续跑 ≤3 次」兜底；B 层执行协议——agent 长任务禁阻塞等待/禁无心跳裸跑/禁静默硬磨（SKILL.md 执行纪律「长任务三禁」）；C 层机器侧——内存守卫 + Chrome 版本漂移检测（升级即标定）。`render-status.json.updatedAt` 为活/卡唯一判据。
+7. **运行时替代（2026-10-31 用户拍板 A+B 双轨）**：Node 只是控制平面（像素在 Chrome、编码在 Rust compositor、拼接在 ffmpeg），段错误治理靠进程隔离而非换引擎。弃：编排进程内自愈（V8 段错误无法自捕）、Bun 运行时（Remotion 不支持且若根因是硬件照崩）、Remotion Cloud（收藏为后续选项）。前置事实：Chrome 155→156 自动升级实测像素漂移地板 ≈0.99 SSIM——Chrome 版本必须纳入漂移检测。
