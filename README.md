@@ -116,9 +116,27 @@ brief、INDEX、Git 和 GitHub 写操作由 CLI 统一管理。写操作需要 `
 
 ## 安装
 
-原生宿主是 **Claude Code**（本插件为其开发），Codex 以 `.codex-plugin/` 清单 + `hooks/hooks.codex.json` 原生消费，zcode 等兼容宿主可直接消费同一产物。安装入口正从「插件引导 CLI」反转为「CLI 驱动分发」：
+原生宿主是 **Claude Code**（本插件为其开发），Codex 以 `.codex-plugin/` 清单 + `hooks/hooks.codex.json` 原生消费，zcode 等兼容宿主可直接消费同一产物，**DSH（DeepSeek AgentKit）**以原生 `SKILL.md` 发现直接消费（见下「DSH 宿主」）。安装入口正从「插件引导 CLI」反转为「CLI 驱动分发」：
 
 当前形态（v6.5.0）：作为 Claude Code 插件安装，SessionStart hook 自动就位锁版本 CLI，无需手动初始化。
+
+### DSH 宿主
+
+DSH（DeepSeek AgentKit）由 `@deepseek-ai/dsh-skill-filesystem` 扫描用户技能根 `~/.dsh/skills`（rank 400，`user-dsh`），原生解析 `SKILL.md` 的 `name`/`description` frontmatter，技能即被发现，无需清单或插件形态。描述符为 `adapters/dsh.json`：
+
+```bash
+shadow-dev workflow plan && shadow-dev workflow execute --plan-hash <哈希> --confirm   # 物化产物
+shadow-dev bind plan --host dsh && shadow-dev bind execute --host dsh --plan-hash <哈希> --confirm
+```
+
+- `tier: native`；`skillsDir: ~/.dsh/skills`，`skillLayout` 与其余宿主一致（`{skillsDir}/{skill}/SKILL.md`）。
+- **无 hook 轨**（`hooks.supported: false`）：DSH 没有与 Claude Code/Codex 等价的 SessionStart hook 契约，要自动执行 `hooks/bootstrap.mjs` 需另写 Cordis 插件，不属本插件范围。CLI 自举在 DSH 上走手动：
+
+  ```bash
+  bash scripts/install-cli.sh install     # 装 pin 版本 CLI（与 hook 行为一致）
+  ```
+
+- 与所有 bind 宿主相同：bind 只复制 `skills/`，技能正文对 `norms/` 与 `menu.md` 的引用会脱离产物根目录。DSH 场景下 `~/.dsh/skills` 是唯一发现根，需要在同机保留物化产物（`~/.local/share/shadow-dev-workflow/`）供引用解析。
 
 ### Codex 宿主
 

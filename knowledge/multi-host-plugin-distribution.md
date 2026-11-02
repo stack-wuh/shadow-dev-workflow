@@ -1,19 +1,20 @@
 ---
-title: 插件多宿主分发（Claude Code / Codex / zcode）
+title: 插件多宿主分发（Claude Code / Codex / zcode / DSH）
 domain: distribution
-keywords: [Codex, Claude Code, 插件清单, marketplace, hooks, 宿主适配, 打包分发, 技能加载, WSL 入口桩, SessionStart 自举]
+keywords: [Codex, Claude Code, zcode, DSH, DeepSeek AgentKit, 插件清单, marketplace, hooks, 宿主适配, 打包分发, 技能加载, WSL 入口桩, SessionStart 自举, 技能发现根]
 scope: [.codex-plugin/, .claude-plugin/, .agents/, hooks/, adapters/, scripts/pack.mjs, skills/]
 status: active
 source:
   - changes/20261009-feature-codex-host-support/brief.md
   - changes/20261010-feature-workflow-context-map/brief.md
   - changes/20261015-feature-plugin-self-sync/brief.md
-verified: 2026-10-15
+  - changes/20261102-feature-dsh-host-adapter/brief.md
+verified: 2026-11-02
 verified-depth: runtime
-verified-scope: 本机 Codex CLI 0.160.1 实测——`codex plugin marketplace add D:/works/shadow-dev-workflow` 回 `Added marketplace shadow-dev-workflow-local`；`codex plugin add shadow-dev-workflow@shadow-dev-workflow-local` 落地 `~/.codex/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/6.4.0`（8 技能 + menu/norms/knowledge/rules 齐备，逐文件哈希与源一致）；重启后技能表出现 `shadow-dev-workflow:shadow-dev-*` 命名空间条目；探针版 `commandWindows` 在 `codex exec --dangerously-bypass-hook-trust` 下输出 `hook: SessionStart` → `SessionStart Completed` 并落标记文件。2026-10-15 ZCode 实测：裸 `bash` 入口的 hook 失败 ×11（宿主 PATH 的 `bash` 命中 WindowsApps 的 WSL 入口桩），node 形态入口在宿主 PATH 下静默 `exit 0`、解析器落 `git-bin`
+verified-scope: 本机 Codex CLI 0.160.1 实测——`codex plugin marketplace add D:/works/shadow-dev-workflow` 回 `Added marketplace shadow-dev-workflow-local`；`codex plugin add shadow-dev-workflow@shadow-dev-workflow-local` 落地 `~/.codex/plugins/cache/shadow-dev-workflow-local/shadow-dev-workflow/6.4.0`（8 技能 + menu/norms/knowledge/rules 齐备，逐文件哈希与源一致）；重启后技能表出现 `shadow-dev-workflow:shadow-dev-*` 命名空间条目；探针版 `commandWindows` 在 `codex exec --dangerously-bypass-hook-trust` 下输出 `hook: SessionStart` → `SessionStart Completed` 并落标记文件。2026-10-15 ZCode 实测：裸 `bash` 入口的 hook 失败 ×11（宿主 PATH 的 `bash` 命中 WindowsApps 的 WSL 入口桩），node 形态入口在宿主 PATH 下静默 `exit 0`、解析器落 `git-bin`。2026-11-02 DSH 实测：`dsh-skill-filesystem` 的 `roots()` 对 `join(dshHome, "skills")` 赋 rank 400 `user-dsh`（`lib/index.js:170-174`），`resolveDshHome` 走 `$DSH_HOME` 否则 `~/.dsh`；把 11 个技能目录放入 `~/.dsh/skills` 后宿主会话技能目录全部列出且 frontmatter 解析成功；`bind plan --host dsh` 回 `tier:native skillsDir:<home>/.dsh/skills` 并识别 12 个技能，非托管同名目录正确判 `blocked:true`
 ---
 
-# 插件多宿主分发（Claude Code / Codex / zcode）
+# 插件多宿主分发（Claude Code / Codex / zcode / DSH）
 
 ## 当前结论
 
@@ -28,6 +29,7 @@ verified-scope: 本机 Codex CLI 0.160.1 实测——`codex plugin marketplace a
 ## 执行约束
 
 - 新增宿主 = 新增该宿主的清单目录 + 该宿主专属 hooks 文件 + `adapters/<host>.json` 描述符；**禁止改写既有宿主清单的语义**（如把 Claude 的 `type: "process"` 换成 `command`）。
+- **纯技能发现型宿主（无清单、无 hook 轨）只加描述符**：DSH 由 `dsh-skill-filesystem` 扫用户技能根发现 `SKILL.md`，既无插件清单也无 SessionStart hook 契约，故 `hooks.supported: false` + `plugin.optional: false`，不伪造清单或 hook 文件；自动 hook 需另写宿主侧插件，属独立变更。DSH 技能根为 `~/.dsh/skills`（rank 400 `user-dsh`，解析顺序 `$DSH_HOME` → `~/.dsh`）。
 - 新宿主清单目录必须同步进打包分发集（`scripts/pack.mjs` 的 `DIRS`），否则 release tarball 缺描述符，`workflow install` 路线拿不到清单。
 - 各宿主 `plugin.json` 的 `version` 必须与 `package.json` 一致，由 `test/pack.test.mjs` 的三清单版本机检守护；版本改动只走 release 流程。
 - 技能正文与 norms/rules 禁止出现宿主专有工具名与文件名（`AskUserQuestion`、`Grep`/`Glob`、`CLAUDE.md`），一律用宿主中立表述，否则跨宿主执行时指令落空。
