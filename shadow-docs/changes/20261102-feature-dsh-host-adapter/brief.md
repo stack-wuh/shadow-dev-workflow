@@ -4,7 +4,7 @@
   "name": "20261102-feature-dsh-host-adapter",
   "type": "feature",
   "scope": "adapters/, README.md",
-  "status": "reviewed",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "feature/20261102-feature-dsh-host-adapter",
   "files": [
@@ -25,7 +25,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "5cd730f84a5686e9be61483da3b30b1cb2fbb012",
     "planHash": "76c28890017f115f2957917428d1f7abfedc2a0eaf7a37c819d5c569a759830e",
     "updatedAt": null,
     "lastError": null,
