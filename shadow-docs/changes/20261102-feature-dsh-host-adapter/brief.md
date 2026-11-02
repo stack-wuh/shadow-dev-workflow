@@ -4,7 +4,7 @@
   "name": "20261102-feature-dsh-host-adapter",
   "type": "feature",
   "scope": "adapters/, README.md",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "feature/20261102-feature-dsh-host-adapter",
   "files": [
@@ -15,8 +15,8 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 80,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/80"
   },
   "review": {
     "conclusion": "passed",
@@ -25,8 +25,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "5cd730f84a5686e9be61483da3b30b1cb2fbb012",
-    "planHash": "76c28890017f115f2957917428d1f7abfedc2a0eaf7a37c819d5c569a759830e",
+    "checkpoint": "pr:80",
+    "planHash": "272913f0a79f717d2545a0e0295d35fad90d69a25801fb22541fa741edcb4e7c",
     "updatedAt": null,
     "lastError": null,
     "commit": {
@@ -37,6 +37,12 @@
         "shadow-docs/changes/20261102-feature-dsh-host-adapter/brief.md"
       ],
       "message": "feat(adapter): 新增 DSH 宿主描述符\n\n- adapters/dsh.json: tier native, skillsDir ~/.dsh/skills, hooks 不支持（DSH 无等价 SessionStart 契约）\n- README: 补 DSH 宿主安装与手动 CLI 自举说明\n- knowledge/multi-host-plugin-distribution: 宿主清单增至 4，补纯技能发现型宿主约束"
+    },
+    "release": {
+      "files": [],
+      "message": null,
+      "title": "feat(adapter): 新增 DSH 宿主描述符",
+      "body": "## 动机\n\n本仓以 `adapters/<host>.json` 描述符声明宿主差异，此前覆盖 Claude Code / Codex / zcode 三宿主。DSH（DeepSeek AgentKit）的 `@deepseek-ai/dsh-skill-filesystem` 扫描用户技能根 `~/.dsh/skills`（rank 400，`user-dsh`）并原生解析 `SKILL.md` frontmatter，实测 12 个技能目录放入后宿主会话技能目录全部列出——缺的只是描述符：没有它，`bind plan --host dsh` 直接 `HOST_NOT_FOUND`，用户只能手工复制，脱离 CLI 管理（无 sidecar 标记、无法 `bind unbind` 回收）。\n\n## 改动\n\n- **`adapters/dsh.json`（新增）**：`tier: native`、`skillsDir: ~/.dsh/skills`、`skillLayout` 与其余宿主一致；`bind` 用 copy + `managed-by` sidecar。\n- **`hooks.supported: false`**：DSH 无与 Claude Code/Codex 等价的 SessionStart hook 契约，要自动执行 `hooks/bootstrap.mjs` 需另写 Cordis 插件，属独立变更。CLI 自举在 DSH 上走手动 `bash scripts/install-cli.sh install`，能力不降级、不静默兜底。\n- **`plugin.optional: false`**：DSH 无插件清单形态，bind 轨即唯一安装路径。\n- **README**：新增「DSH 宿主」节，含安装命令、hook 缺位说明、以及\"bind 只复制 `skills/`、需保留物化产物供引用解析\"的既有约束。\n- **知识卡** `multi-host-plugin-distribution.md`：宿主清单 3→4，补「纯技能发现型宿主（无清单、无 hook 轨）只加描述符」约束与 DSH 实测证据。\n\n未改动 `bind.mjs`、`pack.mjs`、既有三宿主描述符——回归面为零。\n\n## 验证\n\n| 不变量 | 观察点 → 结果 |\n|---|---|\n| INV-1 描述符 schema v1、host 集内唯一 | 扫 `adapters/*.json` → `claude-code, codex, dsh, zcode`，schema 全 v1，无重复 ✅ |\n| INV-2 `skillsDir` 解析 + 目录缺失时如实报 `exists:false` | `bind plan --host dsh --prefix <隔离产物>` → `tier:native skillsDir:C:\\Users\\596540\\.dsh\\skills`，12 技能全识别 ✅ |\n| INV-3 打包分发集含描述符 | `workflow plan --from <工作树>` + `execute` 到隔离前缀 → 产物内 `adapters/dsh.json` 存在 ✅ |\n\n六门（`npm run ci` 组成）：\n- `check:version` ✅ 三处 manifest 同源 7.2.1\n- `check:requires:strict` ✅ `undeclared=[] missing-in-cli=[]`\n- `check:brief` ✅ `fail=0`\n- `check:smoke` ✅ `fail=0`（离线腿本机 deferred：`bash -c tar` 收反斜杠绝对路径，已登记的 execution-layer 缺陷，CI Linux/macOS 跑实断言）\n- `npm test` ✅ 35 pass / 0 fail\n- `check:knowledge` ⚠️ `fail=2` —— 为 `shadow-dev-video` 引用 `scripts/shots.mjs` 的死链，**改动前基线即为同样 2 条，本 PR 零新增**（既存问题，另议）\n\n隔离验证前缀已删除，无残留。\n\n## 复杂度评级\n\n**S** —— 契约变更仅新增一个描述符，触及面 2 文件，可发现性高（`bind plan` 直接可验）。"
     }
   },
   "knowledge": {
