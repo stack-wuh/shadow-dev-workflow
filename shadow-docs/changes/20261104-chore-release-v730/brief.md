@@ -4,7 +4,7 @@
   "name": "20261104-chore-release-v730",
   "type": "chore",
   "scope": "distribution",
-  "status": "branched",
+  "status": "published",
   "baseBranch": "main",
   "branch": "chore/20261104-chore-release-v730",
   "files": [
@@ -17,8 +17,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 85,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/85",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 86,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/86"
   },
   "review": {
     "conclusion": "pending",
@@ -27,7 +27,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:85",
+    "checkpoint": "pr:86",
     "planHash": "c4ec110c985e15a40867ea029359530c8cf6798bf380c122a46963fac175e409",
     "updatedAt": null,
     "lastError": null,
