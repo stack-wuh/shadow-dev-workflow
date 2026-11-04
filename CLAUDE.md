@@ -48,6 +48,7 @@
 | 正式发版（bump、tag、Release、发布链审查） | `shadow-dev-publish` |
 | Knowledge 查询 | `shadow-dev-knowledge`（propose 自动调用） |
 | 线上急修、紧急修复、hotfix | `shadow-dev-hotfix`（快车道，准入判定见其 SKILL.md） |
+| 配音、旁白、TTS 语音合成、产出音频 | `shadow-dev-tts`（文案 → 旁白 WAV，Token Plan/百炼双通道自动识别） |
 
 ## 机器门（scripts/ 是执法层）
 
