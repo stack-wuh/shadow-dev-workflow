@@ -4,7 +4,7 @@
   "name": "20261104-chore-cli-pin-v190",
   "type": "chore",
   "scope": "package.json",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "chore/20261104-chore-cli-pin-v190",
   "files": [
@@ -14,8 +14,8 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 81,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/81"
   },
   "review": {
     "conclusion": "pending",
@@ -24,8 +24,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "366b532c9050eff04c27918ae554ff3346b725c9",
-    "planHash": "5583d31026fac0dbeb74a205d6808499eebdba19b1e2a78c6ad2fa17a15f99d9",
+    "checkpoint": "pr:81",
+    "planHash": "fcfcddc2b1484a4a48d3e0695e8fedc67a5a3f77d2c21fdf1bf4b965a433b3c0",
     "updatedAt": null,
     "lastError": null,
     "commit": {
