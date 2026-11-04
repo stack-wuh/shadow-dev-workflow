@@ -16,7 +16,7 @@ description: wuh.site 视频工作室制作流程——从需求到成片的两�
 4. **动效规范** `motion-spec.md`：UE 动效大师 subagent 产出——令牌化（曲线/弹性/镜头/粒子/转场/调色）+ 全镜覆盖矩阵（每镜入场/持续/出场/转场必有令牌）
 5. **Animatic 分镜板**：真实内容单色简板（**不是空框**）预演节奏，渲染后交用户评审定稿
 
-用户定稿 → `node scripts/shots.mjs import` 一次性导入生成 `shots-manifest.json`（帧数唯一机器真源，此后改帧只改 manifest，storyboard 对账表由脚本反生成）→ 另立 change 进第二段。
+用户定稿 → 在素材仓检出父目录执行 `node wuh.site.video/scripts/shots.mjs import` 一次性导入生成 `shots-manifest.json`（帧数唯一机器真源，此后改帧只改 manifest，storyboard 对账表由脚本反生成）→ 另立 change 进第二段。
 
 ### 第二段 · 正式制作（一个 change）
 > 契约：镜级产出物规范（一镜一文件一 Sequence 一缓存），全文见本技能目录 `shot-spec.md`（2026-10-31 四项决策定稿）。

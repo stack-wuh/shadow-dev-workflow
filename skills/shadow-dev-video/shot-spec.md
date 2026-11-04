@@ -38,8 +38,8 @@ videos/<slug>/
 ```
 
 - `startFrame` 由前缀和生成，**禁止手填**（防对账漂移）。
-- 生成路径：分镜定稿 → `node scripts/shots.mjs import`（一次性解析 storyboard 逐镜表，此为 markdown 唯一被解析的时刻）；此后改帧只改 manifest → `node scripts/shots.mjs sync`（反生成帧数对账表贴回 storyboard，标注「生成区块勿手改」+ 重生成 routes.ts）。
-- `node scripts/shots.mjs check` 校验 INV-S1/S2/S6，渲染前必跑。
+- 生成路径：分镜定稿 → `node wuh.site.video/scripts/shots.mjs import`（素材仓脚本，在其检出父目录执行；一次性解析 storyboard 逐镜表，此为 markdown 唯一被解析的时刻）；此后改帧只改 manifest → `node wuh.site.video/scripts/shots.mjs sync`（反生成帧数对账表贴回 storyboard，标注「生成区块勿手改」+ 重生成 routes.ts）。
+- `node wuh.site.video/scripts/shots.mjs check` 校验 INV-S1/S2/S6，渲染前必跑。
 
 ## 3. 镜组件规则（铁律）
 
