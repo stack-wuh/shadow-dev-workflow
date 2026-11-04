@@ -5,11 +5,11 @@ description: 产出音频——Qwen TTS 配音管线，文案到可进剪辑软�
 
 # Shadow Dev TTS — 配音音频产出
 
-把文案变成视频旁白音频。工具载体：`D:\works\qwen-tts\`（`tts.py` 零依赖单文件，Python 3.10+；API Key 存同目录 `.api_key`，环境变量 `DASHSCOPE_API_KEY` 亦可）。执行真相与实证记录：shadow-dev-cli 仓的 `qwen-tts-voiceover` 知识卡（domain: media-tts）。
+把文案变成视频旁白音频。工具载体：shadow-dev-cli 仓 `tools/qwen-tts/`（`tts.py` 零依赖单文件，Python 3.10+；API Key 存工具目录 `.api_key`——不入库，环境变量 `DASHSCOPE_API_KEY` 亦可）。执行真相与实证记录：shadow-dev-cli 仓的 `qwen-tts-voiceover` 知识卡（domain: media-tts）。
 
 ## 快速出片（默认路径）
 
-1. 文案落成 UTF-8 txt → `cd D:\works\qwen-tts && python tts.py 文案.txt --name <slug>`
+1. 文案落成 UTF-8 txt → `cd <cli仓>/tools/qwen-tts && python tts.py 文案.txt --name <slug>`
 2. 成品 `tts-output/<slug>/final.wav`（44.1kHz / 16bit / 单声道），直接拖进剪辑软件；分段原件在 `segments/`（单段失败可只重跑该段）
 3. 通道按 Key 前缀自动识别；换通道/模型/音色用 `--plan` / `--model` / `--voice`；`--voices` 列表、`--dry-run` 只看分段不烧额度
 
