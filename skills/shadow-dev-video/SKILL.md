@@ -23,7 +23,8 @@ description: wuh.site 视频工作室制作流程——从需求到成片的两�
 1. **令牌库先行**：`motion-tokens.ts` 落地规范全部令牌（曲线基元/弹性参数/节奏网格/调色/高频动效函数）
 2. **逐镜全彩实装**：一镜一文件 `shots/sNN.tsx`（局部帧 0 起、自包含、不透明底、转场挂出镜尾帧+交接态协议），多镜可并行 subagent（独立文件零共享状态）；每镜照覆盖矩阵令牌实装；装配层只做 manifest 遍历 + ShotShell 全局视觉 + 音轨，禁镜内容
 3. **配乐多轨**：CC-BY 曲目（incompetech 等）多段交叉淡化对拍，独立 `SiteFilmAudio` comp（镜渲染恒无音轨，SFX v1 冻结）；`public/<slug>/` 入库（staticFile 以 public/ 为根）；署名清单随片交付
-4. **可视化渲染出片**：渲染脚本 v2——bundle 一次 + 镜级缓存（缓存键=镜文件 hash+依赖闭包），改一镜只重渲一镜（1–3 分钟）→ 拼接 → CFR 终装 → 音轨 mux → 三重终验；进度三层事件（阶段/镜/帧，Remotion `onProgress` 官方数据源）+ `render-progress.html` 面板 + 系统通知（重试静默、终败必达）；镜级失败走收敛梯，整段分段渲染降级为兜底
+4. **配音轨（配音师 subagent）**：走 `shadow-dev-tts` 管线（工具 `D:\works\qwen-tts`，Token Plan 端点与音色白名单实证见素材仓知识卡 `tts-voiceover-pipeline`）——**双声部设计**（讲述者/纸的声音，各只说该说的，不做解释性旁白）、**落点对位表**（人声只踩音乐回落谷/衰减尾/自然静默；高潮段与留白禁区一字不进）、逐句合成 + 按时间轴静音对齐整轨，人声轨与 BGM 各占一路进装配层 mux；配音文案改动必须同步字幕表与 storyboard 机器真源
+5. **可视化渲染出片**：渲染脚本 v2——bundle 一次 + 镜级缓存（缓存键=镜文件 hash+依赖闭包），改一镜只重渲一镜（1–3 分钟）→ 拼接 → CFR 终装 → 音轨 mux → 三重终验；进度三层事件（阶段/镜/帧，Remotion `onProgress` 官方数据源）+ `render-progress.html` 面板 + 系统通知（重试静默、终败必达）；镜级失败走收敛梯，整段分段渲染降级为兜底
 
 ## 双模式工作法（设计模式 → 产出模式）
 
@@ -55,4 +56,5 @@ description: wuh.site 视频工作室制作流程——从需求到成片的两�
 ## 收尾
 
 - 成片交用户验收 → 反馈微调只重渲对应段 → 定稿进 shadow-dev-review/release
-- 新经验回写素材仓知识卡（video-production-flow / render-stability-playbook），本技能引用卡片
+- 新经验回写素材仓知识卡（video-production-flow / render-stability-playbook / tts-voiceover-pipeline），本技能引用卡片
+- 配音坑位与音色白名单变更回写素材仓 `tts-voiceover-pipeline` 知识卡，与 `shadow-dev-tts` 技能双向同步
