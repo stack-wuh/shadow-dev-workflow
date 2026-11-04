@@ -43,3 +43,4 @@
 | 20261015-feature-plugin-self-sync | ✅ 完成 | shadow-docs/changes/archive/20261015-feature-plugin-self-sync/brief.md |
 | 20261015-feature-tdd-debug-skills | ✅ 完成 | shadow-docs/changes/archive/20261015-feature-tdd-debug-skills/brief.md |
 | 20261019-chore-cli-pin-v180 | ✅ 完成 | shadow-docs/changes/archive/20261019-chore-cli-pin-v180/brief.md |
+| 20261104-chore-cli-pin-v190 | ✅ 完成 | shadow-docs/changes/archive/20261104-chore-cli-pin-v190/brief.md |

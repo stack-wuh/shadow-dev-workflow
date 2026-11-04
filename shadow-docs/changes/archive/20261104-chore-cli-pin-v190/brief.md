@@ -4,7 +4,7 @@
   "name": "20261104-chore-cli-pin-v190",
   "type": "chore",
   "scope": "package.json",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261104-chore-cli-pin-v190",
   "files": [
@@ -18,14 +18,14 @@
     "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/81"
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "68b1ec92f3b2736ab2c57869bd3106e8d2ddc829",
+    "verifiedAt": "2026-11-04T00:40:28.942Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:81",
-    "planHash": "fcfcddc2b1484a4a48d3e0695e8fedc67a5a3f77d2c21fdf1bf4b965a433b3c0",
+    "checkpoint": "merged-pr:81",
+    "planHash": "be1a7c66d3b82754e8f335353e08680c2510135ddf26701fca683f8d6970971e",
     "updatedAt": null,
     "lastError": null,
     "commit": {
@@ -34,6 +34,11 @@
       ],
       "message": "chore: cliVersion pin v1.8.0 → v1.9.0——SessionStart 自举不再回滚已发版 CLI"
     }
+  },
+  "knowledge": {
+    "action": "无需变更",
+    "target": null,
+    "reason": "pin 值维护，install-distribution 卡既述机制"
   }
 }
 ---
