@@ -4,7 +4,7 @@
   "name": "20261107-chore-release-v740",
   "type": "chore",
   "scope": "distribution",
-  "status": "published",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "chore/20261107-chore-release-v740",
   "files": [
@@ -27,8 +27,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:90",
-    "planHash": "110c39ea5077726df3d6356dcad7ddf626c0d6289cd172e0ab5689d4127969da",
+    "checkpoint": "4a811f658dac9cc0054dfc63dc698ca4efdf513d",
+    "planHash": "760bef29eddbf2af10506db3719045f358e15307ff352bd40322ec7175b88aa2",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -42,6 +42,12 @@
       "message": "chore(release): v7.4.0 版本号三处同源 bump + 修本机冒烟门 harness",
       "title": "chore(release): v7.4.0 版本号三处同源 bump",
       "body": "## 变更\n\n三份 manifest 版本 7.3.0 → **7.4.0**(`bump-version.mjs` 一次同源写入)。\n\n附带修复: `scripts/check-release-smoke.mjs` 离线腿把打包产物放进 `--work` 目录,而 `release-smoke.sh` 对 `--work` 先 `rm -rf` 再建 prefix/home——资产在物化前被自己删掉(ENOENT),本机 `npm run ci` 在 macOS 上永远红。修复: 产物挪到 `--work` 之外(独立 mkdtemp)。CI 的 `--release` 模式不受影响;此修复让本机门与 CI 同绿。\n\n## 为什么\n\n发布 v7.4.0: v7.3.0 之后 main 已合并的对外交付面——\n\n- PR #80 `20261102-feature-dsh-host-adapter`: DSH 宿主适配\n- PR #89 `20261107-feature-ai-director-video-skill`: shadow-dev-video 技能升级 AI 导演工作流(资产层/强 schema 分镜/生图子管线/混合渲染),顺带修复 main quality-gate 跨仓脚本引用死链\n\n## 验证\n\n- `npm run check:version` → ✓ 三处 manifest 版本同源: 7.4.0(3 个文件)\n- `npm run ci` 四门全绿: 版本同源 / requires:strict / 知识治理 fail=0 / 产物测试 + 发布冒烟 `OK materialized … skills=13`(与 skills/ 实际目录数一致)\n- `cliVersion` pin 保持 v1.9.0 不动(pin 属能力契约,不随发版变动)\n- tag 后发布链审查: 版本权威 / 资产名契约 / 冒烟\n\nCloses #89 关联的发布诉求(发版载体)"
+    },
+    "commit": {
+      "files": [
+        "shadow-docs/INDEX.md"
+      ],
+      "message": "docs(shadow): 台账补登记 20261107-chore-release-v740,INDEX 与在途目录同源"
     }
   }
 }
