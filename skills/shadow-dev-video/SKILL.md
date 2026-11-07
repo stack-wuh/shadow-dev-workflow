@@ -36,7 +36,7 @@ description: wuh.site 视频工作室制作流程——AI 导演工作流：从�
    - **派发必须带 `--ref <branch>`**：不带就跑默认分支 main（本次因此在 main 的旧 manifest 上渲出一支 245s / 38 镜的废片）
    - 单镜重跑：Re-run failed jobs；或 `workflow_dispatch` 传 `shots` 子集
    - 本机取回：`gh run download <run> -n <timestamp>-<slug> -D out/ci`，用 ffmpeg 按时间点抽帧验收（渲在云上、抽帧看结果，这才是「本地看片」的正确姿势）
-7. **终混**：无声成片 + 旁白轨（adely 到正片起点）+ BGM 避让床 → `amix` → 限幅 → AAC；脚本 `scripts/mux-film.sh`
+7. **终混**：无声成片 + 旁白轨（adely 到正片起点）+ BGM 避让床 → `amix` → 限幅 → AAC；脚本 `wuh.site.video/scripts/mux-film.sh`
 
 ## 评审循环（云上出草片 → 本机抽帧看）
 
@@ -66,7 +66,7 @@ description: wuh.site 视频工作室制作流程——AI 导演工作流：从�
 ## v12 实战补遗（2026-11-07 · 《风陵 · 致郭襄》学到的，全部踩过）
 
 ### A. 时间轴三层真源，只认一层
-`storyboard.md`（七列严格表，含「文案·字幕」与「转场（进入本镜）」列）→ `node scripts/shots.mjs import` → `shots-manifest.json`（**唯一机器真源**）→ `node scripts/shots.mjs sync`（生成 `manifest.ts` / `registry.ts` / `routes.tsx`）。
+`storyboard.md`（七列严格表，含「文案·字幕」与「转场（进入本镜）」列）→ `node wuh.site.video/scripts/shots.mjs import` → `shots-manifest.json`（**唯一机器真源**）→ `node wuh.site.video/scripts/shots.mjs sync`（生成 `manifest.ts` / `registry.ts` / `routes.tsx`）。
 - 真源之外的时长写了就是错的：分镜抬头、剧本里的「总时长」都会过期，**只信 manifest**
 - `import` 自带对账（各幕 Σ 帧 vs 幕表），对不上会红——**这条对账是资产，别绕过**
 
@@ -95,7 +95,7 @@ description: wuh.site 视频工作室制作流程——AI 导演工作流：从�
 
 ### F. 改结构（删镜 / 改时长）的影响链（按序执行，缺一步就翻车）
 1. `storyboard.md` 删/改行 → 重算各镜起止窗与幕界 → 同步八幕表与各幕标题（`import` 会对账，不修就红）
-2. `node scripts/shots.mjs import` → `sync`
+2. `node wuh.site.video/scripts/shots.mjs import` → `sync`
 3. **镜号整体前移**：`git mv` 改名，再批量改文件里的 `S<号>` 注释与 `<Caption cue="sNN" />`（漏了字幕就挂错镜）
 4. 被分摊到帧数的镜：`TOTAL` + 关键帧节奏一起重排（只改 TOTAL 会「动作走完干等」）
 5. 旁白重铺 → 字幕重算 → BGM 避让重算
