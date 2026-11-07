@@ -4,7 +4,7 @@
   "name": "20261107-feature-ai-director-video-skill",
   "type": "feature",
   "scope": "shadow-dev-workflow/skills",
-  "status": "reviewed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "feature/20261107-feature-ai-director-video-skill",
   "files": [
@@ -17,8 +17,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 88,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/88",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 89,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/89"
   },
   "review": {
     "conclusion": "passed",
@@ -27,7 +27,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:88",
+    "checkpoint": "pr:89",
     "planHash": "70b9e059485bbca95fc3cdd3bd14818a0daf6d1c67cb13064cf86c915335cd81",
     "updatedAt": null,
     "lastError": null,
