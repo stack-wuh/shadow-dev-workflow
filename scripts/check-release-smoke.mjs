@@ -123,11 +123,14 @@ function materialize () {
   const where = 'offline-smoke'
   const pkgv = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version
   const work = resolve(matTmp || mkdtempSync(join(tmpdir(), 'rel-smoke-')))
+  // 产物必须放在 --work 之外：release-smoke.sh 对 --work 先 rm -rf 再建 prefix/home，
+  // 资产放里面会在物化前被删（ENOENT——2026-11-07 v7.4.0 本机门实证，CI 的 --release 模式不受影响）
+  const dist = mkdtempSync(join(tmpdir(), 'rel-smoke-dist-'))
   const bash = resolveBash()
   if (!bash) { warns.push('SMOKE_MATERIALIZE_DEFERRED offline-smoke: 本机无可信 bash（resolve-bash 拒绝 WSL 入口桩），离线腿未执行，不计入一致'); return }
-  const pk = spawnSync(process.execPath, ['scripts/pack.mjs', '--out', join(work, 'dist')], { cwd: root, encoding: 'utf8' })
+  const pk = spawnSync(process.execPath, ['scripts/pack.mjs', '--out', join(dist, 'dist')], { cwd: root, encoding: 'utf8' })
   if (pk.status !== 0) { bad('SMOKE_PACK_FAILED', where, '本地打包失败 rc=' + pk.status + '：' + String(pk.stderr || '').split(String.fromCharCode(10)).filter((x) => x && !/npm warn/.test(x)).slice(0, 2).join(' / ').slice(0, 200)); return }
-  const asset = join(work, 'dist', 'shadow-dev-workflow-v' + pkgv + '.tar.gz')
+  const asset = join(dist, 'dist', 'shadow-dev-workflow-v' + pkgv + '.tar.gz')
   if (!existsSync(asset)) { bad('SMOKE_PACK_FAILED', where, '本地产物不存在：' + asset); return }
   const r = spawnSync(bash.path, [smokePath, '--from', asset.replace(/\\/g, '/'), '--work', work.replace(/\\/g, '/')], { cwd: root, encoding: 'utf8' })
   const out = String(r.stdout || '') + String(r.stderr || '')
