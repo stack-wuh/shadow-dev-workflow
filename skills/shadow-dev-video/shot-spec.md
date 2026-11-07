@@ -1,6 +1,6 @@
 # 镜级产出物规范（Shot Pipeline Spec）
 
-> 状态：定稿 2026-10-31（四项决策见文末记录），**待 runtime 验证**——site-film 全量迁移 change 即验证场，验证通过后回写素材仓知识卡 video-production-flow。
+> 状态：定稿 2026-10-31（四项决策见文末记录），**待 runtime 验证**——site-film 全量迁移 change 即验证场，验证通过后回写素材仓知识卡 video-production-flow。2026-11-07 增补 §8 AI 首帧资产接入（契约先行，机器校验随素材仓后继 change 落地）。
 > 适用：wuh.site.video 长片正式制作（≥2min）。本文件是 SKILL.md 第二段的展开契约。
 
 ## 0. 核心原则
@@ -88,6 +88,26 @@ videos/<slug>/
 
 v1 冻结：镜渲染无音轨，音轨唯一来源 SiteFilmAudio。启用镜内 SFX 时：镜文件可内嵌 `<Audio>`，渲染口径升级为全镜统一 aac/48k + 无声镜垫静音轨（官方口径 `renderMedia` 传 `enforceAudioTrack: true`，专为后续 concat 设计），终验增音轨时长/偏移两项。**镜文件、manifest、装配契约全不动——只动渲染与拼接层**（v1 冻结不为将来锁死路径）。
 
+## 8. AI 首帧资产接入（2026-11-07 增补，契约先行）
+
+> 来源：混合渲染策略（SKILL.md 第二段）——人物/场景叙事镜与混合镜需要 AI 生图首帧/背景板；数据动效镜不涉及本节。方法论依据见 `ai-director.md` §4–§5。
+
+**资产入库契约：**
+
+- 母带（生成原图 + prompt 记录）入 `videos/<slug>/assets/frames/`（施工图性质，进 git）；渲染引用件入 `public/<slug>/frames/`（staticFile 以 public/ 为根，渲染依赖必进 git——文件存放与版本管理规范）
+- 文件名带镜号 + 版本号：`sNN-vN.png`；prompt 与验收五查结论随 `assets/frames/sNN.md` 登记，保证可复现
+
+**镜文件接入规则：**
+
+1. `<Img src={staticFile('<slug>/frames/sNN-v1.png')} />` 作背景板/前景叠加；不透明底铁律（§3 规则 3）与装配层零全片 overlay（§4/INV-S4）不变——资产像素属镜内容，由镜自带
+2. **换图必改镜文件引用**（版本号进文件名）：缓存键 = hash(镜源 + import 闭包)，`staticFile` 引用的资产**不在闭包内**——只换文件内容不改引用，缓存不失效，成片像素漂移。资产定稿后文件名冻结；返工升级版本号并同步改引用，让 hash 语义自然失效
+3. 确定性不受影响：资产是静态像素输入，同 bundle 同资产同帧同像素成立（§3 规则 6 的前提扩展）
+
+**分镜表 / manifest 契约（登记，素材仓后继 change 落地机器校验）：**
+
+- storyboard 逐镜表新增列：景别+运镜 / 光线 / 构图 / 尾帧描述 / 资产外键（character_ids / environment_id）；新列的 `shots.mjs import` 解析适配随后继 change，落地前写在备注区不破坏既有七列解析，为分镜师自查项
+- manifest 扩展字段（后继 change）：`shots[].characterIds` / `environmentId` / `firstFrameAsset`（文件路径+版本）；`shots.mjs check` 增校验——外键在资产登记表内、`firstFrameAsset` 文件存在、旁白字数硬表（2.5s≤20 字、5s≤40 字、10s≤82 字）
+
 ## 不变量（review 对账用）
 
 - INV-S1：Σ durationFrames = totalFrames = film comp `durationInFrames`
@@ -96,6 +116,7 @@ v1 冻结：镜渲染无音轨，音轨唯一来源 SiteFilmAudio。启用镜内
 - INV-S4：装配层零镜内容、零全片视觉 overlay（SiteFilm.tsx 走查）
 - INV-S5：每镜渲染 nb_frames = durationFrames
 - INV-S6：routes.ts 与 manifest 一致（生成物校验）
+- INV-S7（2026-11-07 增补，§8）：镜引用的首帧资产文件存在、带版本号，且资产变更必伴随镜文件引用变更（缓存键语义）；校验器随素材仓后继 change 落地，此前为走查项
 
 ## 决策记录（2026-10-31，用户拍板）
 
