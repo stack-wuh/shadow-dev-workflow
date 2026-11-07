@@ -4,7 +4,7 @@
   "name": "20261107-chore-release-v740",
   "type": "chore",
   "scope": "distribution",
-  "status": "branched",
+  "status": "published",
   "baseBranch": "main",
   "branch": "chore/20261107-chore-release-v740",
   "files": [
@@ -17,8 +17,8 @@
     "repository": null,
     "issue": null,
     "issueUrl": null,
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 90,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/90"
   },
   "review": {
     "conclusion": "pending",
@@ -27,7 +27,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": null,
+    "checkpoint": "pr:90",
     "planHash": "110c39ea5077726df3d6356dcad7ddf626c0d6289cd172e0ab5689d4127969da",
     "updatedAt": null,
     "lastError": null,
