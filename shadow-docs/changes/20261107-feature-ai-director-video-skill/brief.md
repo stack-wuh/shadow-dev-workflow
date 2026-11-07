@@ -4,7 +4,7 @@
   "name": "20261107-feature-ai-director-video-skill",
   "type": "feature",
   "scope": "shadow-dev-workflow/skills",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "feature/20261107-feature-ai-director-video-skill",
   "files": [
@@ -27,8 +27,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "01d7a2198d594d38214db3a4ed44ec82f278da5e",
-    "planHash": "a336f7bd60e580b8ebca5cc4740ab6d69faf096d741c8f1275d8771916ecd82d",
+    "checkpoint": "pr:89",
+    "planHash": "05803879da0f532360a43ebb468e3e612c4c6b4ab70c42f0dcdc8cc080056701",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -51,7 +51,7 @@
       ],
       "message": "fix(skills): SKILL.md 跨仓脚本引用补 wuh.site.video 前缀(修 CI 死链,main 先存回归)",
       "title": "feat(skills): shadow-dev-video 升级 AI 导演工作流(资产层/强 schema 分镜/生图子管线/混合渲染)",
-      "body": "## 变更\n- `skills/shadow-dev-video/SKILL.md`:九处定向增补(零回退)——前期管线插入**资产层**(风格锚点/角色定妆三视图/场景图,与分镜并行)、分镜**强 schema 导演列**(景别运镜/光线/构图/尾帧描述/资产外键 + 旁白字数硬表)、第二段插入**逐镜 AI 资产生产**(每镜 3-4 变体 + 验收五查 + 先修后摇)、**混合渲染策略**(数据动效留 Remotion,人物/场景叙事镜走 AI 首帧)、收尾落地节奏(先资产层+首帧生图);触发词扩入 AI 导演/生图/首帧/角色一致性/运镜\n- `skills/shadow-dev-video/shot-spec.md`:新增 §8 AI 首帧资产接入(契约先行:资产入库路径/换图必改镜文件引用的缓存键语义/manifest 扩展字段)+ INV-S7\n- `skills/shadow-dev-video/ai-director.md`(新增):AI 导演方法论基座——2026-11-07 五路调研沉淀(GitHub 开源管线/八家模型官方指南/中文社区实战/生图一致性工程/视听语言),含逐镜词汇表/生图模板/翻车诊断/失败模式总表\n- `CLAUDE.md`:Skill 触发表补 shadow-dev-video 行\n- `shadow-docs/INDEX.md`:补登记 20261102-feature-dsh-host-adapter(PR #80 合入遗留缺口)+ 本 change 台账行\n- **CI 死链修复(追加 commit)**:SKILL.md 三处裸 `scripts/shots.mjs` / `scripts/mux-film.sh` 引用补 `wuh.site.video/` 前缀(与既有第 21 行同式)——main 的 quality-gate 自 PR #87/#80 合入即红(先存回归),本地兄弟检出把它降级为 warn 掩盖了;本 PR 顺手修复使门恢复绿\n\n## 影响\n- 行为/触发面:视频技能获得导演层方法论(资产层/生图子管线/混合渲染);宿主技能 description 变更待 pack/bind 产物更新后生效\n- 明确不受影响:不改 CLI 命令面、不改任何 scripts/ 门判定集、不动 requiresCommands 与 cliVersion pin;下游机器校验由 wuh.site.video 后继 change 落地(20261107-feature-asset-registry-shot-schema)\n- 回滚方式:revert 本 PR\n\n## 验证\n- `npm run check:knowledge` → fail=0(死链两处修复;技能 13 个 frontmatter 一致;引用扫描零死链)\n- `npm run check:requires:strict` → ✓; `npm run check:brief` → 6 份在途 brief 契约全绿\n- M 级四条被触及不变量观察点全闭合(详见 brief 结果段)\n\n## 关联\n- Closes #88\n- brief: shadow-docs/changes/20261107-feature-ai-director-video-skill/brief.md"
+      "body": "详见 PR #89 现有正文;本 push 携带 CI 死链修复 commit(01d7a21:SKILL.md 三处裸 scripts/ 引用补 wuh.site.video/ 前缀)。Closes #88"
     },
     "commit": {
       "files": [
