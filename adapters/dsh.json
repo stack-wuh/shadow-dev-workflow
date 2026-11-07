@@ -1,0 +1,21 @@
+{
+  "schema": "shadow-dev-adapter/v1",
+  "host": "dsh",
+  "displayName": "DeepSeek AgentKit (DSH)",
+  "tier": "native",
+  "skillsDir": "~/.dsh/skills",
+  "skillLayout": "{skillsDir}/{skill}/SKILL.md",
+  "bind": {
+    "strategy": "copy",
+    "marker": "managed-by: shadow-dev-workflow"
+  },
+  "hooks": {
+    "supported": false,
+    "mode": "none",
+    "note": "DSH 的技能发现由 dsh-skill-filesystem 插件提供（扫描 ~/.dsh/skills，rank 400 user-dsh），无与 Claude Code/Codex 等价的 SessionStart hook 契约；要自动执行 hooks/bootstrap.mjs 需另写 Cordis 插件，属独立变更。CLI 自举在 DSH 上走手动 bash scripts/install-cli.sh install，能力不降级。"
+  },
+  "plugin": {
+    "optional": false,
+    "note": "DSH 无插件清单形态；技能以 SKILL.md 目录 bundle 直接被发现，bind 轨即为唯一安装路径"
+  }
+}
