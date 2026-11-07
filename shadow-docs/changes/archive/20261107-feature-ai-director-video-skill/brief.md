@@ -4,7 +4,7 @@
   "name": "20261107-feature-ai-director-video-skill",
   "type": "feature",
   "scope": "shadow-dev-workflow/skills",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "feature/20261107-feature-ai-director-video-skill",
   "files": [
@@ -22,13 +22,13 @@
   },
   "review": {
     "conclusion": "passed",
-    "verifiedCommit": "046c104282c3aae8c87cf421d4737a63f537ba70",
-    "verifiedAt": "2026-11-07T10:41:04.623Z"
+    "verifiedCommit": "6e1c94e2c433743a5d62b368610e01641f9aede4",
+    "verifiedAt": "2026-11-07T12:14:36.665Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:89",
-    "planHash": "05803879da0f532360a43ebb468e3e612c4c6b4ab70c42f0dcdc8cc080056701",
+    "checkpoint": "merged-pr:89",
+    "planHash": "ee37f91f02a17855adf3e17ee746e9cb971b1a4c69832be75822df5480074872",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -63,7 +63,7 @@
   "knowledge": {
     "action": "无需变更",
     "target": null,
-    "reason": "技能正文是 ai-director.md 方法论的执行形态载体,ai-director.md 随技能目录分发即知识载体;本仓六张卡片无视频域卡片,无新增长期事实;跨仓 video-production-flow/video-studio-structure 两卡的更新由素材仓后继 change 落地时执行并补 verified-depth/verified-scope"
+    "reason": "技能正文是 ai-director.md 方法论的执行形态载体,ai-director.md 随技能目录分发即知识载体;本仓六张卡片无视频域卡片,无新增长期事实;跨仓两卡更新已由素材仓后继 change 落地(merged PR #53)"
   }
 }
 ---
