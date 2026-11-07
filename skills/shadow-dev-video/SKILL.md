@@ -1,11 +1,11 @@
 ---
 name: shadow-dev-video
-description: wuh.site 视频工作室制作流程——从需求到成片的两段式管线（前期五件套 → 正式制作 → CI 渲染出片 → 旁白/字幕/配乐终混）。触发词：做视频、宣传片、剧本、编剧、分镜、animatic、出片、视频工作室、渲染、旁白、字幕、配乐、BGM、终混。
+description: wuh.site 视频工作室制作流程——AI 导演工作流：从需求到成片的两段式管线（前期五件套+资产层 → 强 schema 分镜 → 生图子管线 → 正式制作 → CI 渲染出片 → 旁白/字幕/配乐终混）。触发词：做视频、宣传片、剧本、编剧、分镜、AI 导演、生图、首帧、角色一致性、运镜、animatic、出片、视频工作室、渲染、旁白、字幕、配乐、BGM、终混。
 ---
 
 # Shadow Dev Video — 视频制作流程
 
-为 wuh.site.video 视频工作室制作长片（≥2min）。两段式：前期定稿后再正式制作，避免在错误叙事上烧动效工时。素材仓库：`github/wuh.site.video`（工作室三层结构，见其项目内知识卡）。
+为 wuh.site.video 视频工作室制作长片（≥2min）。两段式：前期定稿后再正式制作，避免在错误叙事上烧动效工时。素材仓库：`github/wuh.site.video`（工作室三层结构，见其项目内知识卡）。方法论基座：本技能目录 `ai-director.md`（2026-11-07 五路调研沉淀——开源管线/官方指南/中文实战/生图工程/视听语言；逐镜词汇表、生图模板、翻车诊断查它，本文件不复述）；镜级契约：`shot-spec.md`。
 
 > **渲染只在 GitHub Actions。** 本机（8 核 / 16GB 集显）跑不动 Remotion，本地起渲染会把机器堵死（实测 88 个僵尸 chrome-headless、一条跑了 2h50m 占 82% CPU，导致后续抽帧全部 SIGSEGV）。本机只允许：文本处理、音频处理（ffmpeg/sox/python+numpy）、git、`gh`、读 CI 产物抽帧。
 
@@ -14,23 +14,29 @@ description: wuh.site 视频工作室制作流程——从需求到成片的两�
 ### 第一段 · 前期制作（一个 change）
 1. **素材库** `materials.md`：真实素材全溯源——站点源码细节 / 线上 API 数据 / 人文金句，每节标注来源与抓取日期
 2. **剧本** `script.md`：编剧 subagent 产出——叙事轴（含真实时间线对账与顺序取舍，如情感蒙太奇非编年须显式声明）、幕结构、情绪节奏曲线、逐幕梗概、全片文案与金句使用规划（每处标注素材编号）。只定「讲什么、按什么情绪讲」，不碰帧数与镜头语言。**交用户评审定稿后才许进分镜**——文字层返工分钟级，分镜层返工是全表重排
-3. **分镜脚本** `storyboard.md`：分镜师 subagent 产出——把定稿剧本镜头化：逐镜表（镜号/画面/镜头语言/文案/时长/转场/音效点）+ 帧数对账表（各幕相加 = 总帧数，30fps）；文案照抄剧本不改写，叙事要动回剧本层先改剧本
-4. **动效规范** `motion-spec.md`：UE 动效大师 subagent 产出——令牌化（曲线/弹性/镜头/粒子/转场/调色）+ 全镜覆盖矩阵（每镜入场/持续/出场/转场必有令牌）
-5. **Animatic 分镜板**：真实内容单色简板（**不是空框**）预演节奏，渲染后交用户评审定稿
+3. **资产层**（2026-11-07 新增，与分镜并行）：**先定资产，禁逐镜现摇**——
+   - **风格锚点** `style-anchor.md`：全片一次定义——冻结风格块（媒介+镜头+光线+调色，每条生图 prompt 开头原样复用，逐镜只换场景/机位/动作）+ 参考机制三选一（sref code / 风格 LoRA / 风格参考图走 IP-Adapter）；seed 不锁风格不锁角色（ai-director §4.0）
+   - **角色定妆**：`character-design.md`（五段设定）之上补**定妆 Hero 图 + 正/侧/背三视图**，建身份锚三选一（PuLID / --oref / 角色 LoRA）；角色卡用「不可变特征」结构级描述（发型长度、领口形状、腰线位置），**禁写「保持一致」**——那不是约束，是许愿
+   - **场景图**：关键场景空镜概念图（prompt 必须写「无人物」），光线来源/方向/色温入风格锚点
+   - 此后逐镜生图 prompt 只**引用资产**（「@图片1 伸手取伞」），不复述外观
+4. **分镜脚本** `storyboard.md`：分镜师 subagent 产出——把定稿剧本镜头化：逐镜表（镜号/画面/镜头语言/文案/时长/转场/音效点）+ **强 schema 导演列（2026-11-07 增补）**：**景别+运镜**（每镜一种镜头语言；情绪能量越高镜头越紧；运镜×情绪与滥用警告查 ai-director §3）/光线/构图/**尾帧描述**（本镜结束时画面停在哪——下一镜衔接锚）/**资产外键**（character_ids / environment_id，必须在资产层登记）+ 旁白字数硬表（2.5s≤20 字、5s≤40 字、10s≤82 字，防音画漂移）+ 帧数对账表（各幕相加 = 总帧数，30fps）。硬规矩：单镜 ≤10s，长动作强制拆镜；相邻镜组换空间开场；文案照抄剧本不改写，叙事要动回剧本层先改剧本。新列的 `shots.mjs import` 解析与机器校验（外键/字数）由素材仓后继 change 适配落地，此前为分镜师自查项
+5. **动效规范** `motion-spec.md`：UE 动效大师 subagent 产出——令牌化（曲线/弹性/镜头/粒子/转场/调色）+ 全镜覆盖矩阵（每镜入场/持续/出场/转场必有令牌）
+6. **Animatic 分镜板**：真实内容单色简板（**不是空框**）预演节奏，渲染后交用户评审定稿
 
 用户定稿 → 在素材仓检出父目录执行 `node wuh.site.video/scripts/shots.mjs import` 一次性导入生成 `shots-manifest.json`（帧数唯一机器真源，此后改帧只改 manifest，storyboard 对账表由脚本反生成）→ 另立 change 进第二段。
 
 ### 第二段 · 正式制作（一个 change）
-> 契约：镜级产出物规范（一镜一文件一 Sequence 一缓存），全文见本技能目录 `shot-spec.md`（2026-10-31 四项决策定稿）。
+> 契约：镜级产出物规范（一镜一文件一 Sequence 一缓存），全文见本技能目录 `shot-spec.md`（2026-10-31 四项决策定稿，2026-11-07 增补 AI 首帧资产接入 §8）。**混合渲染策略（镜头类型在分镜表逐镜声明）**：数据动效/counter/图表/文字镜 = Remotion 确定性渲染（强项，不回退）；人物/场景叙事镜 = AI 生图首帧打底 + Remotion 动效叠加；两者同镜共存即混合镜。
 1. **令牌库先行**：`motion-tokens.ts` 落地规范全部令牌（曲线基元/弹性参数/节奏网格/调色/高频动效函数）
-2. **逐镜全彩实装**：一镜一文件 `shots/sNN.tsx`（局部帧 0 起、自包含、不透明底、转场挂出镜尾帧+交接态协议），多镜可并行 subagent（独立文件零共享状态）；每镜照覆盖矩阵令牌实装；装配层只做 manifest 遍历 + ShotShell 全局视觉 + 音轨，禁镜内容
-3. **配乐多轨**：CC-BY 曲目（incompetech 等）多段交叉淡化对拍，独立 `SiteFilmAudio` comp（镜渲染恒无音轨，SFX v1 冻结）；`public/<slug>/` 入库（staticFile 以 public/ 为根）；署名清单随片交付
-4. **配音轨（配音师 subagent）**：走 `shadow-dev-tts` 管线（工具 `D:\works\qwen-tts`，Token Plan 端点与音色白名单实证见素材仓知识卡 `tts-voiceover-pipeline`）——**双声部设计**（讲述者/纸的声音，各只说该说的，不做解释性旁白）、**落点对位表**（人声只踩音乐回落谷/衰减尾/自然静默；高潮段与留白禁区一字不进）、逐句合成 + 按时间轴静音对齐整轨，人声轨与 BGM 各占一路进装配层 mux；配音文案改动必须同步字幕表与 storyboard 机器真源
-5. **CI 渲染出片**（`.github/workflows/render-film.yml`，runner 钉 `ubuntu-24.04`）：`bundle`（预打包 + 校验单元 + 生成镜清单）→ `shots` 矩阵（一镜一 job，fail-fast 关）→ `assemble`（清点缺镜 → 拼接 → 三重终验）。
+2. **逐镜 AI 资产生产**（2026-11-07 新增，生图子管线）：按分镜资产引用批量生首帧/背景板——首帧只写构图不写动作、留负空间给运镜（ai-director §5.1）；每镜 **3-4 变体 + 1 张对照样**；过**验收五查**（人脸与定妆 sheet 相似度 / 五指完整 / 文字区干净 / 风格块生效：色温颗粒 / 与上镜色彩连续）；翻车走**先修后摇**：先修（inpaint/换脸/局部重绘）→ 再重摇（同 prompt 变体）→ 最后重写 prompt，重摇只留给构图级失败；定稿资产母带入 `videos/<slug>/assets/frames/`、渲染引用件进 `public/<slug>/frames/sNN-vN.png`（**换图必改镜文件引用**，否则缓存键不失效=像素漂移，shot-spec §8）。抽卡预期：熟练 ~5 次出一镜（成片率 ~20%），单镜超 10 次 = prompt 或资产层系统性问题，停下修因不硬摇
+3. **逐镜全彩实装**：一镜一文件 `shots/sNN.tsx`（局部帧 0 起、自包含、不透明底、转场挂出镜尾帧+交接态协议），多镜可并行 subagent（独立文件零共享状态）；每镜照覆盖矩阵令牌实装；AI 首帧经 `staticFile` 作背景板/前景叠加（接入规则见 shot-spec §8）；装配层只做 manifest 遍历 + ShotShell 全局视觉 + 音轨，禁镜内容
+4. **配乐多轨**：CC-BY 曲目（incompetech 等）多段交叉淡化对拍，独立 `SiteFilmAudio` comp（镜渲染恒无音轨，SFX v1 冻结）；`public/<slug>/` 入库（staticFile 以 public/ 为根）；署名清单随片交付
+5. **配音轨（配音师 subagent）**：走 `shadow-dev-tts` 管线（工具 `D:\works\qwen-tts`，Token Plan 端点与音色白名单实证见素材仓知识卡 `tts-voiceover-pipeline`）——**双声部设计**（讲述者/纸的声音，各只说该说的，不做解释性旁白）、**落点对位表**（人声只踩音乐回落谷/衰减尾/自然静默；高潮段与留白禁区一字不进）、逐句合成 + 按时间轴静音对齐整轨，人声轨与 BGM 各占一路进装配层 mux；配音文案改动必须同步字幕表与 storyboard 机器真源
+6. **CI 渲染出片**（`.github/workflows/render-film.yml`，runner 钉 `ubuntu-24.04`）：`bundle`（预打包 + 校验单元 + 生成镜清单）→ `shots` 矩阵（一镜一 job，fail-fast 关）→ `assemble`（清点缺镜 → 拼接 → 三重终验）。
    - **派发必须带 `--ref <branch>`**：不带就跑默认分支 main（本次因此在 main 的旧 manifest 上渲出一支 245s / 38 镜的废片）
    - 单镜重跑：Re-run failed jobs；或 `workflow_dispatch` 传 `shots` 子集
    - 本机取回：`gh run download <run> -n <timestamp>-<slug> -D out/ci`，用 ffmpeg 按时间点抽帧验收（渲在云上、抽帧看结果，这才是「本地看片」的正确姿势）
-6. **终混**：无声成片 + 旁白轨（adely 到正片起点）+ BGM 避让床 → `amix` → 限幅 → AAC；脚本 `scripts/mux-film.sh`
+7. **终混**：无声成片 + 旁白轨（adely 到正片起点）+ BGM 避让床 → `amix` → 限幅 → AAC；脚本 `wuh.site.video/scripts/mux-film.sh`
 
 ## 评审循环（云上出草片 → 本机抽帧看）
 
@@ -60,7 +66,7 @@ description: wuh.site 视频工作室制作流程——从需求到成片的两�
 ## v12 实战补遗（2026-11-07 · 《风陵 · 致郭襄》学到的，全部踩过）
 
 ### A. 时间轴三层真源，只认一层
-`storyboard.md`（七列严格表，含「文案·字幕」与「转场（进入本镜）」列）→ `node scripts/shots.mjs import` → `shots-manifest.json`（**唯一机器真源**）→ `node scripts/shots.mjs sync`（生成 `manifest.ts` / `registry.ts` / `routes.tsx`）。
+`storyboard.md`（七列严格表，含「文案·字幕」与「转场（进入本镜）」列）→ `node wuh.site.video/scripts/shots.mjs import` → `shots-manifest.json`（**唯一机器真源**）→ `node wuh.site.video/scripts/shots.mjs sync`（生成 `manifest.ts` / `registry.ts` / `routes.tsx`）。
 - 真源之外的时长写了就是错的：分镜抬头、剧本里的「总时长」都会过期，**只信 manifest**
 - `import` 自带对账（各幕 Σ 帧 vs 幕表），对不上会红——**这条对账是资产，别绕过**
 
@@ -89,7 +95,7 @@ description: wuh.site 视频工作室制作流程——从需求到成片的两�
 
 ### F. 改结构（删镜 / 改时长）的影响链（按序执行，缺一步就翻车）
 1. `storyboard.md` 删/改行 → 重算各镜起止窗与幕界 → 同步八幕表与各幕标题（`import` 会对账，不修就红）
-2. `node scripts/shots.mjs import` → `sync`
+2. `node wuh.site.video/scripts/shots.mjs import` → `sync`
 3. **镜号整体前移**：`git mv` 改名，再批量改文件里的 `S<号>` 注释与 `<Caption cue="sNN" />`（漏了字幕就挂错镜）
 4. 被分摊到帧数的镜：`TOTAL` + 关键帧节奏一起重排（只改 TOTAL 会「动作走完干等」）
 5. 旁白重铺 → 字幕重算 → BGM 避让重算
@@ -111,3 +117,4 @@ description: wuh.site 视频工作室制作流程——从需求到成片的两�
 - 成片交用户验收 → 反馈微调只重渲对应段 → 定稿进 shadow-dev-review/release
 - 新经验回写素材仓知识卡（video-production-flow / render-stability-playbook / tts-voiceover-pipeline），本技能引用卡片
 - 配音坑位与音色白名单变更回写素材仓 `tts-voiceover-pipeline` 知识卡，与 `shadow-dev-tts` 技能双向同步
+- **导演层方法论升级回写本技能 `ai-director.md`**（运镜词汇/生图模板/翻车诊断/失败模式总表随实战增补）；落地节奏（2026-11-07 裁定）：下一部片**先只做资产层+首帧生图**（动效仍全 Remotion），验证生图质量稳定后再引入图生视频氛围镜，AI 音频最后考虑（TTS 管线已够用）

@@ -49,6 +49,7 @@
 | Knowledge 查询 | `shadow-dev-knowledge`（propose 自动调用） |
 | 线上急修、紧急修复、hotfix | `shadow-dev-hotfix`（快车道，准入判定见其 SKILL.md） |
 | 配音、旁白、TTS 语音合成、产出音频 | `shadow-dev-tts`（文案 → 旁白 WAV，Token Plan/百炼双通道自动识别） |
+| 做视频、宣传片、剧本、分镜、AI 导演、生图、首帧、角色一致性、出片 | `shadow-dev-video`（wuh.site.video 工作室：资产层 → 强 schema 分镜 → 生图子管线 → CI 渲染出片 → 终混） |
 
 ## 机器门（scripts/ 是执法层）
 
