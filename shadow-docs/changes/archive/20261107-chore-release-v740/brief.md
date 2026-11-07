@@ -4,7 +4,7 @@
   "name": "20261107-chore-release-v740",
   "type": "chore",
   "scope": "distribution",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "chore/20261107-chore-release-v740",
   "files": [
@@ -21,14 +21,14 @@
     "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/90"
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "4235c8500fdf49b2ca584d7a5036f149262be91d",
+    "verifiedAt": "2026-11-07T12:42:23.900Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:90",
-    "planHash": "6d626790a14466cf00860f9e6a20668f4b5bb649df5e19701aaf669ed2cea1c1",
+    "checkpoint": "merged-pr:90",
+    "planHash": "98241f8bff75af86805501ecedb71faf86ede17dcd9ac22ee959c53df2a71b34",
     "updatedAt": null,
     "lastError": null,
     "release": {
@@ -50,6 +50,11 @@
       ],
       "message": "docs(shadow): 台账补登记 20261107-chore-release-v740,INDEX 与在途目录同源"
     }
+  },
+  "knowledge": {
+    "action": "无需变更",
+    "target": null,
+    "reason": "S 级常规版本 bump:三处 manifest 同源由 check:version 机检;发版链三条对账(版本权威/资产名契约/冒烟 skills=13)全绿;smoke harness 修复为一次性 harness 纠错,无新长期事实(既有 release-artifact-pipeline 卡口径未变)"
   }
 }
 ---
@@ -102,13 +107,25 @@
 
 ### Phase 2 提交合并与发版
 
-- [ ] task-3 — release plan/execute → PR → merge → sync
-- [ ] task-4 — 发版委托:CLI 发版命令键未就位,输出委托清单(git tag v7.4.0 + gh release create)交用户执行;发布链审查(publish-release.yml)核对版本权威/资产名契约/冒烟
+- [x] task-3 — release plan/execute → PR #90 → merge(main `4235c85`)→ sync
+- [x] task-4 — 发版委托执行完毕:tag v7.4.0 + Release 由用户执行(CLI 发版命令键未就位,pin v1.9.0 不动);发布链审查三条对账全绿
 
 ## 结果
 
-- 实际耗时: —
-- 验证: —
+- 实际耗时: 2026-11-07 单日(与两个 feature change 同日推进)
+- 验证:
+  - INV-1 版本同源:`node scripts/bump-version.mjs --check` → `✓ 三处 manifest 版本同源: 7.4.0(3 个文件)`
+  - INV-2 pin 未动:`cliVersion` 保持 v1.9.0(未出现在本次 bump 文件集)
+  - INV-3 覆盖范围:上文「覆盖范围」节显式列出两个 feature 与三类跳过项及理由
+  - 四门:`npm run ci` 全绿——版本同源 / requires:strict / 知识治理 fail=0 / 产物测试 + 发布冒烟
+- **发版链审查(run 42373471828,success)**:
+  - 版本权威:tag `v7.4.0` sha `4235c85` == main HEAD(bump 已含于 tag 指向 tree)✓
+  - 资产名契约:`shadow-dev-workflow-v7.4.0.tar.gz` 匹配 `^shadow-dev-workflow-v[0-9][0-9.]*\.tar\.gz$`,断言步 `OK asset contract` ✓
+  - 发布冒烟(唯一实现 release-smoke.sh,隔离 prefix):`OK materialized root=…/prefix/shadow-dev-workflow-7.4.0 skills=13`(与 skills/ 实际目录数一致)✓
+  - Release:https://github.com/stack-wuh/shadow-dev-workflow/releases/tag/v7.4.0
+- **附带修复(用户裁定随载体)**:`scripts/check-release-smoke.mjs` 离线腿真 bug——打包产物置于 `--work` 内,而 `release-smoke.sh` 对 `--work` 先 `rm -rf`,资产在物化前被自删(ENOENT),本机 `npm run ci` 在 macOS 永远红;修复=产物挪至独立 mkdtemp(`--work` 之外),CI 的 `--release` 模式不受影响。修复后本机门与 CI 同绿(fail=0 deferred=0 materialized=1)
+- 环境备注:`npm run ci` 首跑与一次 release execute 撞 exit 139(本机已知段错误),重试全过;发版命令键缺口如实走委托,未降级
+- 未验证项(明说):宿主侧生效(pack/bind 更新技能产物)待用户按需执行 `shadow-dev bind plan/execute` 或攒版后安装新产物
 
 ## 知识评估
 
