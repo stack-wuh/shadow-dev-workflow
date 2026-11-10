@@ -4,7 +4,7 @@
   "name": "20261110-docs-remotion-capabilities",
   "type": "docs",
   "scope": "skills/shadow-dev-video",
-  "status": "branched",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "docs/20261110-docs-remotion-capabilities",
   "files": [
@@ -27,7 +27,7 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "issue:91",
+    "checkpoint": "387426c7ed743ecd1199a9278329f3d008fa41e0",
     "planHash": "9fc130fe22b380419ae912a7385114f22497c5882f7dba89ef583c352f023a3e",
     "updatedAt": null,
     "lastError": null,
