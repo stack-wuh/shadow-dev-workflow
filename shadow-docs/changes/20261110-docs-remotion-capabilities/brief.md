@@ -4,7 +4,7 @@
   "name": "20261110-docs-remotion-capabilities",
   "type": "docs",
   "scope": "skills/shadow-dev-video",
-  "status": "committed",
+  "status": "published",
   "baseBranch": "main",
   "branch": "docs/20261110-docs-remotion-capabilities",
   "files": [
@@ -17,8 +17,8 @@
     "repository": "stack-wuh/shadow-dev-workflow",
     "issue": 91,
     "issueUrl": "https://github.com/stack-wuh/shadow-dev-workflow/issues/91",
-    "pullRequest": null,
-    "pullRequestUrl": null
+    "pullRequest": 92,
+    "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/92"
   },
   "review": {
     "conclusion": "pending",
@@ -27,8 +27,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "387426c7ed743ecd1199a9278329f3d008fa41e0",
-    "planHash": "9fc130fe22b380419ae912a7385114f22497c5882f7dba89ef583c352f023a3e",
+    "checkpoint": "pr:92",
+    "planHash": "e39a01a44d014504902e078e73f6d33fcb649bb70b17057c90ce68543b17e76f",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
