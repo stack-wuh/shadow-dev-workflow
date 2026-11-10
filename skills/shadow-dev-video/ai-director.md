@@ -331,6 +331,7 @@
 3. **动画数值通道本身**,不只动 opacity
 4. 坐标轴先稳定再动数据
 5. 排名流动叙事(bar chart race)是数据片最强钩子([Flourish](https://flourish.studio/visualisations/bar-chart-race) 为对标)
+6. Remotion 实现基元(2026-11-10 增补):线 draw-in=`@remotion/paths evolvePath`(真长度驱动,**禁猜 pathLen**——v3 实证 13 处猜值=起步死区+变速扭曲);morph=`interpolatePath`;有机运动=`noise2D`;数字滚动=spring+interpolate。令牌→基元决策表查技能 `remotion-capabilities.md` §1
 
 ### 7.3 动效原则(可直接执行)
 
