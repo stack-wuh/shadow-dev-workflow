@@ -4,7 +4,7 @@
   "name": "20261110-docs-remotion-capabilities",
   "type": "docs",
   "scope": "skills/shadow-dev-video",
-  "status": "published",
+  "status": "committed",
   "baseBranch": "main",
   "branch": "docs/20261110-docs-remotion-capabilities",
   "files": [
@@ -27,8 +27,8 @@
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:92",
-    "planHash": "e39a01a44d014504902e078e73f6d33fcb649bb70b17057c90ce68543b17e76f",
+    "checkpoint": "2665aeef9ec200a65feab8f5bb2281373921a9a5",
+    "planHash": "61e01aeb5ee518182e9f006771f6ffb37b90c5892e8b8b17da2fba3523e8a32a",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -42,13 +42,9 @@
     },
     "commit": {
       "files": [
-        "shadow-docs/changes/20261110-docs-remotion-capabilities",
-        "skills/shadow-dev-video/SKILL.md",
-        "skills/shadow-dev-video/ai-director.md",
-        "skills/shadow-dev-video/remotion-capabilities.md",
-        "skills/shadow-dev-video/shot-spec.md"
+        "shadow-docs/INDEX.md"
       ],
-      "message": "docs(skill): Remotion 能力地图整合——官方基元优先 + 三维管线契约（Issue #91）\n\n- 新增 remotion-capabilities.md：包清单/令牌→基元决策表/转场架构/3D 双路线/反模式\n- SKILL.md：官方基元优先入令牌库先行 + motion-spec 实现基元列\n- shot-spec.md：import 白名单扩容 @remotion/*（钉 4.0.538）+ §7 补 sfx 素材源 + §9 三维资产管线 + INV-S8 + 决策 #8–#11\n- ai-director.md §7.2：evolvePath/noise2D/spring 基元映射\n- 素材仓同日实证回填：9 包落地 + 描画引擎真长度化（13 处硬编码 dasharray 清零）"
+      "message": "docs(shadow): 台账 INDEX 登记 20261110 change（knowledge gate 红修）"
     }
   }
 }
