@@ -44,7 +44,7 @@ videos/<slug>/
 ## 3. 镜组件规则（铁律）
 
 1. **不自带 Sequence**：装配层以 `<Sequence from={startFrame} durationInFrames={durationFrames}>` 包裹，Sequence 内 `useCurrentFrame` 天然从 0 起。`frame - 120` 式手算偏移被机制消灭（Act1 条件分支 + 手算偏移即本次重构的病灶）。
-2. **自包含**：禁 import 其他 shots/ 文件、禁读镜外帧。import 白名单：react / remotion / brand 令牌 / 本片 motion-tokens / 本片 components/。
+2. **自包含**：禁 import 其他 shots/ 文件、禁读镜外帧。import 白名单：react / remotion / brand 令牌 / 本片 motion-tokens / 本片 components/ / **官方 `@remotion/*` 子包**（2026-11-10 扩容；冻结清单与版本钉死口径见技能 `remotion-capabilities.md` §0——与 remotion 同版本无 `^`，白名单增包走 spec 修订）。
 3. **不透明底色自备**：镜渲染必须自带完整像素——本机 Chrome 部分透明叠渲染确定性崩溃（render-stability-playbook）。
 4. **转场挂出镜尾帧 + 交接态协议**：出镜尾帧按分镜表转场列把画面带到交接态（黑场/白场/光点/冻帧，交接态须显式写明）；受入镜首帧必须从同一交接态起步。两侧各自渲染、拼接自然无缝。本质属「入场揭示」的转场在 motion-spec 覆盖矩阵标注「入场侧」为例外。
 5. **确定性**：随机只 `random(seed)`；禁 `Date.now`/`Math.random`/渲染期网络请求；真实数据静态化入仓。同 bundle 同帧同像素是镜级缓存成立的前提。
@@ -86,7 +86,7 @@ videos/<slug>/
 
 ## 7. SFX 演进口径（v2 预留）
 
-v1 冻结：镜渲染无音轨，音轨唯一来源 SiteFilmAudio。启用镜内 SFX 时：镜文件可内嵌 `<Audio>`，渲染口径升级为全镜统一 aac/48k + 无声镜垫静音轨（官方口径 `renderMedia` 传 `enforceAudioTrack: true`，专为后续 concat 设计），终验增音轨时长/偏移两项。**镜文件、manifest、装配契约全不动——只动渲染与拼接层**（v1 冻结不为将来锁死路径）。
+v1 冻结：镜渲染无音轨，音轨唯一来源 SiteFilmAudio。启用镜内 SFX 时：镜文件可内嵌 `<Audio>`，渲染口径升级为全镜统一 aac/48k + 无声镜垫静音轨（官方口径 `renderMedia` 传 `enforceAudioTrack: true`，专为后续 concat 设计），终验增音轨时长/偏移两项。**镜文件、manifest、装配契约全不动——只动渲染与拼接层**（v1 冻结不为将来锁死路径）。素材源首选 **`@remotion/sfx`**（2026-11-10 增补：MIT 免署名、响度 −3dB 峰值归一、随包版本钉死；替代散装 CC-BY 音效的溯源负担）。
 
 ## 8. AI 首帧资产接入（2026-11-07 增补，契约先行）
 
@@ -108,6 +108,20 @@ v1 冻结：镜渲染无音轨，音轨唯一来源 SiteFilmAudio。启用镜内
 - storyboard 逐镜表新增列：景别+运镜 / 光线 / 构图 / 尾帧描述 / 资产外键（character_ids / environment_id）；新列的 `shots.mjs import` 解析适配随后继 change，落地前写在备注区不破坏既有七列解析，为分镜师自查项
 - manifest 扩展字段（后继 change）：`shots[].characterIds` / `environmentId` / `firstFrameAsset`（文件路径+版本）；`shots.mjs check` 增校验——外键在资产登记表内、`firstFrameAsset` 文件存在、旁白字数硬表（2.5s≤20 字、5s≤40 字、10s≤82 字）
 
+## 9. 三维资产管线（2026-11-10 增补，决策 #11：three 先行 + Blender 契约先行）
+
+> 实现细节与代码样板见技能 `remotion-capabilities.md` §4。镜头类型「三维镜」在分镜表逐镜声明（混合渲染策略，SKILL.md 第二段）。
+
+**three / R3F 路线（现役）**：镜文件内 `<ThreeCanvas>` + `useCurrentFrame` 直驱（`<Sequence layout="none">`）；**服务端渲染必须显式 `chromiumOptions: { gl: 'angle' }`**（renderMedia 参数，config 文件对 Node API 不生效）；CI 无 GPU 走软件渲染，3D 镜单独 timeout 预算。确定性约束同 §3 规则 6（场景禁 Math.random/Date.now）。CI 实证先例：zhi-guo-xiang InkStage（headless WebGL 可出图）。
+
+**Blender 路线（契约先行，首个 3D 镜需求出现再落 CI 基建）**：
+
+- 建模走 **bpy 程序化脚本入库**（.blend 二进制不入库——可复现纪律，git 可 diff）；渲染 `blender -b -P render.py` 无头产出 PNG 帧序列
+- 序列入 `public/<slug>/three/sNN-vN/`（**版本号进目录名**）；镜内 `staticFile` 按帧取，Remotion 只做合成
+- **换渲必改镜文件引用**（§8 缓存键语义同构——只换文件内容不改引用，缓存不失效=像素漂移）
+- **Blender 版本钉死 = 像素基线**（类比 Chrome 漂移）；版本升级必须重标定
+- 本机不渲铁律延伸到 Blender；CI 每镜独立 job + artifact 中转（复用 render-film 编排模式）；Cycles CPU 渲成本先行核算
+
 ## 不变量（review 对账用）
 
 - INV-S1：Σ durationFrames = totalFrames = film comp `durationInFrames`
@@ -117,6 +131,14 @@ v1 冻结：镜渲染无音轨，音轨唯一来源 SiteFilmAudio。启用镜内
 - INV-S5：每镜渲染 nb_frames = durationFrames
 - INV-S6：routes.ts 与 manifest 一致（生成物校验）
 - INV-S7（2026-11-07 增补，§8）：镜引用的首帧资产文件存在、带版本号，且资产变更必伴随镜文件引用变更（缓存键语义）；校验器随素材仓后继 change 落地，此前为走查项
+- INV-S8（2026-11-10 增补，§9）：三维资产（Blender 帧序列/three 贴图）目录带版本号、文件存在，且换渲必伴随镜文件引用变更；Blender 版本记录在册（像素基线口径）
+
+## 决策记录（增补）
+
+8. **官方子包全量引入**（2026-11-10 用户拍板）：paths/noise/motion-blur/shapes/transitions/three/captions/sfx/rough-notation 九包 + R3F，与 remotion 同版本钉死。弃最小集（能力地图残缺，后续再动每个包都要另立 change）。
+9. **镜级契约不动**：描画/噪声/弹性升级全部在令牌层内部完成（签名向后兼容或镜文件机械迁移），装配层与 manifest 零改动。
+10. **跨镜转场协议不动 + 令牌吸收**（2026-11-10 用户拍板）：交接态协议保持（镜级缓存粒度不破坏）；官方 presentation 曲线以两侧镜像令牌吸收（brand/motion `TRANS`）；TransitionSeries 仅限镜内多场景。弃相邻镜联合渲染单元（缓存粒度变粗、缺镜清点语义复杂化）。
+11. **3D 双路线分层**（2026-11-10 用户拍板）：three/R3F 现役就绪（CI WebGL 已有 zhi-guo-xiang 实证）；Blender 契约先行（§9.2），首个 3D 镜需求出现再落 CI 基建。弃全量立项（无需求预付基建）、弃 3D 暂缓（能力地图缺维）。
 
 ## 决策记录（2026-10-31，用户拍板）
 
