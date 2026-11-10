@@ -48,4 +48,4 @@
 | 20261104-chore-release-v730 | published | shadow-docs/changes/20261104-chore-release-v730/brief.md |
 | 20261107-chore-release-v740 | ✅ 完成 | shadow-docs/changes/archive/20261107-chore-release-v740/brief.md |
 | 20261107-feature-ai-director-video-skill | ✅ 完成 | shadow-docs/changes/archive/20261107-feature-ai-director-video-skill/brief.md |
-| 20261110-docs-remotion-capabilities | published | shadow-docs/changes/20261110-docs-remotion-capabilities/brief.md |
+| 20261110-docs-remotion-capabilities | ✅ 完成 | shadow-docs/changes/archive/20261110-docs-remotion-capabilities/brief.md |

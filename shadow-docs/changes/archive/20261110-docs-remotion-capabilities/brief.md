@@ -4,7 +4,7 @@
   "name": "20261110-docs-remotion-capabilities",
   "type": "docs",
   "scope": "skills/shadow-dev-video",
-  "status": "published",
+  "status": "archived",
   "baseBranch": "main",
   "branch": "docs/20261110-docs-remotion-capabilities",
   "files": [
@@ -21,14 +21,14 @@
     "pullRequestUrl": "https://github.com/stack-wuh/shadow-dev-workflow/pull/92"
   },
   "review": {
-    "conclusion": "pending",
-    "verifiedCommit": null,
-    "verifiedAt": null
+    "conclusion": "passed",
+    "verifiedCommit": "4418cd73f03b10c304f3826db282ce6665eb941f",
+    "verifiedAt": "2026-11-10T14:31:54.836Z"
   },
   "workflow": {
     "operation": null,
-    "checkpoint": "pr:92",
-    "planHash": "75a616afb78850835feec535c490041ad51cd6cf83b4d0b667ce47d44328cc09",
+    "checkpoint": "merged-pr:92",
+    "planHash": "519d2e8cad165f23b419de50d469c59a4c57890cf6c56dbadd678d010fb08c0a",
     "updatedAt": null,
     "lastError": null,
     "issuePlan": {
@@ -46,6 +46,11 @@
       ],
       "message": "docs(shadow): 台账 INDEX 登记 20261110 change（knowledge gate 红修）"
     }
+  },
+  "knowledge": {
+    "action": "新增",
+    "target": "skills/shadow-dev-video/remotion-capabilities.md",
+    "reason": "官方基元层能力地图（调研+素材仓同日实证：9 包钉 4.0.538、描画引擎真长度化、13 处硬编码 dasharray 清零、typecheck 全绿）；四项用户拍板落地，CI 六平台 gate 全绿（run 42834659793）"
   }
 }
 ---
